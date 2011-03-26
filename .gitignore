@@ -1,0 +1,9 @@
+*~
+Makefile
+libmeegocalendar.so
+libCalendar.so
+.moc
+.obj
+meego-app-calendar.pro.user
+meego-app-calendar.qmlproject.user
+meego-app-calendar-*.tar.bz2

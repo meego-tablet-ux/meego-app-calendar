@@ -1,0 +1,10 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include/meegocalendar
+
+Name: meegocalendar
+Description: MeeGo Calendar library
+Version: 0.1.1
+Libs: -L${libdir} -lmeegocalendar
+Cflags: -I${includedir}
