@@ -41,8 +41,6 @@ CalendarMonthModel::CalendarMonthModel(QObject *parent) : QAbstractListModel(par
     roles.insert(MonthItem::EventsCount,"eventsCount");
 
     setRoleNames(roles);
-
-    loadCurrentMonthValues();
 }
 
 CalendarMonthModel::~CalendarMonthModel()
@@ -54,10 +52,9 @@ void CalendarMonthModel::loadCurrentMonthValues()
 {
     UtilMethods utilities;
     CalendarController controller;
-    QDate currentDate = QDate::currentDate();
-    int monthDays = currentDate.daysInMonth();
-    QDate monthStartDate(currentDate.year(),currentDate.month(),1);
-    QDate monthEndDate(currentDate.year(),currentDate.month(),monthDays);
+    int monthDays = dateVal.daysInMonth();
+    QDate monthStartDate(dateVal.year(),dateVal.month(),1);
+    QDate monthEndDate(dateVal.year(),dateVal.month(),monthDays);
 
 
     int startDayOfMonth = monthStartDate.dayOfWeek();
@@ -67,9 +64,8 @@ void CalendarMonthModel::loadCurrentMonthValues()
     int totalDisplayDays = monthDays+daysBeforeStartDay+daysAfterEndDay;
     daysAfterEndDay += (42-totalDisplayDays);
     totalDisplayDays = monthDays+daysBeforeStartDay+daysAfterEndDay;
-
+    beginResetModel();
     clearData();
-    emit beginInsertRows(QModelIndex(),0,(monthDays+daysBeforeStartDay+daysAfterEndDay));
 
     int indexCount=0;
     for(indexCount=0;indexCount<daysBeforeStartDay;indexCount++) {
@@ -95,14 +91,6 @@ void CalendarMonthModel::loadCurrentMonthValues()
         }
         QList<IncidenceIO> list = controller.getEventsFromDB(EDayList,KDateTime(tmpDate));
 
-        /*QList<IncidenceIO> rawList = controller.getEventsFromDB(EAll); //controller.getEventsFromDB(EDayList,KDateTime::currentLocalDateTime());
-        QList<IncidenceIO> list;
-        for(int i=0;i<rawList.count();i++) {
-            if(rawList.at(i).getStartDateTime().date() == tmpDate) {
-                list.append(rawList.at(i));
-            }
-        }*/
-
         eventsCount = list.count();
         if(eventsCount>0) {
             if(eventsCount==1) {
@@ -149,111 +137,14 @@ void CalendarMonthModel::loadCurrentMonthValues()
         itemsList << new MonthItem(indexCount,utilities.getDateInFormatString(tmpDate,"d"),tmpDate,false,currDate);
     }
 
-    emit endInsertRows();
+   endResetModel();
 
 }
 
 void CalendarMonthModel::loadGivenMonthValuesFromOffset(QDate dateInFocus)
 {
-    UtilMethods utilities;
-    CalendarController controller;
-    QDate currentDate = dateInFocus;
-    //currentDate = currentDate.addMonths(offSetFromCurrentMonth);
-
-    int monthDays = currentDate.daysInMonth();
-    QDate monthStartDate(currentDate.year(),currentDate.month(),1);
-    QDate monthEndDate(currentDate.year(),currentDate.month(),monthDays);
-    QString allDayText = tr("All day: ");
-
-    int startDayOfMonth = monthStartDate.dayOfWeek();
-    int endDayOfMonth = monthEndDate.dayOfWeek();
-    int daysBeforeStartDay = (startDayOfMonth-1);
-    int daysAfterEndDay = 7-endDayOfMonth;
-    int totalDisplayDays = monthDays+daysBeforeStartDay+daysAfterEndDay;
-    daysAfterEndDay += (42-totalDisplayDays);
-    totalDisplayDays = monthDays+daysBeforeStartDay+daysAfterEndDay;
-
-    beginResetModel();
-    clearData();
-
-    int indexCount=0;
-    for(indexCount=0;indexCount<daysBeforeStartDay;indexCount++) {
-        QDate tmpDate = monthStartDate.addDays(-(daysBeforeStartDay-indexCount));
-        bool currDate = false;
-        if(utilities.datesEqual(tmpDate,QDate::currentDate())) {
-            currDate = true;
-        }
-        itemsList << new MonthItem(indexCount,utilities.getDateInFormatString(tmpDate,"d"),tmpDate,false,currDate);
-    }
-
-    for(int j=0;j<monthDays;j++,indexCount++) {
-        QDate tmpDate = monthStartDate.addDays(j);
-        bool currDate = false;
-        int eventsCount=0;
-        QString event1="";
-        QString event2="";
-        QString event3="";
-
-        if(utilities.datesEqual(tmpDate,QDate::currentDate())) {
-            currDate = true;
-        }
-        QList<IncidenceIO> list = controller.getEventsFromDB(EDayList,KDateTime(tmpDate));
-        /*QList<IncidenceIO> rawList = controller.getEventsFromDB(EAll); //controller.getEventsFromDB(EDayList,KDateTime::currentLocalDateTime());
-        QList<IncidenceIO> list;
-        for(int i=0;i<rawList.count();i++) {
-            if(rawList.at(i).getStartDateTime().date() == tmpDate) {
-                list.append(rawList.at(i));
-            }
-        }*/
-
-        eventsCount = list.count();
-        if(eventsCount>0) {
-            if(eventsCount==1) {
-                IncidenceIO ioObject = list.at(0);
-                if(ioObject.isAllDay()) event1 = allDayText;
-                event1 += ioObject.getSummary();
-            } else if(eventsCount ==2) {
-                IncidenceIO ioObject = list.at(0);
-                if(ioObject.isAllDay()) event1 = allDayText;
-                event1 += ioObject.getSummary();
-                IncidenceIO ioObject2 = list.at(1);
-                if(ioObject2.isAllDay()) event2 = allDayText;
-                event2 += ioObject2.getSummary();
-            } else if(eventsCount ==3) {
-                IncidenceIO ioObject = list.at(0);
-                if(ioObject.isAllDay()) event1 = allDayText;
-                event1 += ioObject.getSummary();
-                IncidenceIO ioObject2 = list.at(1);
-                if(ioObject2.isAllDay()) event2 = allDayText;
-                event2 += ioObject2.getSummary();
-                IncidenceIO ioObject3 = list.at(2);
-                if(ioObject3.isAllDay()) event3 = allDayText;
-                event3 += ioObject3.getSummary();
-            } else {
-                IncidenceIO ioObject = list.at(0);
-                if(ioObject.isAllDay()) event1 = allDayText;
-                event1 += ioObject.getSummary();
-                IncidenceIO ioObject2 = list.at(1);
-                if(ioObject2.isAllDay()) event2 = allDayText;
-                event2 += ioObject2.getSummary();
-                event3 = tr("%1 more events...").arg(QString::number(eventsCount - 2));
-            }
-
-        }
-        itemsList << new MonthItem(indexCount,utilities.getDateInFormatString(tmpDate,"d"),tmpDate,true,currDate,event1,event2,event3,eventsCount);
-    }
-
-    for(int k=1;k<=daysAfterEndDay;k++,indexCount++) {
-        QDate tmpDate = monthEndDate.addDays(k);
-        bool currDate = false;
-        if(utilities.datesEqual(tmpDate,QDate::currentDate())) {
-            currDate = true;
-        }
-        itemsList << new MonthItem(indexCount,utilities.getDateInFormatString(tmpDate,"d"),tmpDate,false,currDate);
-    }
-
-    endResetModel();
-
+    dateVal = dateInFocus;
+    loadCurrentMonthValues();
 }
 
 QVariant CalendarMonthModel::data(const QModelIndex &index, int role) const

@@ -21,7 +21,8 @@ SOURCES += \
     timelistmodel.cpp \
     utilmethods.cpp \
     viewcalendarmodel.cpp \
-    weekviewmodel.cpp
+    weekviewmodel.cpp \
+    eventsdatamodel.cpp
 
 INSTALL_HEADERS += \
     alarmlistmodel.h \
@@ -38,7 +39,8 @@ INSTALL_HEADERS += \
     viewcalendarmodel.h \
     weekviewmodel.h
 
-HEADERS += $$INSTALL_HEADERS
+HEADERS += $$INSTALL_HEADERS \
+    eventsdatamodel.h
 
 target.path = $$[QT_INSTALL_LIBS]
 INSTALLS += target

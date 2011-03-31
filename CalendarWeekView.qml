@@ -30,8 +30,8 @@ Item {
         if(dayInFocusIndex==0) {//i.e if day is sunday
             dayInFocusIndex = 7;
         }
+        dayInFocusIndex--;
 
-        console.log("dayInFocusIndex="+dayInFocusIndex);
     }
 
 
@@ -44,14 +44,13 @@ Item {
                 scene.appDateInFocus = dateInFocus;
                 daysModel.loadGivenWeekValuesFromDate(dateInFocus)
                 var tmpDate = dateInFocus;
-                allDayViewModel.loadGivenWeekModel(dateInFocus);
-                weekEventsModel.loadGivenWeekModel(dateInFocus);
                 dateInFocusVal = utilities.getWeekHeaderTitle(tmpDate.getDate(),(tmpDate.getMonth()+1),tmpDate.getFullYear());
                 dayInFocusIndex = dateInFocus.getDay();
                 if(dayInFocusIndex==0) {//i.e if day is sunday
                     dayInFocusIndex = 7;
                 }
-
+                dayInFocusIndex--;
+                eventsListView.contentY = (UtilMethods.EDayTimeStart*50);
             }
         }
 
@@ -59,30 +58,26 @@ Item {
             if(scene.gotoToday) {
                 initDate();
                 daysModel.loadGivenWeekValuesFromDate(dateInFocus)
-                allDayViewModel.loadGivenWeekModel(dateInFocus);
-                weekEventsModel.loadGivenWeekModel(dateInFocus);
+                eventsListView.contentY = (UtilMethods.EDayTimeStart*50);
                 scene.gotoToday=false;
             }
         }
 
         onAddedEventChanged: {
             if(scene.addedEvent) {
-                console.log("Trigger model change here");
-                allDayViewModel.loadGivenWeekModel(dateInFocus);
-                weekEventsModel.loadGivenWeekModel(dateInFocus);
+                daysModel.loadGivenWeekValuesFromDate(dateInFocus)
                 searchList.listModel.refresh();
+                eventsListView.contentY = (UtilMethods.EDayTimeStart*50);
                 scene.addedEvent = false;
             }
         }
 
         onDeletedEventChanged: {
             if(scene.deletedEvent) {
-                console.log("Before changing the model after delete inside DayView");
-                allDayViewModel.loadGivenWeekModel(dateInFocus);
-                weekEventsModel.loadGivenWeekModel(dateInFocus);
+                daysModel.loadGivenWeekValuesFromDate(dateInFocus)
                 searchList.listModel.refresh();
+                eventsListView.contentY = (UtilMethods.EDayTimeStart*50);
                 scene.deletedEvent = false;
-                console.log("Marking deletedEvent is false inside DayView");
             }
         }
 
@@ -91,7 +86,6 @@ Item {
     Connections {
         target:weekPage
         onShowSearchChanged: {
-            console.log("weekPage.showSearch="+weekPage.showSearch);
             if(!showSearch) {
                 searchList.listModel.filterOut("");
             }
@@ -101,8 +95,6 @@ Item {
         }
 
         onSearch: {
-            console.log("dayPage.showSearch="+dayPage.showSearch);
-            console.log("search: " + needle);
             if(!searchList.visible) {
                 searchList.visible = true;
                 weekViewData.visible = false;
@@ -110,7 +102,6 @@ Item {
             }
             if(searchList.visible) {
                 searchList.listModel.filterOut(needle);
-                console.log("search: (" + needle+")");
                 searchList.listIndex = 0;
                 scene.searchResultCount = searchList.listModel.count;
             }
@@ -120,14 +111,14 @@ Item {
 
     function resetCalendarDayModels(coreDateVal) {
         var tmpDate = new Date(utilities.getLongDate(coreDateVal));
-        allDayViewModel.loadGivenWeekModel(coreDateVal);
-        weekEventsModel.loadGivenWeekModel(coreDateVal);
         scene.eventDay=tmpDate.getDate();
         scene.eventMonth=(tmpDate.getMonth()+1);
         scene.eventYear=tmpDate.getFullYear();
         dateInFocus = tmpDate;
         scene.appDateInFocus = dateInFocus;
         dateInFocusVal = utilities.getWeekHeaderTitle(scene.eventDay,scene.eventMonth,scene.eventYear);
+        daysModel.loadGivenWeekValuesFromDate(dateInFocus);
+        eventsListView.contentY = (UtilMethods.EDayTimeStart*50);
     }
 
     function setDateInFocus(coreDateVal)
@@ -175,7 +166,6 @@ Item {
         loader.item.description = description;
         loader.item.summary = summary;
         loader.item.location = location;
-        console.log("AlarmType="+alarmType);
         loader.item.alarmType = alarmType;
         loader.item.zoneOffset = zoneOffset;
         loader.item.startDate = startDate;
@@ -185,7 +175,6 @@ Item {
             loader.item.timeVal = qsTr("%1, %2 - %3").arg(utilities.getDateInFormat(startDate,UtilMethods.ESystemLocaleLongDate)).arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale));
         }
         loader.item.initMaps();
-        console.log(loader.item.timeVal);
     }
 
     Loader {
@@ -210,17 +199,6 @@ Item {
     TimeListModel {
         id:timeListModel
     }
-
-    WeekViewModel {
-        id:allDayViewModel
-        modelType:UtilMethods.EAllDay
-    }
-
-    WeekViewModel {
-        id:weekEventsModel
-        modelType:UtilMethods.ENotAllDay
-    }
-
 
     CalendarListView {
         id: searchList
@@ -264,66 +242,69 @@ Item {
                 z:100
 
                 Column {
-                    Row {
-                        Item {
-                            id:spacer1
-                            width:scene.content.width/12
-                            height:100
+                    id:stacker
+                    Item {
+                        id:dayBox
+                        width:calDataBox.width
+                        height:100
+                        Row {
+                            id:dayRow
+                            Repeater {
+                                id: dayRepeater
+                                property int dayIndex:0
+                                property int prevIndex:0
+                                model: daysModel
+                                Column {
+                                    id:allDayColumn
+                                    property int topIndex:index
 
-                        }//end of spacer1
+                                    Rectangle {
+                                        id:dateValBox
+                                        width:(dayBox.width/7)
+                                        height: dayBox.height/2
+                                        border.width:1
+                                        border.color: (isDateInFocus(coreDateVal))?"lightgray":"lightgray"
+                                        color:(isDateInFocus(coreDateVal))?"lightgray":"white"
 
-                        Rectangle {
-                            id:dayBox
-                            width:calDataBox.width -(spacer1.width)
-                            height:100
-                            color:"lightgray"
-                            border.width: 2
-                            border.color: "darkgray"
-                            Row {
-                                id:dayRow
-                                //anchors.centerIn: dayBox
-                                Repeater {
-                                    id: dayRepeater
-                                    property int dayIndex:0
-                                    property int prevIndex:0
-                                    model: daysModel
-                                    Column {
-                                        id:allDayColumn
-
-                                        Rectangle {
-                                            id:dateValBox
-                                            width:(dayBox.width/7)
-                                            height: dayBox.height/2
-                                            border.width:1
-                                            border.color: (isDateInFocus(coreDateVal))?"lightgray":"lightgray"
-                                            color:(isDateInFocus(coreDateVal))?"lightgray":"white"
-
-                                            Text {
-                                                  id: dateValTxt
-                                                  text:dateValString
-                                                  font.bold: true
-                                                  color:isCurrentDate(coreDateVal,index)?theme_buttonFontColorActive:theme_fontColorNormal
-                                                  font.pixelSize: (scene.isLandscapeView())?theme_fontPixelSizeLarge:theme_fontPixelSizeMedium
-                                                  anchors.centerIn: parent
-                                                  //width: dateValBox.width
-                                                  elide: Text.ElideRight
-                                             }
-                                            MouseArea {
-                                                anchors.fill: parent
-                                                onClicked: {
-                                                    setDateInFocus(coreDateVal);
-                                                }
+                                        Text {
+                                              id: dateValTxt
+                                              text:dateValString
+                                              font.bold: true
+                                              color:isCurrentDate(coreDateVal,index)?theme_buttonFontColorActive:theme_fontColorNormal
+                                              font.pixelSize: (scene.isLandscapeView())?theme_fontPixelSizeLarge:theme_fontPixelSizeMedium
+                                              anchors.centerIn: parent
+                                              elide: Text.ElideRight
+                                         }
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            onClicked: {
+                                                setDateInFocus(coreDateVal);
+                                                dayInFocusIndex = index;
                                             }
                                         }
+                                    }//end dateValBox
 
-                                        Rectangle {
-                                            id:allDayBox
-                                            width: dayBox.width/7
-                                            height: dayBox.height/2
-                                            border.width:2
-                                            border.color: "lightgray"
-                                            property int parentIndex:index
-                                            color:"white"
+                                    Rectangle {
+                                        id:allDayBox
+                                        width: dayBox.width/7
+                                        height: dayBox.height/2
+                                        border.width:1
+                                        border.color: (isDateInFocus(coreDateVal))?"lightgray":"lightgray"
+                                        property int parentIndex:index
+                                        color:(isDateInFocus(coreDateVal))?"lightgray":"white"
+
+                                        DayViewModel {
+                                            id:allDayViewModel
+                                            modelType:UtilMethods.EAllDay
+                                            dateVal:coreDateVal
+                                        }
+
+                                        Item {
+                                            id:allDayDisplayBox
+                                            height:(allDayViewModel.count>0)?(parent.height-4):0
+                                            width: parent.width
+                                            anchors.centerIn: parent
+                                            z:500
                                             ListView {
                                                 id:allDayView
                                                 anchors.fill: parent
@@ -338,75 +319,81 @@ Item {
                                                     width: allDayBox.width-4
                                                     anchors.horizontalCenter: parent.horizontalCenter
                                                     anchors.leftMargin: 2
-                                                    visible: (allDayBox.parentIndex==dayIndex)?true:false
 
                                                     BorderImage {
                                                         id:allDayImage
                                                         source:"image://theme/calendar/calendar_event"
                                                         anchors.fill: parent
-                                                    }
+                                                        Item {
+                                                            id: allDayDescBox
+                                                            height: parent.height
+                                                            width:parent.width
+                                                            anchors.top: parent.top
+                                                            Text {
+                                                                id: allDayDescText
+                                                                text: (index==2 && (allDayViewModel.count>3))?qsTr("%1 more events exist").arg(allDayViewModel.count-2):summary
+                                                                anchors.left: parent.left
+                                                                anchors.leftMargin: 2
+                                                                anchors.verticalCenter: parent.verticalCenter
+                                                                color:theme_fontColorNormal
+                                                                font.pixelSize: theme_fontPixelSizeSmaller
+                                                                width:allDayDescBox.width
+                                                                elide: Text.ElideRight
+                                                            }//end desc
+                                                            ExtendedMouseArea {
+                                                                anchors.fill:parent
+                                                                onPressedAndMoved: {
+                                                                     allDayDescText.text = summary;
+                                                                }
 
-                                                    Item {
-                                                        id: allDayDescBox
-                                                        height: parent.height
-                                                        width:parent.width
-                                                        anchors.top: parent.top
-                                                        Text {
-                                                            id: allDayDescText
-                                                            text: (index==2 && (allDayViewModel.count>3))?qsTr("%1 more events exist").arg(allDayViewModel.count-2):summary
-                                                            anchors.left: parent.left
-                                                            anchors.leftMargin: 2
-                                                            anchors.verticalCenter: parent.verticalCenter
-                                                            color:theme_fontColorNormal
-                                                            font.pixelSize: theme_fontPixelSizeSmaller
-                                                            width:allDayDescBox.width
-                                                            elide: Text.ElideRight
-                                                        }
-                                                    }//end allDayDescBox
-                                                    ExtendedMouseArea {
-                                                        anchors.fill:parent
-                                                        onPressedAndMoved: {
-                                                             allDayDescText.text = summary;
-                                                        }
+                                                                onClicked: {
+                                                                    allDayDescBox.focus = true;
+                                                                    if(index ==2 && (allDayViewModel.count>3)) {
+                                                                        allDayDescText.text = summary;
+                                                                    }
+                                                                    var map = mapToItem (scene.content, mouseX, mouseY);
+                                                                    scene.openView (map.x,map.y,scene.container,uid,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
+                                                                }
+                                                                onLongPressAndHold: {
+                                                                    var map = mapToItem (scene.content, mouseX, mouseY);
+                                                                    displayContextMenu (map.x, map.y,uid,eventActionsPopup,popUpLoader,calItemBox,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
+                                                                }
 
-                                                        onClicked: {
-                                                            allDayDescBox.focus = true;
-                                                            if(index ==2 && (allDayViewModel.count>3)) {
-                                                                allDayDescText.text = summary;
-                                                            }
-                                                            //scene.editEvent(uid);
-                                                            var map = mapToItem (scene.content, mouseX, mouseY);
-                                                            scene.openView (map.x,map.y,scene.container,uid,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
-                                                        }
-                                                        onLongPressAndHold: {
-                                                            //showPopUp(uid,eventActionsPopup,popUpLoader,weekBox,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay)
-                                                            var map = mapToItem (scene.content, mouseX, mouseY);
-                                                            displayContextMenu (map.x, map.y,uid,eventActionsPopup,popUpLoader,weekBox,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
-                                                        }
+                                                            }//ExtendedMouseArea
+                                                        }//end allDayDescBox
 
-                                                    }
-                                                }
+                                                    }//end allDayImage
+                                                }//end calItemBox
+
+                                            }//end listview
+
+                                        }//end allDayDisplayBox
+
+                                        ExtendedMouseArea {
+                                            anchors.fill: parent
+                                            onClicked: {
+                                                var map = mapToItem (scene.content, mouseX, mouseY);
+                                                scene.openNewEventView(map.x,map.y,addNewEventComponent, addNewEventLoader,true);
                                             }
                                         }
 
-                                    }
-                                    onDayIndexChanged: {
-                                        dayRow.children[prevIndex].color = "white"
-                                        if(prevIndex != currDayIndex) {
-                                            dayRow.children[currDayIndex].color = "white"
-                                        }
-                                    }
 
-                                }//end of repeater
-                            }//end of Row
-                        }//end of dayBox
-                    }
+                                    }//end alldaybox
+                                }//end of allDayColumn
+                            }//end of dayRepeater
+                        }//end of dayRow
+                    }//end dayBox
 
-                    Rectangle {
+                    Image {
+                        id:headerDivider
+                        width: calDataBox.width
+                        source: "image://theme/menu_item_separator"
+                    } //end of headerDivider
+
+                    Item {
                          id: centerContent
                          height: calDataBox.height-dayBox.height
                          width: calDataBox.width
-                         color: "lightgray"
                          property real cellHeight:50
                          property real cellWidth: dayBox.width/7
                          property int timeListCount:timeListModel.count
@@ -418,170 +405,147 @@ Item {
                             width: centerContent.width
                             contentHeight: (centerContent.timeListCount+1)*(centerContent.cellHeight)
                             contentWidth: centerContent.width
-                            contentY:(UtilMethods.EDayTimeStart*50)
                             clip: true
-                            z:100
                             focus: true
+                            boundsBehavior: Flickable.StopAtBounds
 
                             Row {
-                                spacing:2
-                                anchors.top: parent.top
-                                ListView {
-                                     id: timeListView
-                                     height: eventsListView.contentHeight
-                                     width: scene.content.width/12
-                                     contentHeight: eventsListView.contentHeight
-                                     contentWidth: scene.content.width/12
-                                     clip:true
-                                     interactive: false
-                                     model:timeListModel
-                                     delegate: Rectangle {
-                                         id: timeValBox
-                                         height: 50
-                                         width:scene.content.width/12
-                                         color: "white"
-                                         border.width: 2
-                                         border.color: "lightgray"
-                                         Text {
-                                             id: timeValText
-                                             text: timeVal
-                                             anchors.top: parent.top
-                                             anchors.horizontalCenter: parent.horizontalCenter
-                                             font.bold: true
-                                             color:theme_fontColorNormal
-                                             font.pixelSize: (scene.isLandscapeView())?theme_fontPixelSizeMedium:theme_fontPixelSizeSmall
-                                             elide: Text.ElideRight
-                                         }
-                                     }//end timeValBox
+                                id:weekDayRow
+                                Repeater {
+                                    id: weekDayRepeater
+                                    model: daysModel
+                                    Rectangle {
+                                        id:weekDayBox
+                                        height: centerContent.timeListCount*centerContent.cellHeight
+                                        width: centerContent.cellWidth
+                                        property int weekDayIndex:index
+                                        color:(dayInFocusIndex==weekDayIndex)?"lightgray":"white"
+                                        TimeListModel {
+                                            id:timeModel
+                                            dateVal:coreDateVal
+                                        }
 
-                                }//end Timeline listview
+                                        ListView {
+                                            id:weekDayListView
+                                            anchors.fill:parent
+                                            contentHeight: weekDayBox.height
+                                            contentWidth: weekDayBox.width
+                                            clip:true
+                                            interactive: false
+                                            model:timeModel
+                                            delegate: Rectangle {
+                                                id: vacantAreaBox
+                                                height: centerContent.cellHeight
+                                                width: centerContent.cellWidth
+                                                border.width:1
+                                                border.color: "lightgray"
+                                                property int parentIndex:index
+                                                color: "transparent"
+                                                z:2
 
-                                Item {
-                                    id:weekBox
-                                    height: centerContent.timeListCount*centerContent.cellHeight
-                                    width: centerContent.width - timeListView.width
-                                    Row {
-                                        id:weekDayRow
-                                        Repeater {
-                                            id: weekDayRepeater
-                                            model:7
-                                            Item {
-                                                id:weekDayBox
-                                                height: weekBox.height
-                                                width: weekBox.width/7
-                                                ListView {
-                                                    id:weekDayListView
-                                                    anchors.top: parent.top
-                                                    height: weekBox.height
-                                                    width: weekBox.width/7
-                                                    contentHeight: weekBox.height
-                                                    contentWidth: weekBox.width/7
-                                                    clip:true
-                                                    interactive: false
-                                                    model:timeListModel
-                                                    property int colIndex:index
-                                                    delegate: Rectangle {
-                                                        id: vacantAreaBox
-                                                        height: centerContent.cellHeight
-                                                        width: centerContent.cellWidth
-                                                        border.width:2
-                                                        border.color: "lightgray"
-                                                        property int parentIndex:index
-                                                        color: "white"
-                                                        z:2
-
-                                                        Repeater {
-                                                            id:calDataItemsList
-                                                            model: weekEventsModel
-                                                            focus: true
-                                                            delegate:Item {
-                                                                id: displayRect
-                                                                height: (startIndex == vacantAreaBox.parentIndex && weekDayListView.colIndex==dayIndex)?(heightUnits*vacantAreaBox.height):vacantAreaBox.height
-                                                                width: (startIndex == vacantAreaBox.parentIndex && weekDayListView.colIndex==dayIndex)?(widthUnits*vacantAreaBox.width):vacantAreaBox.width
-                                                                x:(xUnits+xUnits*displayRect.width)+1
-                                                                Image {
-                                                                    id:regEventImage
-                                                                    source:"image://theme/calendar/calendar_event"
-                                                                    anchors.fill: parent
-                                                                    z:1000
-
-                                                                    Item {
-                                                                        id:descriptionBox
-                                                                        width: 8*(displayRect.width/9)
-                                                                        height:displayRect.height
-                                                                        anchors.left: parent.left
-                                                                        anchors.leftMargin: 2
-                                                                        Column {
-                                                                            spacing: 2
-                                                                            anchors.top: parent.top
-                                                                            anchors.topMargin: 2
-                                                                            anchors.leftMargin: 2
-                                                                            Text {
-                                                                                  id: eventDescription
-                                                                                  text:summary
-                                                                                  font.bold: true
-                                                                                  color:theme_fontColorNormal
-                                                                                  font.pixelSize: theme_fontPixelSizeSmall
-                                                                                  width:descriptionBox.width
-                                                                                  elide: Text.ElideRight
-                                                                             }
-
-                                                                            Text {
-                                                                                  id: eventTime
-                                                                                  text: qsTr("%1 - %2").arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale))
-                                                                                  color:theme_fontColorNormal
-                                                                                  font.pixelSize:theme_fontPixelSizeSmall
-                                                                                  width:descriptionBox.width
-                                                                                  elide: Text.ElideRight
-                                                                             }
-                                                                        }
-                                                                    }
-
-
-                                                                    ExtendedMouseArea {
-                                                                        anchors.fill: parent
-                                                                        onClicked: {
-                                                                            var map = mapToItem (scene.content, mouseX, mouseY);
-                                                                            scene.openView (map.x,map.y,scene.container,uid,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
-                                                                        }
-                                                                        onLongPressAndHold: {
-                                                                            var map = mapToItem (scene.content, mouseX, mouseY);
-                                                                            displayContextMenu (map.x, map.y,uid,eventActionsPopup,popUpLoader,weekBox,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
-                                                                        }
-                                                                    }
-                                                                }
-                                                                z:200
-                                                                opacity: (startIndex == vacantAreaBox.parentIndex && weekDayListView.colIndex==dayIndex)?1:0
-                                                            }
-                                                        }//end Repeater
-
-                                                        ExtendedMouseArea {
-                                                            anchors.fill: parent
-                                                            onClicked: {
-                                                                scene.eventStartHr=startHr;
-                                                                scene.eventEndHr=endHr;
-                                                                var map = mapToItem (scene.content, mouseX, mouseY);
-                                                                scene.openNewEventView(map.x,map.y,addNewEventComponent, addNewEventLoader,false);
-                                                            }
-                                                            onLongPressAndHold: {
-                                                                scene.eventStartHr=startHr;
-                                                                scene.eventEndHr=endHr;
-                                                                var map = mapToItem (scene.content, mouseX, mouseY);
-                                                                scene.openNewEventView(map.x,map.y,addNewEventComponent, addNewEventLoader,false);
-                                                            }
-                                                        }
-
-                                                    }//end vacantAreaBox
-
+                                                Text {
+                                                    id:timeValText
+                                                    text:timeVal
+                                                    anchors.top:parent.top
+                                                    anchors.left:parent.left
+                                                    anchors.leftMargin: 5
+                                                    color:theme_fontColorNormal
+                                                    font.pixelSize: (scene.isLandscapeView())?theme_fontPixelSizeMedium:theme_fontPixelSizeSmall
+                                                    elide: Text.ElideRight
+                                                    visible:(dayInFocusIndex==weekDayIndex)?true:false
                                                 }
 
-                                            }
-                                        }//end repeater
-                                    }//end Row
+                                                Repeater {
+                                                    id:calDataItemsList
+                                                    model: dataModel
+                                                    focus: true
+                                                    delegate:Item {
+                                                        id: displayRect
+                                                        height: (heightUnits*vacantAreaBox.height)
+                                                        width: 9*(widthUnits*vacantAreaBox.width)/10
+                                                        x:(xUnits+xUnits*displayRect.width)+1
+                                                        BorderImage {
+                                                            id:regEventImage
+                                                            source:"image://theme/calendar/calendar_event"
+                                                            anchors.fill: parent
+                                                            z:1000
 
-                                }//end weekBox
+                                                            Item {
+                                                                id:descriptionBox
+                                                                width: 8*(displayRect.width/9)
+                                                                height:displayRect.height
+                                                                anchors.left: parent.left
+                                                                anchors.leftMargin: 2
+                                                                Column {
+                                                                    spacing: 2
+                                                                    anchors.top: parent.top
+                                                                    anchors.topMargin: 2
+                                                                    anchors.leftMargin: 2
+                                                                    Text {
+                                                                          id: eventDescription
+                                                                          text:summary
+                                                                          font.bold: true
+                                                                          color:theme_fontColorNormal
+                                                                          font.pixelSize: theme_fontPixelSizeSmall
+                                                                          width:descriptionBox.width
+                                                                          elide: Text.ElideRight
+                                                                     }
 
-                            }//end row
+                                                                    Text {
+                                                                          id: eventTime
+                                                                          text: qsTr("%1 - %2").arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale))
+                                                                          color:theme_fontColorNormal
+                                                                          font.pixelSize:theme_fontPixelSizeSmall
+                                                                          width:descriptionBox.width
+                                                                          elide: Text.ElideRight
+                                                                     }
+                                                                }
+                                                            }
+
+
+                                                            ExtendedMouseArea {
+                                                                anchors.fill: parent
+                                                                onClicked: {
+                                                                    var map = mapToItem (scene.content, mouseX, mouseY);
+                                                                    scene.openView (map.x,map.y,scene.container,uid,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
+                                                                }
+                                                                onLongPressAndHold: {
+                                                                    var map = mapToItem (scene.content, mouseX, mouseY);
+                                                                    displayContextMenu (map.x, map.y,uid,eventActionsPopup,popUpLoader,displayRect,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
+                                                                }
+                                                            }
+                                                        }
+                                                        z:200
+                                                    }
+                                                }//end Repeater
+
+                                                ExtendedMouseArea {
+                                                    anchors.fill: parent
+                                                    onClicked: {
+                                                        scene.eventStartHr=startHr;
+                                                        scene.eventEndHr=endHr;
+                                                        var map = mapToItem (scene.content, mouseX, mouseY);
+                                                        scene.openNewEventView(map.x,map.y,addNewEventComponent, addNewEventLoader,false);
+                                                    }
+                                                    onLongPressAndHold: {
+                                                        scene.eventStartHr=startHr;
+                                                        scene.eventEndHr=endHr;
+                                                        var map = mapToItem (scene.content, mouseX, mouseY);
+                                                        scene.openNewEventView(map.x,map.y,addNewEventComponent, addNewEventLoader,false);
+                                                    }
+                                                }
+
+                                            }//end vacantAreaBox
+                                        }//end ListView
+
+                                    }//end delegate Item
+
+                                }//end repeater
+                            }//end Row
+
+                            Component.onCompleted: {
+                                eventsListView.contentY = (UtilMethods.EDayTimeStart*50);
+                            }
 
                          }//end flickable
 
@@ -592,9 +556,9 @@ Item {
 
             }//end of calDatabox
 
-        }
+        }//end spacerBox
 
 
-    }//end of top column
+    }//end of weekViewData
 
-}
+}//end Item

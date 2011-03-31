@@ -1472,6 +1472,7 @@ AbstractContext {
                                       onClicked: {
                                          scene.deleteEvent(uid);
                                          outer.close();
+                                          outer.visible = false;
                                       }
                                   }
 

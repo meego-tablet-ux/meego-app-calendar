@@ -21,6 +21,7 @@ class DayViewModel:public QAbstractListModel
     Q_OBJECT
     Q_PROPERTY(int count READ getCount);
     Q_PROPERTY(int modelType READ getModelType WRITE setModelType);
+    Q_PROPERTY(QDate dateVal READ getDateVal WRITE setDateVal);
 
 public:
     DayViewModel(QObject *parent = 0);
@@ -35,10 +36,18 @@ public:
 
     void setModelType(const int type)
         {
-          qDebug()<<"model set to="<<type;
           modelType = type;
-          loadCurrentDayValues();
         }
+
+    void setDateVal(QDate dateValue) {
+        dateVal = dateValue;
+        loadCurrentDayValues();
+        return;
+    }
+
+    QDate getDateVal() const {
+        return dateVal;
+    }
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -57,6 +66,7 @@ signals:
 protected:
     QList<CalendarDataItem*> itemsList;
     int modelType;
+    QDate dateVal;
 };
 
 #endif // DAYVIEWMODEL_H

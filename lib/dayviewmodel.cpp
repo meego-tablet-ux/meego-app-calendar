@@ -45,7 +45,6 @@ DayViewModel::DayViewModel(QObject *parent) : QAbstractListModel(parent)
     roles.insert(CalendarDataItem::StartIndex,"startIndex");
 
     setRoleNames(roles);
-    loadCurrentDayValues();
 }
 
 
@@ -56,12 +55,10 @@ DayViewModel::~DayViewModel()
 
 void DayViewModel::loadCurrentDayValues()
 {
-    qDebug()<<"entered loadCurrentDayValues()\n";    
     CalendarController controller;
-    QList<IncidenceIO> list = controller.getEventsFromDB(EDayList,KDateTime::currentLocalDateTime());
-
+    QList<IncidenceIO> list = controller.getEventsFromDB(EDayList,KDateTime(dateVal));
+    beginResetModel();
     clearData();
-    emit beginInsertRows(QModelIndex(),0,list.count());
     int eventsCount=0;
     if(modelType == UtilMethods::EAllEvents ) {
         for(int i=0;i<list.count();i++) {
@@ -69,18 +66,15 @@ void DayViewModel::loadCurrentDayValues()
             if(ioObject.isAllDay()) {
                 itemsList << new CalendarDataItem(eventsCount,ioObject);
                 eventsCount++;
-                qDebug()<<"Inside adding alldayevents, eventsCount="<<eventsCount;
             }
         }
         for(int i=0;i<list.count();i++) {
             IncidenceIO ioObject = list.at(i);
             if(!ioObject.isAllDay()) {
-                qDebug()<<"Inside adding not alldayevents, eventsCount="<<eventsCount;
                 itemsList << new CalendarDataItem(eventsCount,ioObject);
                 eventsCount++;
             }
         }
-        qDebug()<<"Added total events = "<<itemsList.count();
     } else {
         for(int i=0;i<list.count();i++) {
             IncidenceIO ioObject = list.at(i);
@@ -94,49 +88,13 @@ void DayViewModel::loadCurrentDayValues()
         }
         assignDisplayValues();
     }
-    qDebug()<<"Inside loadCurrentDayValues, modelType="<<modelType<<", added events count="<<eventsCount<<"\n";
-    emit endInsertRows();
+    endResetModel();
 }
 
 void DayViewModel::loadGivenDayModel(QDate nextDate)
 {
-    qDebug()<<"entered loadGivenDayModel()\n";
-    CalendarController controller;
-    QList<IncidenceIO> list = controller.getEventsFromDB(EDayList,KDateTime(nextDate));
-
-    clearData();
-    emit beginInsertRows(QModelIndex(),0,list.count());
-    int eventsCount=0;
-    if(modelType == UtilMethods::EAllEvents ) {
-        for(int i=0;i<list.count();i++) {
-            IncidenceIO ioObject = list.at(i);
-            if(ioObject.isAllDay()) {
-                itemsList << new CalendarDataItem(eventsCount,ioObject);
-                eventsCount++;
-            }
-        }
-        for(int i=0;i<list.count();i++) {
-            IncidenceIO ioObject = list.at(i);
-            if(!ioObject.isAllDay()) {
-                itemsList << new CalendarDataItem(eventsCount,ioObject);
-                eventsCount++;
-            }
-        }
-        qDebug()<<"Added total events = "<<itemsList.count();
-    } else {
-        for(int i=0;i<list.count();i++) {
-            IncidenceIO ioObject = list.at(i);
-            if((modelType == UtilMethods::EAllDay) && (ioObject.isAllDay())) {
-                itemsList << new CalendarDataItem(i,ioObject);
-                ioObject.printIncidence();
-            } else if((modelType == UtilMethods::ENotAllDay) && (!ioObject.isAllDay())) {
-                itemsList << new CalendarDataItem(i,ioObject);
-                ioObject.printIncidence();
-            }
-        }
-        assignDisplayValues();
-    }
-    emit endInsertRows();
+    dateVal = nextDate;
+    loadCurrentDayValues();
 }
 
 void DayViewModel::assignDisplayValues()
@@ -226,62 +184,6 @@ void DayViewModel::assignDisplayValues()
         }
 
     }
-
-    //Based on the count computed above, assign the width and xUnits
-    /*for(int i=0;i<count;i++)
-    {
-        int itemCount=0;
-        CalendarDataItem *calItem = ((CalendarDataItem*)(itemsList.at(i)));
-        itemCount = hashmap.value(calItem->startIndex);
-        qDebug()<<"Itemcount for "<<calItem->startIndex<<"="<<itemCount;
-        if(itemCount >1) {
-            QList<CalendarDataItem*> sameIndexItems;
-            for(int k=0;k<count;k++) {
-                CalendarDataItem *nextItem = ((CalendarDataItem*)(itemsList.at(k)));
-                if((nextItem->startIndex == calItem->startIndex)) {
-                    sameIndexItems.append(nextItem);
-                }
-                nextItem = NULL;
-            }
-            qDebug()<<"Count of sameIndexItems.count()="<<sameIndexItems.count()<<"itemCount="<<itemCount;
-            if(sameIndexItems.count() == itemCount) {
-                for(int l=0;l<itemCount;l++) {
-                    qDebug()<<"Assigning values for item"<<l;
-                    ((CalendarDataItem*)(sameIndexItems.at(l)))->xUnits = l;
-                    //((CalendarDataItem*)(sameIndexItems.at(l)))->widthUnits = (1.0/itemCount);
-                    qDebug()<<"xUnits="<<((CalendarDataItem*)(sameIndexItems.at(l)))->xUnits<<",widthUnits="<<((CalendarDataItem*)(sameIndexItems.at(l)))->widthUnits;
-                }
-                sameIndexItems.clear();
-                qDebug()<<"Done with same index items";
-            }
-            qDebug()<<"After same index items block";
-
-            //Computing how many item start within the height of an existing item
-            QList<CalendarDataItem*> overlapByOffsetItems;
-            for(int k=0;k<count;k++) {
-                qDebug()<<"Inside the loop for overlapitems";
-                CalendarDataItem *nextItem = ((CalendarDataItem*)(itemsList.at(k)));
-                if((calItem->startIndex > nextItem->startIndex ) && (calItem->startIndex <(nextItem->startIndex+nextItem->heightUnits)) ) {
-                    overlapByOffsetItems.append(nextItem);
-                }
-                nextItem = NULL;
-            }
-
-            qDebug()<<"Count of overlapbyoffset items ="<<overlapByOffsetItems.count();
-            if(overlapByOffsetItems.count()>0) {
-                calItem->xUnits = itemCount-1;
-                //calItem->widthUnits = (1.0/itemCount);
-                qDebug()<<"xUnits="<<calItem->xUnits<<",widthUnits="<<calItem->widthUnits;
-               //for(int m=0;m<overlapByOffsetItems.count();m++) {
-               //    CalendarDataItem *prevItem = ((CalendarDataItem*)(overlapByOffsetItems.at(m)));
-               //     prevItem->widthUnits = (1.0/itemCount);
-               // }
-                overlapByOffsetItems.clear();
-                qDebug()<<"done with overlap items";
-            }
-        }
-
-    }//end of for loop*/
 
     return;
 }
@@ -516,11 +418,9 @@ void DayViewModel::clearData()
 {
     if(!itemsList.isEmpty())
     {
-        beginRemoveRows(QModelIndex(), 0, itemsList.count()-1);
         for(int i = 0; i < itemsList.count(); i++)
             delete itemsList[i];
-        itemsList.clear();
-        endRemoveRows();
+         itemsList.clear();
     }
 }
 

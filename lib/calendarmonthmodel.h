@@ -48,6 +48,8 @@ class CalendarMonthModel:public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(int count READ getCount);
+    Q_PROPERTY(QDate dateVal READ getDateVal WRITE setDateVal);
+
 
 public:
     CalendarMonthModel(QObject *parent = 0);
@@ -55,6 +57,16 @@ public:
 
     int getCount() const
         { return itemsList.count(); }
+
+    void setDateVal(QDate dateValue) {
+        dateVal = dateValue;
+        loadCurrentMonthValues();
+        return;
+    }
+
+    QDate getDateVal() const {
+        return dateVal;
+    }
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -69,6 +81,7 @@ signals:
 
 protected:
     QList<MonthItem *> itemsList;
+    QDate dateVal;
 
 };
 

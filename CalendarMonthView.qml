@@ -20,7 +20,6 @@ Item {
 
     function initDate()
     {
-        console.log("Inside initDate()");
         var tmpDate = utilities.getCurrentDateVal();
         dateInFocus = tmpDate;
         scene.eventDay=tmpDate.getDate();
@@ -110,7 +109,6 @@ Item {
 
         onAddedEventChanged: {
             if(scene.addedEvent) {
-                console.log("Trigger model change here");
                 allEventsViewModel.loadGivenDayModel(dateInFocus);
                 monthModel.loadGivenMonthValuesFromOffset(dateInFocus);
                 searchList.listModel.refresh();
@@ -120,12 +118,10 @@ Item {
 
         onDeletedEventChanged: {
             if(scene.deletedEvent) {
-                console.log("Before changing the model after delete inside DayView");
                 allEventsViewModel.loadGivenDayModel(dateInFocus);
                 monthModel.loadGivenMonthValuesFromOffset(dateInFocus);
                 searchList.listModel.refresh();
                 scene.deletedEvent = false;
-                console.log("Marking deletedEvent is false inside DayView");
             }
         }
     }
@@ -134,7 +130,6 @@ Item {
     Connections {
         target:monthPage
         onShowSearchChanged: {
-            console.log("monthPage.showSearch="+monthPage.showSearch);
             if(!showSearch) {
                 searchList.listModel.filterOut("");
             }
@@ -144,8 +139,6 @@ Item {
         }
 
         onSearch: {
-            console.log("monthPage.showSearch="+monthPage.showSearch);
-            console.log("search: " + needle);
             if(!searchList.visible) {
                 searchList.visible = true;
                 monthViewData.visible = false;
@@ -153,7 +146,6 @@ Item {
             }
             if(searchList.visible) {
                 searchList.listModel.filterOut(needle);
-                console.log("search: (" + needle+")");
                 searchList.listIndex = 0;
                 scene.searchResultCount = searchList.listModel.count;
             }
@@ -171,7 +163,6 @@ Item {
         loader.item.description = description;
         loader.item.summary = summary;
         loader.item.location = location;
-        console.log("AlarmType="+alarmType);
         loader.item.alarmType = alarmType;
         loader.item.zoneOffset = zoneOffset;
         loader.item.startDate = startDate;
@@ -181,7 +172,6 @@ Item {
             loader.item.timeVal = qsTr("%1, %2 - %3").arg(utilities.getDateInFormat(startDate,UtilMethods.ESystemLocaleLongDate)).arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale));
         }
         loader.item.initMaps();
-        console.log(loader.item.timeVal);
     }
 
     function showMultipleEventsPopup(xVal,yVal,coreDateVal,popUpParent) {
@@ -205,7 +195,6 @@ Item {
         MultipleEventsPopup {
             onClose: {
                 multipleEventsPopupLoader.sourceComponent = undefined
-                console.log("Inside onClose for MultipleEventsPopup in CalendarMonthView");
             }
         }
     }
@@ -224,15 +213,12 @@ Item {
     DayViewModel {
         id:allEventsViewModel
         modelType:UtilMethods.EAllEvents
-    }
-
-    DayViewModel {
-        id:dayEventsViewModel
-        modelType:UtilMethods.EAllEvents
+        dateVal:dateInFocus
     }
 
     CalendarMonthModel {
         id:monthModel
+        dateVal:dateInFocus
     }
 
     CalendarWeekModel {
@@ -449,7 +435,6 @@ Item {
                                                     }
                                                     onPressAndHold: {
                                                         if(isMonthDay && eventsCount>0) {
-                                                            console.log("coreDateVal="+utilities.getDateInFormatString(coreDateVal,"dd MMM yyyy"));
                                                              var map = mapToItem (scene.content, mouseX, mouseY);
                                                             showMultipleEventsPopup(map.x,map.y,coreDateVal,scene.container);
                                                         }

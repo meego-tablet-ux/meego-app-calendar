@@ -19,6 +19,7 @@
 #include "calendarmonthmodel.h"
 #include "calendarlistmodel.h"
 #include "weekviewmodel.h"
+#include "eventsdatamodel.h"
 
 components::components ()
 {
@@ -40,6 +41,7 @@ void components::registerTypes(const char *uri)
     qmlRegisterType<CalendarMonthModel>(uri, 0, 1, "CalendarMonthModel");
     qmlRegisterType<CalendarListModel>(uri, 0, 1, "CalendarListModel");
     qmlRegisterType<WeekViewModel>(uri, 0, 1, "WeekViewModel");
+    qmlRegisterType<EventsDataModel>(uri, 0, 1, "EventsDataModel");
 }
 
 Q_EXPORT_PLUGIN(components);
