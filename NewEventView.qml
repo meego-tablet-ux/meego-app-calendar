@@ -9,6 +9,7 @@
 import Qt 4.7
 import MeeGo.Labs.Components 0.1
 import MeeGo.App.Calendar 0.1
+import MeeGo.Components 0.1 as Ux
 
 AbstractContext {
     id:outer
@@ -218,14 +219,6 @@ AbstractContext {
             }
 
             eventIO.alarmType = alarmCmb.modelVal;
-            console.log("**************type="+eventIO.type+",description="+eventIO.description+",summary="+eventIO.summary+",location="+eventIO.location+",AllDay="+eventIO.allDay+"\n");
-            console.log("****************startDateTxt.text="+startDateTxt.text+",startTimeTxt.text="+startTimeTxt.text+",finishDateTxt.text="+finishDateTxt.text+",finishTimeTxt.text="+finishTimeTxt.text);
-            console.log("*****************endRepeatDayText.text="+endRepeatDayText.text);
-            console.log("******************repeatEndDate="+utilities.getDateInFormatString(repeatEndDate,"dd/MMM/yyyy"));
-            console.log("tzCmb's modelVal = "+tzCmb.modelVal);
-            console.log("alarmCmb's modelVal = "+alarmCmb.modelVal);
-            console.log("repeatCmb's modelVal = "+repeatCmb.modelVal);
-            console.log("repeatEndDateVal ="+repeatEndDateVal);
 
             if(windowType == UtilMethods.EAddEvent) {
                 controller.addModifyEvent(UtilMethods.EAddEvent,eventIO);
@@ -350,12 +343,12 @@ AbstractContext {
         }
 
 
-        function openTimePicker(index,parentVal,xVal,yVal)
+        function openTimePicker(index,parentVal)
         {
             timePickerLoader.sourceComponent = timePickerComponent;
             timePickerLoader.item.parent = parentVal;
             timePickerLoader.item.fromIndex = index;
-            timePickerLoader.item.show(xVal,yVal);
+            timePickerLoader.item.show();
         }
 
         function formatInteger(intVal)
@@ -379,14 +372,12 @@ AbstractContext {
             }
         }
 
-        function openDatePicker(index,parentVal,xVal,yVal)
+        function openDatePicker(index,parentVal)
         {
             datePickerLoader.sourceComponent = datePickerComponent;
             datePickerLoader.item.parent = parentVal;
             datePickerLoader.item.fromIndex = index;
-            //datePickerLoader.item.xVal = xVal;
-            //datePickerLoader.item.yVal = yVal;
-            datePickerLoader.item.show(xVal,yVal);
+            datePickerLoader.item.show();
         }
 
 
@@ -417,13 +408,16 @@ AbstractContext {
 
         Component {
             id:datePickerComponent
-            DatePickerDialog {
+            Ux.DatePicker {
                 id:datePicker
+                height:(scene.isLandscapeView())? scene.container.height:scene.container.width
+                width:(scene.isLandscapeView())?scene.container.width/2:scene.container.height/3
                 property date dateVal
                 property int fromIndex:0
-                onClosed: setDateValues(fromIndex,dateVal);
-                onTriggered: {
-                    dateVal = date;
+
+                onDateSelected: {
+                    dateVal=datePicker.selectedDate;
+                    setDateValues(fromIndex,dateVal);
                 }
             }
         }
@@ -434,20 +428,15 @@ AbstractContext {
 
         Component {
             id:timePickerComponent
-            TimePicker {
+            Ux.TimePicker {
                 id: timePicker
-                property variant timeVal
                 property int fromIndex:0
-                onClosed: {
-                    onTimeChanged: {
-                        timeVal = utilities.createTimeFromVals(hours,minutes);
-                    }
+                property variant timeVal                
+                onAccepted: {
+                    timeVal = utilities.createTimeFromVals(hours,minutes);
                     setTimeValues(fromIndex,timeVal);
+                    console.log("timeVal changed to: "+timeVal);
                 }
-                onCancelled: {
-                    timePickerLoader.sourceComponent=undefined;
-                }
-
                 minutesIncrement:5
             }
         }
@@ -517,7 +506,7 @@ AbstractContext {
                     width: parent.width
                     anchors.top: parent.top
                     anchors.margins: 5
-                    height: 30
+                    height: (windowType==UtilMethods.EAddEvent)?30:0
                     Text {
                         id: eventTitle
                         text: titleBlockText
@@ -529,50 +518,16 @@ AbstractContext {
 
                     }
                 }
-                Rectangle {
+                Item {
                     id:titleEditArea
                     anchors.top: titleArea.bottom
                     anchors.margins: 5
                     width: parent.width
                     height: 30
-                    color: "white"
-                    radius: 2
-                    border.width: 2
-                    border.color: theme_fontColorInactive
-                    TextInput {
+                    Ux.TextEntry {
                         id: eventTitleText
-                        text: qsTr("Event title")
-                        anchors.left: parent.left
-                        anchors.leftMargin: 10
-                        anchors.verticalCenter: parent.verticalCenter
-                        color:(windowType==UtilMethods.EAddEvent)?theme_fontColorInactive:theme_fontColorNormal
-                        font.pixelSize: theme_fontPixelSizeLarge
-                        cursorVisible: true
-                        //focus:true
-                        Keys.onReturnPressed: {
-                            eventTitle = eventTitleText.text;
-                            titleClickCount=0;
-                            eventTitleText.focus = false;
-                        }
-                    }
-                    MouseArea {
+                        defaultText: qsTr("Event title")
                         anchors.fill: parent
-                        onClicked: {
-                            if(!eventTitleText.activeFocus) {
-                                eventTitleText.forceActiveFocus();
-                                eventTitleText.cursorVisible=true;
-                                if(titleClickCount==0) {
-                                    eventTitleText.text="";
-                                    eventTitleText.color = theme_fontColorNormal;
-                                    titleClickCount++;
-                                } else {
-                                    titleClickCount++;
-                                }
-                            }
-                        }
-                        onFocusChanged: {
-                            eventTitleText.cursorVisible=false;
-                        }
                     }
                 }
 
@@ -768,8 +723,7 @@ AbstractContext {
                                           MouseArea {
                                               anchors.fill: parent
                                               onClicked: {
-                                                  var map = mapToItem (scene.content, mouseX, mouseY);
-                                                  openDatePicker(1,outer.parent.parent,map.x,map.y);
+                                                   openDatePicker(1,scene.container);
                                               }
                                               onFocusChanged: {
                                                   startDateStr = startDateTxt.text;
@@ -800,8 +754,7 @@ AbstractContext {
                                           MouseArea {
                                               anchors.fill: parent
                                               onClicked: {
-                                                  var map = mapToItem (scene.content, mouseX, mouseY);
-                                                  openTimePicker(1,outer.parent.parent,map.x,map.y);
+                                                  openTimePicker(1,scene.container);
                                               }
                                               onFocusChanged: {
                                                   startTimeStr = startTimeTxt.text;
@@ -854,8 +807,7 @@ AbstractContext {
                                           MouseArea {
                                               anchors.fill: parent
                                               onClicked: {
-                                                  var map = mapToItem (scene.content, mouseX, mouseY);
-                                                  openDatePicker(2,outer.parent.parent,map.x,map.y);
+                                                   openDatePicker(2,scene.container);
                                               }
                                               onFocusChanged: {
                                                   endDateStr = finishDateTxt.text;
@@ -886,8 +838,7 @@ AbstractContext {
                                           MouseArea {
                                               anchors.fill: parent
                                               onClicked: {
-                                                   var map = mapToItem (scene.content, mouseX, mouseY);
-                                                  openTimePicker(2,outer.parent.parent,map.x,map.y);
+                                                  openTimePicker(2,scene.container);
                                               }
                                               onFocusChanged: {
                                                   endTimeStr = finishTimeTxt.text;
@@ -1142,37 +1093,15 @@ AbstractContext {
                                           }
                                       }//end repeatendcmbbox
 
-                                      Rectangle {
+                                      Item {
                                           id: repeatCountBox
                                           height: 0
                                           width:0
-                                          radius:2
-                                          border.width: 2
-                                          border.color: "Gray"
                                           opacity:0
-
-                                          TextInput {
-                                                id: repeatCountText
-                                                text: ""
-                                                anchors.left: parent.left
-                                                anchors.leftMargin: 5
-                                                anchors.verticalCenter: parent.verticalCenter
-                                                color:theme_fontColorNormal
-                                                font.pixelSize:theme_fontPixelSizeLarge
-                                          }
-                                          MouseArea {
+                                          Ux.TextField {
+                                              id:repeatCountText
                                               anchors.fill: parent
-                                              onClicked: {
-                                                  if(!repeatCountText.activeFocus) {
-                                                      repeatCountText.cursorVisible = true;
-                                                      repeatCountText.focus = true;
-                                                  }
-                                              }
-                                              onFocusChanged: {
-                                                  repeatCountText.cursorVisible=false;
-                                              }
                                           }
-
                                       }
                                   }//end row
 
@@ -1223,8 +1152,7 @@ AbstractContext {
                                           MouseArea {
                                               anchors.fill: parent
                                               onClicked: {
-                                                  var map = mapToItem (scene.content, mouseX, mouseY);
-                                                  openDatePicker(3,outer.parent.parent,map.x,map.y);
+                                                   openDatePicker(3,scene.container);
                                               }
                                           }
                                       }//end repeatend icon
@@ -1337,39 +1265,14 @@ AbstractContext {
                                       height:parent.height
                                       anchors.top: parent.top
                                       clip:true
-                                      Rectangle {
+                                      Item {
                                           id:locInputBox
                                           height: 100
                                           width:editList.innerBoxWidth
-                                          radius: 2
-                                          border.width: 2
-                                          border.color: "Gray"
-                                          color: "white"
-                                          TextEdit {
+                                          Ux.TextField {
                                               id: locInputText
                                               text: ""
-                                              anchors.top:parent.top
-                                              anchors.left: parent.left
-                                              anchors.leftMargin:5
-                                              height:parent.height
-                                              width:parent.width
-                                              anchors.verticalCenter: parent.verticalCenter
-                                              color:theme_fontColorNormal
-                                              font.pixelSize:theme_fontPixelSizeLarge
-                                              focus: true
-                                              wrapMode: TextEdit.Wrap
-                                          }
-
-                                          MouseArea {
-                                              anchors.fill: parent
-                                              onClicked: {
-                                                  if(!locInputText.activeFocus) {
-                                                     locInputText.forceActiveFocus();
-                                                     locInputText.cursorVisible=true;
-                                                     console.log("Inside location Input")
-                                                  }
-
-                                              }
+                                              anchors.fill:parent
                                           }
                                       }
 
@@ -1413,40 +1316,16 @@ AbstractContext {
                                       width:editList.innerBoxWidth
                                       clip: true
                                       anchors.top: notesBlock.top
-                                      Rectangle {
+                                      Item {
                                           id:notesInputBlock
                                           anchors.fill:parent
                                           width: editList.innerBoxWidth
                                           height:150
-                                          radius: 2
-                                          border.width: 2
-                                          border.color: "Gray"
-                                          color: "white"
 
-                                          TextEdit {
+                                          Ux.TextField {
                                               id: notesInputText
                                               text: ""
-                                              anchors.top:parent.top
-                                              anchors.left: parent.left
-                                              anchors.leftMargin:5
-                                              height:parent.height
-                                              width:parent.width
-                                              anchors.verticalCenter: parent.verticalCenter
-                                              color:theme_fontColorNormal
-                                              font.pixelSize: theme_fontPixelSizeLarge
-                                              focus: true
-                                              wrapMode: TextEdit.Wrap
-                                          }
-
-                                          MouseArea {
-                                              anchors.fill: parent
-                                              onClicked: {
-                                                  if(!notesInputText.activeFocus) {
-                                                     notesInputText.forceActiveFocus();
-                                                     notesInputText.cursorVisible=true;
-                                                  }
-
-                                              }
+                                              anchors.fill:parent
                                           }
                                       }//end of notesInputBlock
 
@@ -1463,15 +1342,14 @@ AbstractContext {
                                   Button {
                                       id: deleteButton
                                       height:(windowType==UtilMethods.EAddEvent)?0:50
-                                      width: 2*(editList.innerBoxWidth/3)
                                       anchors.centerIn: parent
                                       title: qsTr("Delete event")
                                       opacity: (windowType==UtilMethods.EAddEvent)?0:1
                                       font.pixelSize: theme_fontPixelSizeLarger
                                       color: theme_buttonFontColor
                                       onClicked: {
-                                         scene.deleteEvent(uid);
-                                         outer.close();
+                                          scene.deleteEvent(uid);
+                                          outer.close();
                                           outer.visible = false;
                                       }
                                   }

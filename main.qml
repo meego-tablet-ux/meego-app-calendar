@@ -9,6 +9,7 @@
 import Qt 4.7
 import MeeGo.Labs.Components 0.1
 import MeeGo.App.Calendar 0.1
+import MeeGo.Components 0.1 as Ux
 
 Window {
     id: scene    
@@ -37,7 +38,6 @@ Window {
     Connections {
         target: mainWindow
         onCall: {
-            console.log("Global onCall: " + parameters);
             applicationData = parameters;
         }
     }
@@ -45,12 +45,10 @@ Window {
     onApplicationDataChanged: {
         if(applicationData != undefined)
         {
-            console.log("Remote Call: " + applicationData);
             var cmd = applicationData[0];
             var cdata = applicationData[1];
 
             scene.applicationData = undefined;
-            console.log("in landing screen");
 
             if (cmd == "openCalendar")
             {
@@ -81,7 +79,6 @@ Window {
 
     onSearch: {
         searchTriggered = true;
-        console.log("search: " + needle);
     }
 
     // callback used when the user touches the statusbar
@@ -100,8 +97,6 @@ Window {
     Component {
         id: addNewEventComponent
         NewEventView {
-            //menuWidth:400 //(scene.isLandscapeView())?(scene.width/2):(2*(scene.height/3))
-            //menuHeight: 400 //(scene.isLandscapeView())?((scene.height)-100):(scene.width/2)
             onClose: addNewEventLoader.sourceComponent = undefined
         }
     }
@@ -118,7 +113,6 @@ Window {
             Connections {
                 target:  dayPage.menuItem
                 onCloseActionsMenu: {
-                    console.log("Inside the onCloseActionsMenu");
                     dayPage.closeMenu();
                 }
             }
@@ -185,7 +179,6 @@ Window {
 
     function initEventDateVals()
     {
-        console.log("Inside initEventDateVals()");
         var tmpDate = utilities.getCurrentDateVal();
         scene.eventDay=tmpDate.getDate();
         scene.eventMonth=(tmpDate.getMonth()+1);
@@ -209,21 +202,10 @@ Window {
         scene.eventYear=scene.appDateInFocus.getFullYear();
         loader.item.initView=true;
         loader.item.displayNewEvent(xVal,yVal);
-
-        /*if(loader.item.initializeView!=undefined) {
-            loader.item.initializeView(eventDay,eventMonth,eventYear,eventStartHr,eventEndHr,isAllDay);
-        }
-
-        var menuContainer = loader.item
-
-        menuContainer.z = 100
-        menuContainer.fogOpacity = 0.5
-        menuContainer.menuOpacity = 1.0*/
     }
 
     function editEvent(xVal,yVal,uid)
     {
-        console.log("Obtained Uid="+uid);
         addNewEventLoader.sourceComponent = addNewEventComponent;
         addNewEventLoader.item.parent = scene.container;
         addNewEventLoader.item.windowType = UtilMethods.EModifyEvent;
@@ -231,33 +213,21 @@ Window {
         addNewEventLoader.item.editEventId = uid;
         addNewEventLoader.item.editView=true;
         addNewEventLoader.item.displayNewEvent(xVal,yVal);
-
-
-        /*addNewEventLoader.item.initializeModifyView(uid);
-
-        var menuContainer = addNewEventLoader.item
-
-        menuContainer.z = 100
-        menuContainer.fogOpacity = 0.5
-        menuContainer.menuOpacity = 1.0*/
-
     }
 
     function deleteEvent(uid)
     {
-        console.log("Obtained uid="+uid);
         dialogLoader.sourceComponent = confirmDelete;
         dialogLoader.item.parent = scene.container;
         dialogLoader.item.eventId = uid;
     }
 
 
-    function openDatePicker(popUpParent,xVal,yVal)
+    function openDatePicker(popUpParent)
     {
-       console.log("From openDatePicker");
         datePickerLoader.sourceComponent = datePickerComponent;
         datePickerLoader.item.parent = popUpParent;
-       datePickerLoader.item.show(xVal,yVal);
+        datePickerLoader.item.show();
     }
 
 
@@ -306,7 +276,6 @@ Window {
             eventId:eventId
             onClose: {
                 eventDetailsLoader.sourceComponent = undefined
-                console.log("Closed EventDetails from main");
             }
         }
     }
@@ -318,31 +287,18 @@ Window {
 
     Component {
         id:datePickerComponent
-        DatePickerDialog {
+        Ux.DatePicker {
             id:datePicker
-            z:1000
-            property bool cancelAction:false
-            onClosed: {
-                if(cancelAction==false) {
-                    scene.gotoDate = true;
-                    console.log("Inside onClosed, set scene.gotoDate="+scene.gotoDate);
-                   datePickerLoader.sourceComponent=undefined;
-                }
-            }
-            onTriggered: {
-                scene.dateFromOutside = date;
-                scene.appDateInFocus = date;
-                //optionsMenu.visible=false;
-                datePicker.cancelAction = false;
-                console.log("Inside onTriggered, set scene.gotoDate="+scene.gotoDate);
-            }
-            onCancel: {
-                scene.gotoDate = false;
-                datePicker.cancelAction = true;
-                console.log("Inside onCancel, set scene.gotoDate="+scene.gotoDate);
-                //datePickerLoader.sourceComponent=undefined;
+            height:(scene.isLandscapeView())? scene.container.height:scene.container.width
+            width:(scene.isLandscapeView())?scene.container.width/2:scene.container.height/3
+            onDateSelected: {
+                scene.dateFromOutside = selectedDate;
+                scene.appDateInFocus = selectedDate;
+                scene.gotoDate = true;
+                datePickerLoader.sourceComponent=undefined;
             }
         }
+
     }
 
 
@@ -376,7 +332,6 @@ Window {
                 if(button==1)  {
                     controller.deleteEvent(eventId);
                     scene.deletedEvent = true;
-                    console.log(" scene.deletedEvent="+ scene.deletedEvent);
                     dialogLoader.sourceComponent = undefined;
                 } else {
                     dialogLoader.sourceComponent = undefined;
@@ -476,8 +431,7 @@ Window {
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                var map = mapToItem (scene.content, mouseX, mouseY);
-                                openDatePicker(scene.container,map.x,map.y);
+                                openDatePicker(scene.container);
                                 actionsMenuItem.closeActionsMenu();
                                 return;
                             }

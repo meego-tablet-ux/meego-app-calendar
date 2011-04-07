@@ -147,9 +147,7 @@ QString UtilMethods::getCurrentTime(int format)
 
 
 QDate UtilMethods::addDMYToGivenDate(QDate toDate,int days, int mon, int yr) {
-    qDebug()<<"Before adding, toDate="<<toDate.toString("dd MMM yyyy");
     toDate = toDate.addDays(days).addMonths(mon).addYears(yr);
-    qDebug()<<"After adding, toDate="<<toDate.toString("dd MMM yyyy");
     return toDate;
 }
 
@@ -170,11 +168,8 @@ QString UtilMethods::getWeekHeaderTitle(int day,int mon,int year)
     int dayOfWeek = inFocusDateVal.dayOfWeek();
 
     startDateVal = inFocusDateVal.addDays(1-dayOfWeek);
-    qDebug()<<"Constructed date ="<<startDateVal.toString("dd MMM yyyy");
     endDateVal = startDateVal.addDays(6);
-    qDebug()<<"After adding days, Constructed date ="<<endDateVal.toString("dd MMM yyyy");
     QString toTxt = tr("%1 - %2").arg(getDateInFormat(startDateVal,UtilMethods::EDefault)).arg(getDateInFormat(endDateVal,UtilMethods::EDefault));
-    qDebug()<<"Inside getWeekHeaderTitle, toTxt="<<toTxt;
     return toTxt;
 }
 

@@ -111,6 +111,7 @@ class UtilMethods: public QObject
     };
 
     enum ERepeatEndType {
+        ENoRepeatEndType=-1,
         EForever=0,
         EForNTimes,
         EAfterDate
@@ -214,8 +215,6 @@ class UtilMethods: public QObject
 
 
 public:
-    //Q_INVOKABLE KDateTime getKDateTimeFromVals(QString dateStr,QString timeStr,int offset);
-    //Q_INVOKABLE QString getCurrentDateTime();
     Q_INVOKABLE QString getCurrentDate(int format=UtilMethods::EDefault);
     Q_INVOKABLE QDate getCurrentDateVal();
     Q_INVOKABLE QDate getDateFromVal(QString fromDate);
@@ -223,21 +222,15 @@ public:
     Q_INVOKABLE QString getDateInFormat(QDate fromDate,int format);
     Q_INVOKABLE QString getShortDate(QDate fromDate);
     Q_INVOKABLE QString getLongDate(QDate fromDate);
-    //Q_INVOKABLE QString getTimeInFormatString(QTime fromTime,QString format);
     Q_INVOKABLE QString getTimeInFormat(QTime fromTime,int format);
     Q_INVOKABLE QTime getCurrentTimeVal();
     Q_INVOKABLE QTime roundTime(QTime timeVal);
     Q_INVOKABLE QString getCurrentTime(int format=UtilMethods::ETimeSystemLocale);
     Q_INVOKABLE QTime addHMToCurrentTime(int hr,int min);
-    //Q_INVOKABLE QString addDMYToCurrentDate(int days, int mon, int yr);
     Q_INVOKABLE QDate addDMYToGivenDate(QDate toDate,int days, int mon, int yr);
     Q_INVOKABLE QDate createDateFromVals(int day,int mon,int year);
     Q_INVOKABLE QString getWeekHeaderTitle(int day,int mon,int year);
     Q_INVOKABLE QTime createTimeFromVals(int ht,int min);
-    //Q_INVOKABLE QString getMonthAsString(int mon,int format);
-    //Q_INVOKABLE int getMonthAsInt(QString mon);
-    //Q_INVOKABLE QString getValueAsString(int val);
-    //Q_INVOKABLE int getValueAsInt(QString val);
     Q_INVOKABLE QString getMonth(QDate fromDate);
     Q_INVOKABLE QString getDay(QDate fromDate);
     Q_INVOKABLE QString getYear(QDate fromDate);
