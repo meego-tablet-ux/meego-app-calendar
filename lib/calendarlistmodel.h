@@ -17,6 +17,8 @@
 #include "calendardataitem.h"
 #include "calendarcontroller.h"
 
+class FilterTerminate;
+
 class CalendarListModel:public QAbstractListModel
 {
     Q_OBJECT
@@ -50,7 +52,7 @@ public:
     void loadAllEventsSorted();
 
 public slots:
-    void filterOut(QString filter);
+    void filterOut(QString filter, FilterTerminate *terminateObject = 0);
 
 
 signals:

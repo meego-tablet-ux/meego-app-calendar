@@ -12,6 +12,7 @@
 #include "incidenceio.h"
 #include <QHash>
 #include <math.h>
+#include "filterterminate.h"
 
 CalendarListModel::CalendarListModel(QObject *parent) : QAbstractListModel(parent)
 {
@@ -124,10 +125,11 @@ void CalendarListModel::loadAllEventsSorted()
 
 
 
-void CalendarListModel::filterOut(QString filter)
+void CalendarListModel::filterOut(QString filter, FilterTerminate *terminateObject)
 {
     QList<CalendarDataItem*> displaylist;
         for(int i = 0; i < itemsList.count(); i++) {
+            if(terminateObject && terminateObject->filteringStopped()) return;
             if(filter.isEmpty()||itemsList[i]->summary.contains(filter, Qt::CaseInsensitive))
             {
                 itemsList[i]->xUnits = itemsList[i]->summary.indexOf(filter,0,Qt::CaseInsensitive);

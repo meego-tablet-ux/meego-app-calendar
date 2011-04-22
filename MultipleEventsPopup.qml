@@ -7,10 +7,11 @@
  */
 
 import Qt 4.7
-import MeeGo.Labs.Components 0.1
+import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.App.Calendar 0.1
+import MeeGo.Components 0.1
 
-AbstractContext {
+Labs.AbstractContext {
     id: eventListPopup
     property date coreDateVal
     signal close()
@@ -182,9 +183,8 @@ AbstractContext {
                     anchors.centerIn: parent
                     bgSourceUp: "image://theme/btn_grey_up"
                     bgSourceDn: "image://theme/btn_grey_dn"
-                    title: qsTr("Close")
-                    font.pixelSize: theme_fontPixelSizeLarge
-                    color: theme_buttonFontColor
+                    text: qsTr("Close")
+                    hasBackground: true
                     onClicked: {
                         eventListPopup.close();
                         eventListPopup.visible = false;

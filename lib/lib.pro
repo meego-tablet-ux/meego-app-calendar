@@ -40,7 +40,8 @@ INSTALL_HEADERS += \
     weekviewmodel.h
 
 HEADERS += $$INSTALL_HEADERS \
-    eventsdatamodel.h
+    eventsdatamodel.h \
+    filterterminate.h
 
 target.path = $$[QT_INSTALL_LIBS]
 INSTALLS += target

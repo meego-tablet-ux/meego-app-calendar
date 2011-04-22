@@ -7,11 +7,11 @@
  */
 
 import Qt 4.7
-import MeeGo.Labs.Components 0.1
+import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.App.Calendar 0.1
-import MeeGo.Components 0.1 as Ux
+import MeeGo.Components 0.1
 
-AbstractContext {
+Labs.AbstractContext {
     id:outer
 
     property int windowType:0
@@ -25,6 +25,7 @@ AbstractContext {
     property int eventEndHr
     property bool isAllDay
     property string editEventId
+    property int paintedTextMaxWidth:400
 
     signal close()
 
@@ -41,7 +42,7 @@ AbstractContext {
     content:Item {
         id: container
         height:400
-        width:400
+        width:paintedTextMaxWidth
 
         property bool initView:outer.initView
         property bool editView:outer.editView
@@ -110,7 +111,8 @@ AbstractContext {
             }
 
             if(!validData) {
-                showErrorMessage();
+               //showErrorMessage();
+                confirmDialog.show();
             }
             return validData;
         }
@@ -140,35 +142,47 @@ AbstractContext {
 
         function showErrorMessage()
         {
-            messageBoxLoader.sourceComponent = messageBoxcomponent;
+            //messageBoxLoader.sourceComponent = messageBoxcomponent;
             messageBoxLoader.item.parent = scene.container;
+            messageBoxLoader.item.show();
          }
 
         Loader {
             id:messageBoxLoader
         }
 
-        Component {
-            id:messageBoxcomponent
+        //Component {
+            //id:messageBoxcomponent
             ModalDialog {
                 id:confirmDialog
-                z:500
-                rightButtonText: qsTr("OK")
-                dialogTitle: qsTr("Error")
-                Text {
-                    id:confirmMsg
-                    text: qsTr("Please check the date and time entered")
-                    anchors.centerIn:parent
-                    color:theme_fontColorNormal
-                    font.pixelSize: theme_fontPixelSizeLarge
-                    elide: Text.ElideRight
+                title :qsTr("Error")
+                buttonHeight: 35
+                showCancelButton: false
+                showAcceptButton: true
+                //cancelButtonText: qsTr( "Error" )
+                acceptButtonText: qsTr( "OK" )
+                autoCenter:true
+                aligneTitleCenter:true
+
+                content: Item {
+                    id: myContent
+                    anchors.fill:parent
+                    anchors.margins: 10
+                    Text {
+                        id:confirmMsg
+                        text: qsTr("Please check the date and time entered")
+                        anchors.fill:parent
+                        wrapMode:Text.Wrap
+                        font.pixelSize: theme_fontPixelSizeLarge
+                    }
                 }
-                onDialogClicked: {
+
+                onAccepted: {
                     messageBoxLoader.sourceComponent = undefined
                 }
 
             }
-        }
+       // }
 
         function createIOObject() {
             //Initialize variables
@@ -200,8 +214,8 @@ AbstractContext {
             }
             eventIO.zoneOffset = tzCmb.modelVal;
 
-            eventIO.repeatType = repeatCmb.modelVal;
-            eventIO.repeatEndType = repeatEndCmb.modelVal;
+            eventIO.repeatType = repeatCmbBlock.repeatType;
+            eventIO.repeatEndType = repeatEndComboBox.repeatEndType;
 
             if(eventIO.repeatType != UtilMethods.ENoRepeat) {
                 if(eventIO.repeatEndType == UtilMethods.EForNTimes) {
@@ -218,7 +232,7 @@ AbstractContext {
                 }
             }
 
-            eventIO.alarmType = alarmCmb.modelVal;
+            eventIO.alarmType = alarmCmb.selectedIndex;
 
             if(windowType == UtilMethods.EAddEvent) {
                 controller.addModifyEvent(UtilMethods.EAddEvent,eventIO);
@@ -315,9 +329,9 @@ AbstractContext {
             alarmCmb.selectedVal = utilities.getAlarmString(editEvent.alarmType);
             alarmCmb.modelVal = editEvent.alarmType;
 
-            repeatCmb.modelVal = editEvent.repeatType;
-            repeatCmb.selectedVal = utilities.getRepeatTypeString(editEvent.repeatType);
-            repeatEndCmb.modelVal = editEvent.repeatEndType;
+            repeatCmb.selectedIndex = editEvent.repeatType;
+            repeatCmb.title = utilities.getRepeatTypeString(editEvent.repeatType);
+            repeatEndCmb.selectedIndex = editEvent.repeatEndType;
 
             if(editEvent.repeatType != UtilMethods.ENoRepeat) {
                 if(editEvent.repeatEndType == UtilMethods.EForNTimes) {
@@ -383,21 +397,18 @@ AbstractContext {
 
         function setDateValues(fromIndex,dateVal)
         {
-            var day  = utilities.getDateInFormatString(dateVal,"dd");
-            var month  = utilities.getDateInFormatString(dateVal,"MMM");
-            var year  = utilities.getDateInFormatString(dateVal,"yyyy");
-
-            if(day!="" && month!="" && year!="") {
-                if(fromIndex == 1) {
-                    startDate = dateVal;
-                    startDateTxt.text=utilities.getDateInFormat(startDate,UtilMethods.EDefault);
-                } else if(fromIndex == 2) {
-                    endDate = dateVal;
-                    finishDateTxt.text = utilities.getDateInFormat(endDate,UtilMethods.EDefault);
-                } else if(fromIndex == 3) {
-                    repeatEndDate = dateVal;
-                    endRepeatDayText.text = utilities.getDateInFormat(repeatEndDate,UtilMethods.EDefault);
-                }
+            if(fromIndex == 1) {
+                startDate = dateVal;
+                startDateTxt.text=utilities.getDateInFormat(startDate,UtilMethods.EDefault);
+                console.log("Obtained startDateTxt.text="+startDateTxt.text);
+            } else if(fromIndex == 2) {
+                endDate = dateVal;
+                finishDateTxt.text = utilities.getDateInFormat(endDate,UtilMethods.EDefault);
+                console.log("Obtained finishDateTxt.text="+finishDateTxt.text);
+            } else if(fromIndex == 3) {
+                repeatEndDate = dateVal;
+                endRepeatDayText.text = utilities.getDateInFormat(repeatEndDate,UtilMethods.EDefault);
+                console.log("Obtained endRepeatDayText.text="+endRepeatDayText.text);
             }
         }
 
@@ -408,7 +419,7 @@ AbstractContext {
 
         Component {
             id:datePickerComponent
-            Ux.DatePicker {
+            DatePicker {
                 id:datePicker
                 height:(scene.isLandscapeView())? scene.container.height:scene.container.width
                 width:(scene.isLandscapeView())?scene.container.width/2:scene.container.height/3
@@ -417,6 +428,7 @@ AbstractContext {
 
                 onDateSelected: {
                     dateVal=datePicker.selectedDate;
+                    console.log("Obtained dateVal="+dateVal.toString());
                     setDateValues(fromIndex,dateVal);
                 }
             }
@@ -428,7 +440,7 @@ AbstractContext {
 
         Component {
             id:timePickerComponent
-            Ux.TimePicker {
+            TimePicker {
                 id: timePicker
                 property int fromIndex:0
                 property variant timeVal                
@@ -454,7 +466,7 @@ AbstractContext {
         }
 
 
-        TimezoneListModel {
+        Labs.TimezoneListModel {
             id: timezonelist
         }
 
@@ -515,7 +527,7 @@ AbstractContext {
                         font.pixelSize: theme_fontPixelSizeLarge
                         width: parent.width
                         anchors.fill: parent
-
+                        elide: Text.ElideRight
                     }
                 }
                 Item {
@@ -524,7 +536,7 @@ AbstractContext {
                     anchors.margins: 5
                     width: parent.width
                     height: 30
-                    Ux.TextEntry {
+                    TextEntry {
                         id: eventTitleText
                         defaultText: qsTr("Event title")
                         anchors.fill: parent
@@ -549,7 +561,7 @@ AbstractContext {
                id:scrollableEditArea
                 flickableDirection: Flickable.VerticalFlick
                 width: editList.width
-                height: (editList.height-titleBlock.height-50) //buttonsArea.height)
+                height: (editList.height-titleBlock.height-50)
                 contentWidth: scrollableSection.width
                 contentHeight:scrollableSection.height
                 anchors.top: titleDivBox.bottom
@@ -563,7 +575,7 @@ AbstractContext {
                 Item {
                     id: scrollableSection
                     width: editList.width
-                    height:(dateTimeBox.height+dateTimeBlock.height+moreBlock.height+50)
+                    height:(dateTimeBox.height+dateTimeBlock.height+moreBlock.height)
                     anchors.top: parent.top
                     property bool expanded:false
 
@@ -636,7 +648,12 @@ AbstractContext {
                                   Item {
                                       id: allDayTxtBox
                                       anchors.left:parent.left
-                                      width: parent.width/3
+                                      width: {
+                                          if(parent.width/3>allDayTxt.paintedWidth)
+                                              return parent.width/3;
+                                          else {(outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+allDayTxt.paintedWidth+100)}
+                                            return parent.width/3;
+                                      }
                                       height: 30
                                       anchors.verticalCenter: parent.verticalCenter
                                       Text {
@@ -685,7 +702,12 @@ AbstractContext {
                               Row {
                                   Item{
                                       id:startTimeBlock
-                                      width: dateTimeBlock.width/3
+                                      width: {
+                                          if(dateTimeBlock.width/3>startTxt.paintedWidth)
+                                              return dateTimeBlock.width/3;
+                                          else {(outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+startTxt.paintedWidth+100)}
+                                            return dateTimeBlock.width/3;
+                                      }
                                       height:50
                                       Text{
                                           id:startTxt
@@ -694,7 +716,7 @@ AbstractContext {
                                           font.pixelSize: theme_fontPixelSizeMedium
                                           width:parent.width
                                           anchors.left: parent.left
-                                          anchors.verticalCenter: parent.verticalCenter
+                                          anchors.verticalCenter: parent.verticalCenter                                          
                                       }
                                   }//end starttimeblock
 
@@ -768,7 +790,12 @@ AbstractContext {
                               Row {
                                   Item{
                                       id:finishTimeBlock
-                                      width:dateTimeBlock.width/3
+                                      width:{
+                                          if(dateTimeBlock.width/3>finishTxt.paintedWidth)
+                                              return dateTimeBlock.width/3;
+                                          else {(outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+finishTxt.paintedWidth+100)}
+                                            return dateTimeBlock.width/3;
+                                      }
                                       height:30
                                       Text{
                                           id:finishTxt
@@ -934,7 +961,12 @@ AbstractContext {
                               Row {
                                   Item{
                                       id:tzText
-                                      width: dateTimeBlock.width/3
+                                      width: {
+                                          if(dateTimeBlock.width/3>tzTxt.paintedWidth)
+                                              return dateTimeBlock.width/3;
+                                          else {(outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+tzTxt.paintedWidth+100)}
+                                            return dateTimeBlock.width/3;
+                                      }
                                       height:50
                                       Text{
                                           id:tzTxt
@@ -962,9 +994,6 @@ AbstractContext {
                                             type: 1
                                             anchors.verticalCenter: parent.verticalCenter
                                             selectedVal:(windowType==UtilMethods.EAddEvent)?utilities.getLocalTimeZoneName():editEvent.zoneName
-                                            onExpandView: {
-                                                 //scrollableSection.height+=150;
-                                            }
                                         }
 
                                   }//end of tzcmb block
@@ -977,7 +1006,6 @@ AbstractContext {
                                   width: editList.width
                                   height: 30
                                   color: "Gray"
-                                  z:-2
                                   Text {
                                       id:repeatTxt
                                       text: qsTr("Repeat")
@@ -998,19 +1026,23 @@ AbstractContext {
                                   anchors.left: parent.left
                                   anchors.leftMargin: 25
                                   height:30
-                                  z:-2
                                   property int repeatType:repeatCmb.selectedIndex
 
-                                  DataLoaderCombo {
-                                        id: repeatCmb
-                                        anchors.top: parent.top
-                                        anchors.left: parent.left
-                                        width: parent.width
-                                        height:30
-                                        type: 3
-                                        z:1000
-                                        selectedVal:(windowType==UtilMethods.EAddEvent)?qsTr("Never"):repeatCmb.selectedVal
-                                    }
+                                  DropDown {
+                                      id: repeatCmb
+
+                                      width: editList.innerBoxWidth
+                                      anchors.fill: parent
+
+                                      title: (windowType==UtilMethods.EAddEvent)?qsTr("Never"):utilities.getRepeatTypeString(editEvent.repeatType)
+                                      replaceDropDownTitle:true
+                                      titleColor: "black"
+                                      model: [  qsTr("Never"), qsTr("Every day"), qsTr("Every week") , qsTr("Every 2 weeks"),qsTr("Every 2 weeks"),qsTr("Every month"),qsTr("Every year"),qsTr("Other...")]
+                                      payload: [ UtilMethods.ENoRepeat,UtilMethods.ENoRepeat,UtilMethods.EEveryDay,UtilMethods.EEveryWeek,UtilMethods.EEvery2Weeks,UtilMethods.EEveryMonth,UtilMethods.EEveryYear,UtilMethods.EOtherRepeat ]
+                                      onTriggered: {
+                                          repeatType = payload[index];
+                                      }
+                                  }
 
                                   onRepeatTypeChanged: {
                                       if(repeatType != UtilMethods.ENoRepeat) {
@@ -1040,7 +1072,6 @@ AbstractContext {
                                   width: editList.innerBoxWidth
                                   height:0
                                   opacity: 0
-                                  z:-3
 
                                   Row {
                                       spacing: 10
@@ -1052,16 +1083,23 @@ AbstractContext {
                                           id: repeatEndComboBox
                                           width: repeatEndCmbBlock.width
                                           height: repeatEndCmbBlock.height
-                                          property int repeatEndType:repeatEndCmb.modelVal
-                                          DataLoaderCombo {
-                                                id: repeatEndCmb
-                                                anchors.top: parent.top
-                                                anchors.left: parent.left
-                                                width: parent.width
-                                                height:30
-                                                type: 4
-                                                z:1000
+                                          property int repeatEndType:repeatEndCmb.selectedIndex
+
+                                          DropDown {
+                                              id: repeatEndCmb
+                                              anchors.top: parent.top
+                                              anchors.left: parent.left
+                                              width: parent.width
+                                              height:30
+                                              replaceDropDownTitle:true
+                                              titleColor: "black"
+                                              model: [  qsTr("Repeats forever"), qsTr("Ends after number of times..."), qsTr("Ends after date...")]
+                                              payload: [UtilMethods.EForever,UtilMethods.EForNTimes,UtilMethods.EAfterDate]
+                                              onTriggered: {
+                                                  repeatEndType = payload[index];
+                                              }
                                           }
+
                                           onRepeatEndTypeChanged: {
                                               if(repeatEndType == UtilMethods.EForNTimes) {
                                                   repeatEndComboBox.width = repeatEndCmbBlock.width -50;
@@ -1098,7 +1136,7 @@ AbstractContext {
                                           height: 0
                                           width:0
                                           opacity:0
-                                          Ux.TextField {
+                                          TextField {
                                               id:repeatCountText
                                               anchors.fill: parent
                                           }
@@ -1115,28 +1153,19 @@ AbstractContext {
                                   anchors.leftMargin: 25
                                   height:0
                                   opacity: 0
-                                  z:-4
 
                                   Row {
                                       spacing: 5
-                                      anchors.left: parent.left
-                                      anchors.leftMargin: 5
-
-                                      Rectangle {
+                                      Item {
                                           id: endRepeatDayBox
                                           height: repeatEndDateBox.height
-                                          width:(repeatEndDateBox.width/2)
-                                          radius:2
-                                          border.width: 2
-                                          border.color: "Gray"
-                                          Text {
+                                          width:2*(repeatEndDateBox.width/3)
+                                          TextEntry {
                                                 id: endRepeatDayText
                                                 text: ""
-                                                anchors.left: parent.left
-                                                anchors.leftMargin: 5
-                                                anchors.verticalCenter: parent.verticalCenter
-                                                color:theme_fontColorNormal
-                                                font.pixelSize: theme_fontPixelSizeMedium
+                                                anchors.fill:parent
+                                                readOnly: true
+                                                textInput.font.pixelSize:theme_fontPixelSizeMedium
                                           }
                                       }//end repeatendday
 
@@ -1189,18 +1218,23 @@ AbstractContext {
                                   anchors.left: parent.left
                                   anchors.leftMargin: 25
                                   height:30
-                                  z:-5
 
-                                  DataLoaderCombo {
-                                        id: alarmCmb
-                                        anchors.top: parent.top
-                                        anchors.left: parent.left
-                                        width: (parent.width)
-                                        height:30
-                                        type: 2
-                                        z:500
-                                        selectedVal:(windowType==UtilMethods.EAddEvent)?qsTr("No reminder"):utilities.getAlarmString(editEvent.alarmType)
-                                    }
+                                  DropDown {
+                                      id: alarmCmb
+                                      anchors.top: parent.top
+                                      anchors.left: parent.left
+                                      width: (parent.width)
+                                      height:30
+                                      title: (windowType==UtilMethods.EAddEvent)?qsTr("No reminder"):utilities.getAlarmString(editEvent.alarmType)
+                                      replaceDropDownTitle:true
+                                      titleColor: "black"
+
+                                      model: [  qsTr("No reminder"), qsTr("10 minutes before"), qsTr("15 minutes before"),qsTr("30 minutes before"),qsTr("1 hour before"),qsTr("2 hours before"),qsTr("1 day before"),qsTr("2 days before"),qsTr("1 week before"),qsTr("Other...")]
+                                      payload: [UtilMethods.ENoAlarm,UtilMethods.E10MinB4,UtilMethods.E15MinB4,UtilMethods.E30MinB4,UtilMethods.E1HrB4,UtilMethods.E2HrsB4,UtilMethods.E1DayB4,UtilMethods.E2DaysB4,UtilMethods.E1WeekB4,UtilMethods.EOtherAlarm]
+                                      onTriggered: {
+                                          selectedIndex = payload[index];
+                                      }
+                                  }
 
                                   Image {
                                        id: cancelAlarmIcon
@@ -1269,7 +1303,7 @@ AbstractContext {
                                           id:locInputBox
                                           height: 100
                                           width:editList.innerBoxWidth
-                                          Ux.TextField {
+                                          TextField {
                                               id: locInputText
                                               text: ""
                                               anchors.fill:parent
@@ -1322,7 +1356,7 @@ AbstractContext {
                                           width: editList.innerBoxWidth
                                           height:150
 
-                                          Ux.TextField {
+                                          TextField {
                                               id: notesInputText
                                               text: ""
                                               anchors.fill:parent
@@ -1343,10 +1377,11 @@ AbstractContext {
                                       id: deleteButton
                                       height:(windowType==UtilMethods.EAddEvent)?0:50
                                       anchors.centerIn: parent
-                                      title: qsTr("Delete event")
+                                      text: qsTr("Delete event")
                                       opacity: (windowType==UtilMethods.EAddEvent)?0:1
-                                      font.pixelSize: theme_fontPixelSizeLarger
-                                      color: theme_buttonFontColor
+                                      hasBackground: true
+                                      bgSourceUp: "image://theme/btn_grey_up"
+                                      bgSourceDn: "image://theme/btn_grey_dn"
                                       onClicked: {
                                           scene.deleteEvent(uid);
                                           outer.close();
@@ -1438,9 +1473,8 @@ AbstractContext {
                     //width: (parent.width/3)-10
                     bgSourceUp: "image://theme/btn_blue_up"
                     bgSourceDn: "image://theme/btn_blue_dn"
-                    title: qsTr("Save")
-                    font.pixelSize: theme_fontPixelSizeLarger
-                    color: theme_buttonFontColor
+                    text: qsTr("Save")
+                    hasBackground: true
                     anchors.left: parent.left
                     anchors.leftMargin: 20
                     anchors.verticalCenter: parent.verticalCenter
@@ -1459,9 +1493,8 @@ AbstractContext {
                     //width: (parent.width/3)-10
                     bgSourceUp: "image://theme/btn_grey_up"
                     bgSourceDn: "image://theme/btn_grey_dn"
-                    title: qsTr("Cancel")
-                    font.pixelSize: theme_fontPixelSizeLarger
-                    color: theme_buttonFontColor
+                    text: qsTr("Cancel")
+                    hasBackground: true
                     anchors.right: parent.right
                     anchors.rightMargin:20
                     anchors.verticalCenter: parent.verticalCenter
@@ -1477,7 +1510,7 @@ AbstractContext {
                 State {
                     name: "windowExpanded"
                     PropertyChanges { target: container; height:(scene.isLandscapeView())?((scene.height)-100):(2*(scene.width/3)) }
-                    PropertyChanges { target: scrollableSection; height:750;}
+                    PropertyChanges { target: scrollableSection; height:800;}
                     PropertyChanges { target: scrollableEditArea; height:editList.height;}
                     when: (editList.windowExpanded==true)
                 }

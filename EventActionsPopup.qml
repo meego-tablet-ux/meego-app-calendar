@@ -7,8 +7,9 @@
  */
 
 import Qt 4.7
-import MeeGo.Labs.Components 0.1
+import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.App.Calendar 0.1
+import MeeGo.Components 0.1
 
 Item {
     id: eventActionsPopup
@@ -30,7 +31,10 @@ Item {
 
     function initMaps()
     {
-        eventOptionsContextMenu.displayContextMenu(mapX,mapY);
+        //eventOptionsContextMenu.displayContextMenu(mapX,mapY);
+        eventOptionsContextMenu.setPosition( mapX,mapY );
+        eventOptionsContextMenu.show();
+
     }
 
     function openView (component,loader,popUpParent)
@@ -59,29 +63,38 @@ Item {
         }
     }
 
+    TopItem { id: topItem }
 
-    ContextMenu {
+    ModalContextMenu {
         id: eventOptionsContextMenu
-        model: [qsTr ("Event details"), qsTr ("Edit event"), qsTr ("Delete event")]
-        menuWidth: 400
-        onTriggered: {
-            if (index == 0)
-            {
-                console.log("Uid received is "+eventId);
-                openView (viewDetails,eventDetailsLoader,scene.container);
-            }
-            else if (index == 1)
-            {
-                console.log("Uid received is "+eventId);
-                scene.editEvent(mapX,mapY,eventId);
-            }
-            else if (index == 2)
-            {
-                console.log("Uid received is "+eventId);
-                scene.deleteEvent(eventId);
-             }
+        content:  ActionMenu {
+            id: actionMenu
 
-        }
-    }
+            model: [qsTr ("Event details"), qsTr ("Edit event"), qsTr ("Delete event")]
+            payload: [ 0,1,2]
+
+            onTriggered: {
+                if (index == 0)
+                {
+                    console.log("Uid received is "+eventId);
+                    openView (viewDetails,eventDetailsLoader,scene.container);
+                    eventOptionsContextMenu.hide();
+                }
+                else if (index == 1)
+                {
+                    console.log("Uid received is "+eventId);
+                    scene.editEvent(mapX,mapY,eventId);
+                    eventOptionsContextMenu.hide();
+                }
+                else if (index == 2)
+                {
+                    console.log("Uid received is "+eventId);
+                    scene.deleteEvent(eventId);
+                    eventOptionsContextMenu.hide();
+                 }
+            }
+         }
+
+    }//end ModalContextMenu
 
 }

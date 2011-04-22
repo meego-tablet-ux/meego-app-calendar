@@ -7,10 +7,11 @@
  */
 
 import Qt 4.7
-import MeeGo.Labs.Components 0.1
+import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.App.Calendar 0.1
+import MeeGo.Components 0.1
 
-AbstractContext {
+Labs.AbstractContext {
     id: viewEventDetails    
     z:100
     property string eventId
@@ -280,14 +281,12 @@ AbstractContext {
                             anchors.centerIn: parent
                             Button {
                                 id: backButton
-                                width:buttonBox.buttonWidth
                                 visible:(viewEventDetails.showBack)?true:false
                                 height:(viewEventDetails.showBack)?30:0
                                 bgSourceUp: "image://theme/btn_grey_up"
                                 bgSourceDn: "image://theme/btn_grey_dn"
-                                title: qsTr("Back")
-                                font.pixelSize: theme_fontPixelSizeLarge
-                                color: theme_buttonFontColor
+                                text: qsTr("Back")
+                                hasBackground: true
                                 onClicked: {
                                         //showMultipleEventsPopup(viewEventDetails.mouseX,viewEventDetails.mouseY,startDate,scene.container);
                                         viewEventDetails.close();
@@ -298,13 +297,11 @@ AbstractContext {
 
                             Button {
                                 id: editButton
-                                width:buttonBox.buttonWidth
                                 height:30
                                 bgSourceUp: "image://theme/btn_blue_up"
                                 bgSourceDn: "image://theme/btn_blue_dn"
-                                title: qsTr("Edit")
-                                font.pixelSize: theme_fontPixelSizeLarge
-                                color: theme_buttonFontColor
+                                text: qsTr("Edit")
+                                hasBackground: true
                                 onClicked: {
                                     scene.editEvent(mouseX,mouseY,eventId);
                                     viewEventDetails.close();
@@ -315,13 +312,11 @@ AbstractContext {
 
                             Button {
                                 id: closeButton
-                                width:buttonBox.buttonWidth
                                 height:30
                                 bgSourceUp: "image://theme/btn_grey_up"
                                 bgSourceDn: "image://theme/btn_grey_dn"
-                                title: qsTr("Close")
-                                font.pixelSize: theme_fontPixelSizeLarge
-                                color: theme_buttonFontColor
+                                text: qsTr("Close")
+                                hasBackground: true
                                 onClicked: {
                                     viewEventDetails.close();
                                     viewEventDetails.visible = false;

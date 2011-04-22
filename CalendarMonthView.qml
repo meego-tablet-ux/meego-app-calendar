@@ -7,7 +7,7 @@
  */
 
 import Qt 4.7
-import MeeGo.Labs.Components 0.1
+import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.App.Calendar 0.1
 
 Item {
@@ -17,6 +17,7 @@ Item {
     property string dateInFocusVal
     property string monthInFocusVal
     property int currDayIndex:0
+    property int allDayEventsCount:allEventsViewModel.count
 
     function initDate()
     {
@@ -486,7 +487,7 @@ Item {
 
                                     Item {
                                         id:eventsListBox
-                                        height:eventViewBox.height-dateBox.height-buttonBox.height-50
+                                        height:eventViewBox.height-dateBox.height-50
                                         width: eventViewBox.width
                                         Rectangle {
                                             id:listViewBox
@@ -544,13 +545,17 @@ Item {
                                                         onClicked: {
                                                             //scene.editEvent(uid);
                                                             var map = mapToItem (scene.content, mouseX, mouseY);
-                                                            scene.openView (map.x,map.y,scene.container,uid,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
+                                                            //console.log("allDayEventsCount="+allDayEventsCount);
+                                                            //if(allDayEventsCount>0) {
+                                                                scene.openView (map.x,map.y,scene.container,uid,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
+                                                            /*} else  {
+                                                                scene.openNewEventView(map.x,map.y,addNewEventComponent, addNewEventLoader,false);
+                                                            }*/
                                                         }
                                                         onLongPressAndHold: {
-                                                            //showPopUp(uid,eventActionsPopup,popUpLoader,eventImage,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
                                                             var map = mapToItem (scene.content, mouseX, mouseY);
                                                             displayContextMenu (map.x, map.y,uid,eventActionsPopup,popUpLoader,eventBox,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
-                                                        }
+                                                        }                                                       
                                                     }
 
                                                 }//end of delegate
@@ -558,37 +563,6 @@ Item {
                                         }
 
                                     }//end eventslistbox
-
-                                    Item {
-                                        id:buttonBox
-                                        width: eventsListBox.width
-                                        height:50
-                                        BorderImage {
-                                            id: buttonBoxImage
-                                            source: "image://theme/calendar/calendar_month_inactiveday_l"
-                                            anchors.fill: parent
-                                        }
-                                        Button {
-                                            id: addEventButton
-                                            width:parent.width/2
-                                            height:30
-                                            anchors.centerIn: parent
-                                            bgSourceUp: "image://theme/btn_grey_up"
-                                            bgSourceDn: "image://theme/btn_grey_dn"
-                                            title: qsTr("Add Event")
-                                            font.pixelSize: theme_fontPixelSizeLarge
-                                            color: theme_buttonFontColor
-                                            MouseArea {
-                                                anchors.fill: parent
-                                                onClicked: {
-                                                   scene.appDateInFocus = dateInFocus;
-                                                    var map = mapToItem (scene.content, mouseX, mouseY);
-                                                    scene.openNewEventView(map.x,map.y,addNewEventComponent, addNewEventLoader,false);
-                                                }
-                                            }
-                                        }//addEventButton
-
-                                    }//end buttonBox
                                 }
                             }
 

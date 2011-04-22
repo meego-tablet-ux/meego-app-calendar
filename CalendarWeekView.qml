@@ -289,14 +289,28 @@ Item {
                                         width: dayBox.width/7
                                         height: dayBox.height/2
                                         border.width:1
-                                        border.color: (isDateInFocus(coreDateVal))?"lightgray":"lightgray"
+                                        border.color:(isDateInFocus(coreDateVal))?"lightgray":"lightgray"
                                         property int parentIndex:index
+                                        //property bool highlightCol:(isDateInFocus(coreDateVal))?true:false
                                         color:(isDateInFocus(coreDateVal))?"lightgray":"white"
 
                                         DayViewModel {
                                             id:allDayViewModel
                                             modelType:UtilMethods.EAllDay
                                             dateVal:coreDateVal
+                                        }
+
+                                        Text {
+                                            id:allDayText
+                                            text: qsTr("All Day")
+                                            color:theme_fontColorNormal
+                                            font.pixelSize: theme_fontPixelSizeSmaller
+                                            anchors.top:parent.top
+                                            anchors.left:parent.left
+                                            anchors.leftMargin: 5
+                                            anchors.topMargin: 5
+                                            elide: Text.ElideRight
+                                            visible:(isDateInFocus(coreDateVal))? true:false
                                         }
 
                                         Item {
@@ -441,7 +455,7 @@ Item {
                                                 border.color: "lightgray"
                                                 property int parentIndex:index
                                                 color: "transparent"
-                                                z:2
+                                                z:-model.index
 
                                                 Text {
                                                     id:timeValText

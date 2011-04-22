@@ -73,7 +73,7 @@ void CalendarFeedModel::setSearchText(const QString &text)
         return;
     }
 
-    m_source->filterOut(text);
+    m_source->filterOut(text, static_cast<FilterTerminate*>(this));
 
     if (m_searchText.isEmpty()) {
         int count = m_source->rowCount();
@@ -240,4 +240,9 @@ void CalendarFeedModel::performAction(QString action, QString uniqueid)
         parameters << "--cdata" << uniqueid;
         QProcess::startDetached(executable, parameters);
     }
+}
+
+bool CalendarFeedModel::filteringStopped()
+{
+    return isSearchHalted();
 }

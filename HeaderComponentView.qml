@@ -7,8 +7,9 @@
  */
 
 import Qt 4.7
-import MeeGo.Labs.Components 0.1
+import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.App.Calendar 0.1
+import MeeGo.Components 0.1
 
 Item {
     id:navHeader
@@ -73,7 +74,7 @@ Item {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             color:theme_fontColorNormal
-            font.pixelSize: (scene.isLandscapeView())?theme_fontPixelSizeLarger:theme_fontPixelSizeLarge
+            font.pixelSize: theme_fontPixelSizeLarge
         }
 
 

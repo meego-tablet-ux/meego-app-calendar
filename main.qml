@@ -2,17 +2,17 @@
  * Copyright 2011 Intel Corporation.
  *
  * This program is licensed under the terms and conditions of the
- * Apache License, version 2.0.  The full text of the Apache License is at 	
+ * Apache License, version 2.0.  The full text of the Apache License is at
  * http://www.apache.org/licenses/LICENSE-2.0
  */
 
 import Qt 4.7
-import MeeGo.Labs.Components 0.1
+import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.App.Calendar 0.1
-import MeeGo.Components 0.1 as Ux
+import MeeGo.Components 0.1
 
-Window {
-    id: scene    
+Labs.Window {
+    id: scene
     showsearch: false
     title: qsTr("Calendar")
     filterModel: [qsTr("Day"),qsTr("Week"),qsTr("Month")]
@@ -104,7 +104,7 @@ Window {
 
     Component {
         id:dayViewComponent
-        ApplicationPage {
+        Labs.ApplicationPage {
             id: dayPage
             anchors.fill:parent
             title:qsTr("Day")
@@ -130,7 +130,7 @@ Window {
 
     Component {
         id:weekViewComponent
-        ApplicationPage {
+        Labs.ApplicationPage {
             id: weekPage
             anchors.fill:parent
             title:qsTr("Week")
@@ -155,7 +155,7 @@ Window {
 
     Component {
         id:monthViewComponent
-        ApplicationPage {
+        Labs.ApplicationPage {
             id: monthPage
             anchors.fill:parent
             title:qsTr("Month")
@@ -187,6 +187,9 @@ Window {
 
     function openNewEventView(xVal,yVal,component, loader,isAllDay)
     {
+        scene.eventDay=scene.appDateInFocus.getDate();
+        scene.eventMonth=(scene.appDateInFocus.getMonth()+1);
+        scene.eventYear=scene.appDateInFocus.getFullYear();
         loader.sourceComponent = component
         loader.item.parent = scene.container
         loader.item.windowType = UtilMethods.EAddEvent;
@@ -196,10 +199,6 @@ Window {
         loader.item.eventStartHr = eventStartHr;
         loader.item.eventEndHr = eventEndHr;
         loader.item.isAllDay = isAllDay;
-
-        scene.eventDay=scene.appDateInFocus.getDate();
-        scene.eventMonth=(scene.appDateInFocus.getMonth()+1);
-        scene.eventYear=scene.appDateInFocus.getFullYear();
         loader.item.initView=true;
         loader.item.displayNewEvent(xVal,yVal);
     }
@@ -220,6 +219,7 @@ Window {
         dialogLoader.sourceComponent = confirmDelete;
         dialogLoader.item.parent = scene.container;
         dialogLoader.item.eventId = uid;
+        dialogLoader.item.show();
     }
 
 
@@ -287,10 +287,11 @@ Window {
 
     Component {
         id:datePickerComponent
-        Ux.DatePicker {
+        DatePicker {
             id:datePicker
             height:(scene.isLandscapeView())? scene.container.height:scene.container.width
             width:(scene.isLandscapeView())?scene.container.width/2:scene.container.height/3
+            autoCenter:true
             onDateSelected: {
                 scene.dateFromOutside = selectedDate;
                 scene.appDateInFocus = selectedDate;
@@ -315,134 +316,69 @@ Window {
         id:confirmDelete
         ModalDialog {
             id:confirmDeleteDialog
-            leftButtonText:qsTr("Delete")
-            rightButtonText: qsTr("Cancel")
-            dialogTitle: qsTr ("Delete event")
-            Text {
-                id:errorMsg
-                text: qsTr("Are you sure you want to delete this event?")
-                anchors.centerIn:parent
-                color:theme_fontColorNormal
-                font.pixelSize: theme_fontPixelSizeLarge
-                elide: Text.ElideRight
-            }
-            z:5000
+            title :qsTr("Delete event?")
+            buttonHeight: 35
+            showCancelButton: true
+            showAcceptButton: true
+            cancelButtonText: qsTr( "Cancel" )
+            acceptButtonText: qsTr( "Delete" )
             property string eventId
-            onDialogClicked: {
-                if(button==1)  {
-                    controller.deleteEvent(eventId);
-                    scene.deletedEvent = true;
-                    dialogLoader.sourceComponent = undefined;
-                } else {
-                    dialogLoader.sourceComponent = undefined;
+            autoCenter:true
+            aligneTitleCenter:true
+
+            content: Item {
+                id: myContent
+                anchors.fill:parent
+                anchors.margins: 10
+                Text {
+                    id:errorMsg
+                    text: qsTr("Are you sure you want to delete this event?")
+                    anchors.fill:parent
+                    wrapMode:Text.Wrap
+                    font.pixelSize: theme_fontPixelSizeLarge
                 }
+            }
+
+            // handle signals:
+            onAccepted: {
+                controller.deleteEvent(eventId);
+                scene.deletedEvent = true;
+                dialogLoader.sourceComponent = undefined;
+            }
+            onRejected: {
+                dialogLoader.sourceComponent = undefined;
             }
         }
     }
 
     Component {
         id: actionsMenu
-        Item {
+        ActionMenu {
             id: actionsMenuItem
-            width: scene.width/4
-            height:(scene.height/4)+2
             signal closeActionsMenu()
-            Item {
-                id:optionsMenu
-                anchors.fill:parent
-                Column {
-                    Item {
-                        id:createEventBox
-                        width:optionsMenu.width
-                        height:optionsMenu.height/3
-                        Text {
-                            id:createEventTxt
-                            text:qsTr("Create new event")
-                            anchors.left: parent.left
-                            anchors.verticalCenter: parent.verticalCenter
-                            anchors.leftMargin: 15
-                            color:theme_fontColorNormal
-                            font.pixelSize: (scene.isLandscapeView())?theme_fontPixelSizeLarger:theme_fontPixelSizeLarge
-                        }
+            model: [ qsTr("Create new event"), qsTr("Go to today"), qsTr("Go to date")]
 
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                var map = mapToItem (scene.content, mouseX, mouseY);
-                                scene.openNewEventView(map.x,map.y,addNewEventComponent, addNewEventLoader,false);
-                                actionsMenuItem.closeActionsMenu();
-
-                            }
-                        }
-                    }//end of createEvent
-
-                    Rectangle {
-                        id:spacer1
-                        color: theme_fontColorNormal
-                        height: 1
-                        width:optionsMenu.width
+            onTriggered: {
+                switch (index) {
+                    case 0: {
+                        actionsMenuItem.closeActionsMenu();
+                        scene.openNewEventView(scene.container.width-(actionsMenuItem.contentWidth)/3,(actionsMenuItem.contentHeight)/3, addNewEventComponent, addNewEventLoader,false);
+                        break;
                     }
-
-                    Item {
-                        id:gotoTodayBox
-                        width:optionsMenu.width
-                        height:optionsMenu.height/3
-                        Text {
-                            id:gotoTodayTxt
-                            text:qsTr("Go to today")
-                            anchors.left: parent.left
-                            anchors.verticalCenter: parent.verticalCenter
-                            anchors.leftMargin: 15
-                            color:theme_fontColorNormal
-                            font.pixelSize: (scene.isLandscapeView())?theme_fontPixelSizeLarger:theme_fontPixelSizeLarge
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                scene.gotoToday=true;
-                                actionsMenuItem.closeActionsMenu();
-                                return;
-                            }
-                        }
-                    }//end of gotoToday
-
-                    Rectangle {
-                        id:spacer2
-                        color: theme_fontColorNormal
-                        height: 1
-                        width:optionsMenu.width
+                    case 1: {
+                        scene.gotoToday=true;
+                        actionsMenuItem.closeActionsMenu();
+                        break;
                     }
-
-                    Item {
-                        id:gotoDateBox
-                        width:optionsMenu.width
-                        height:optionsMenu.height/3
-                        Text {
-                            id:gotoDateTxt
-                            text:qsTr("Go to date...")
-                            anchors.left: parent.left
-                            anchors.verticalCenter: parent.verticalCenter
-                            anchors.leftMargin: 15
-                            color:theme_fontColorNormal
-                            font.pixelSize: (scene.isLandscapeView())?theme_fontPixelSizeLarger:theme_fontPixelSizeLarge
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                openDatePicker(scene.container);
-                                actionsMenuItem.closeActionsMenu();
-                                return;
-                            }
-                        }
-                    }//end of gotodate
+                    case 2: {
+                        actionsMenuItem.closeActionsMenu();
+                        openDatePicker(scene.container);
+                        break;
+                    }
                 }
-
             }
-
         }
-    }
+    }//end actionsMenu
 
-}
+}//end Window
 

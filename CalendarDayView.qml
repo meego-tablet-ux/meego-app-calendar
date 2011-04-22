@@ -8,6 +8,8 @@
 
 import Qt 4.7
 import MeeGo.App.Calendar 0.1
+import MeeGo.Components 0.1
+import MeeGo.Labs.Components 0.1 as Labs
 
 Item {
     id: centerPane
@@ -176,6 +178,9 @@ Item {
             loader.item.timeVal = qsTr("%1, %2 - %3").arg(utilities.getDateInFormat(startDate,UtilMethods.ESystemLocaleLongDate)).arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale));
         }
         loader.item.initMaps();
+        //contextmenu.setPosition( windowMenuButton.x + windowMenuButton.width / 2, mapToItem( window, window.width / 2, windowMenuButton.y + windowMenuButton.height ).y )
+        //loader.item.setPosition(xVal,yVal);
+        //loader.item.show()
     }
 
     Loader {
@@ -314,26 +319,28 @@ Item {
                             anchors.top:dayRow.bottom
                             color:"white"
                              Row {
+                                 id:allDayRow
                                  anchors.top: allDayBox.top
+                                 anchors.left: allDayBox.left
+                                 anchors.margins: 10
                                  Item {
                                      id: allDayTextIconBox
                                      height:allDayBox.height
-                                     width: allDayBox.width/8
+                                     width: allDayText.width+allDayIconBox.width
                                      z:1
 
                                      Item {
                                          id:allDayTextBox
-                                         width:allDayTextIconBox.width
+                                         width:allDayText.width
                                          height: 30
                                          anchors.top: allDayTextIconBox.top
-
                                          Text {
                                              id: allDayText
                                              text: qsTr("All day")
-                                             anchors.centerIn: parent
+                                             //anchors.centerIn: parent
                                              font.bold: true
                                              color:theme_fontColorNormal
-                                             font.pixelSize: (scene.isLandscapeView())?theme_fontPixelSizeLarger:theme_fontPixelSizeMedium
+                                             font.pixelSize: (scene.isLandscapeView())?theme_fontPixelSizeMedium:theme_fontPixelSizeSmall
                                              elide: Text.ElideRight
                                          }
                                      }//end alldaytextbox
@@ -368,13 +375,13 @@ Item {
                                              scene.openNewEventView(map.x,map.y,addNewEventComponent, addNewEventLoader,true);
                                          }
                                      }
-                                 }
+                                 }//allDayTextIconBox
 
                                  //Display the all day events here
                                  Item {
                                     id: allDayEventsDisplayBox
                                     height:allDayBox.height
-                                    width: allDayBox.width-allDayTextIconBox.width
+                                    width: allDayBox.width-allDayTextIconBox.width-2*allDayRow.anchors.margins
                                     z:1
 
                                     Item {
@@ -461,7 +468,7 @@ Item {
 
                     Image {
                         id:headerDivider
-                        width: calDataBox.width
+                        width: calData.width
                         source: "image://theme/menu_item_separator"
                     } //end of headerDivider
 
@@ -487,7 +494,7 @@ Item {
                                          id: calTimeValBox
                                          height: 50
                                          width: centerContent.width
-                                         z:1
+                                         z:-model.index
                                          Rectangle {
                                              id: timeValBox
                                              height: parent.height

@@ -7,7 +7,7 @@
  */
 
 import Qt 4.7
-import MeeGo.Labs.Components 0.1
+import MeeGo.Labs.Components 0.1 as Labs
 
 //Model used for this Drop Down is a StringList Model
 //Reset the "dataModel" with appropriate values to make this work

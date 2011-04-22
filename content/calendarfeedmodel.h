@@ -16,9 +16,11 @@
 #include <feedmodel.h>
 #include <actions.h>
 
+#include "filterterminate.h"
+
 class CalendarListModel;
 
-class CalendarFeedModel: public McaFeedModel, public McaSearchableFeed
+class CalendarFeedModel: public McaFeedModel, public McaSearchableFeed, public FilterTerminate
 {
     Q_OBJECT
 
@@ -30,6 +32,8 @@ public:
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
+
+    bool filteringStopped();
 
 protected slots:
     void sourceRowsAboutToBeInserted(const QModelIndex& parent, int first, int last);

@@ -111,7 +111,6 @@ class UtilMethods: public QObject
     };
 
     enum ERepeatEndType {
-        ENoRepeatEndType=-1,
         EForever=0,
         EForNTimes,
         EAfterDate
@@ -242,6 +241,7 @@ public:
     Q_INVOKABLE QString getAlarmString(int alarmType);
     Q_INVOKABLE QString getLocalTimeZoneName();
     Q_INVOKABLE QString getRepeatTypeString(int repeatType);
+
 
     ~UtilMethods();
 };
