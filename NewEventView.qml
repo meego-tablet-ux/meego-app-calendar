@@ -649,10 +649,10 @@ Labs.AbstractContext {
                                       id: allDayTxtBox
                                       anchors.left:parent.left
                                       width: {
-                                          if(parent.width/3>allDayTxt.paintedWidth)
-                                              return parent.width/3;
-                                          else {(outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+allDayTxt.paintedWidth+100)}
-                                            return parent.width/3;
+                                          if(parent.width/3<allDayTxt.paintedWidth){
+                                              (outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+allDayTxt.paintedWidth+50)
+                                          }
+                                          return parent.width/3;
                                       }
                                       height: 30
                                       anchors.verticalCenter: parent.verticalCenter
@@ -703,10 +703,10 @@ Labs.AbstractContext {
                                   Item{
                                       id:startTimeBlock
                                       width: {
-                                          if(dateTimeBlock.width/3>startTxt.paintedWidth)
-                                              return dateTimeBlock.width/3;
-                                          else {(outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+startTxt.paintedWidth+100)}
-                                            return dateTimeBlock.width/3;
+                                          if(dateTimeBlock.width/3<startTxt.paintedWidth) {
+                                              (outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+startTxt.paintedWidth+50)
+                                          }
+                                          return dateTimeBlock.width/3;
                                       }
                                       height:50
                                       Text{
@@ -791,10 +791,10 @@ Labs.AbstractContext {
                                   Item{
                                       id:finishTimeBlock
                                       width:{
-                                          if(dateTimeBlock.width/3>finishTxt.paintedWidth)
-                                              return dateTimeBlock.width/3;
-                                          else {(outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+finishTxt.paintedWidth+100)}
-                                            return dateTimeBlock.width/3;
+                                          if(dateTimeBlock.width/3<finishTxt.paintedWidth){
+                                              (outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+finishTxt.paintedWidth+50)
+                                          }
+                                          return dateTimeBlock.width/3;
                                       }
                                       height:30
                                       Text{
@@ -962,10 +962,10 @@ Labs.AbstractContext {
                                   Item{
                                       id:tzText
                                       width: {
-                                          if(dateTimeBlock.width/3>tzTxt.paintedWidth)
-                                              return dateTimeBlock.width/3;
-                                          else {(outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+tzTxt.paintedWidth+100)}
-                                            return dateTimeBlock.width/3;
+                                          if(dateTimeBlock.width/3<tzTxt.paintedWidth){
+                                              (outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+tzTxt.paintedWidth+50)
+                                          }
+                                          return dateTimeBlock.width/3;
                                       }
                                       height:50
                                       Text{
