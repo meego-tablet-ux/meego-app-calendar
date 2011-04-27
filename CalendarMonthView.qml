@@ -26,15 +26,19 @@ Item {
         scene.eventDay=tmpDate.getDate();
         scene.eventMonth=(tmpDate.getMonth()+1);
         scene.eventYear=tmpDate.getFullYear();
-        dateInFocusVal = utilities.getDateInFormat(dateInFocus,UtilMethods.ESystemLocaleLongDate);
-        monthInFocusVal = qsTr("%1 %2").arg(utilities.getDateInFormatString(tmpDate,"MMMM")).arg(utilities.getDateInFormatString(tmpDate,"yyyy"));
+        //dateInFocusVal = utilities.getDateInFormat(dateInFocus,UtilMethods.ESystemLocaleLongDate);
+        dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
+        //monthInFocusVal = qsTr("%1 %2").arg(utilities.getDateInFormatString(tmpDate,"MMMM")).arg(utilities.getDateInFormatString(tmpDate,"yyyy"));
+        monthInFocusVal = i18nHelper.localDate(tmpDate, Labs.LocaleHelper.DateMonthYear);
     }
 
     function resetFocus(nextVal)
     {
         dateInFocus = utilities.addDMYToGivenDate(dateInFocus,0,nextVal*1,0);
-        dateInFocusVal = utilities.getDateInFormat(dateInFocus,UtilMethods.ESystemLocaleLongDate);
-        monthInFocusVal = qsTr("%1 %2").arg(utilities.getDateInFormatString(dateInFocus,"MMMM")).arg(utilities.getDateInFormatString(dateInFocus,"yyyy"));
+        //dateInFocusVal = utilities.getDateInFormat(dateInFocus,UtilMethods.ESystemLocaleLongDate);
+        dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
+        //monthInFocusVal = qsTr("%1 %2").arg(utilities.getDateInFormatString(dateInFocus,"MMMM")).arg(utilities.getDateInFormatString(dateInFocus,"yyyy"));
+        monthInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateMonthYear);
         offset = offset+nextVal;
         resetCalendarModels(dateInFocus);
     }
@@ -48,8 +52,10 @@ Item {
         scene.eventMonth=(tmpDate.getMonth()+1);
         scene.eventYear=tmpDate.getFullYear();
         dateInFocus = tmpDate;
-        dateInFocusVal = utilities.getDateInFormat(dateInFocus,UtilMethods.ESystemLocaleLongDate);
-        monthInFocusVal = qsTr("%1 %2").arg(utilities.getDateInFormatString(dateInFocus,"MMMM")).arg(utilities.getDateInFormatString(dateInFocus,"yyyy"));
+        //dateInFocusVal = utilities.getDateInFormat(dateInFocus,UtilMethods.ESystemLocaleLongDate);
+        dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
+        //monthInFocusVal = qsTr("%1 %2").arg(utilities.getDateInFormatString(dateInFocus,"MMMM")).arg(utilities.getDateInFormatString(dateInFocus,"yyyy"));
+        monthInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateMonthYear);
     }
 
     function resetDataModel(coreDateVal) {
@@ -60,8 +66,10 @@ Item {
         scene.eventMonth=(tmpDate.getMonth()+1);
         scene.eventYear=tmpDate.getFullYear();
         dateInFocus = tmpDate;
-        dateInFocusVal = utilities.getDateInFormat(dateInFocus,UtilMethods.ESystemLocaleLongDate);
-        monthInFocusVal = qsTr("%1 %2").arg(utilities.getDateInFormatString(dateInFocus,"MMMM")).arg(utilities.getDateInFormatString(dateInFocus,"yyyy"));
+        //dateInFocusVal = utilities.getDateInFormat(dateInFocus,UtilMethods.ESystemLocaleLongDate);
+        dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
+        //monthInFocusVal = qsTr("%1 %2").arg(utilities.getDateInFormatString(dateInFocus,"MMMM")).arg(utilities.getDateInFormatString(dateInFocus,"yyyy"));
+        monthInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateMonthYear);
     }
 
     function getDayImage(isCurrentDay,isMonthDay,coreDateVal,index) {
@@ -170,7 +178,8 @@ Item {
         if(allDay) {
             loader.item.timeVal = qsTr("All day");
         } else  {
-            loader.item.timeVal = qsTr("%1, %2 - %3").arg(utilities.getDateInFormat(startDate,UtilMethods.ESystemLocaleLongDate)).arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale));
+            //loader.item.timeVal = qsTr("%1, %2 - %3").arg(utilities.getDateInFormat(startDate,UtilMethods.ESystemLocaleLongDate)).arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale));
+            loader.item.timeVal = qsTr("%1, %2 - %3").arg(i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
         }
         loader.item.initMaps();
     }
@@ -209,6 +218,10 @@ Item {
 
     UtilMethods {
         id: utilities
+    }
+
+    Labs.LocaleHelper {
+        id:i18nHelper
     }
 
     DayViewModel {
@@ -305,7 +318,7 @@ Item {
 
                                                     Text {
                                                           id: weekValTxt
-                                                          text:utilities.getDateInFormatString(coreDateVal,"ddd")
+                                                          text: i18nHelper.localDate(coreDateVal, Labs.LocaleHelper.DateWeekdayShort) //utilities.getDateInFormatString(coreDateVal,"ddd")
                                                           font.bold: true
                                                           color:theme_fontColorNormal
                                                           font.pixelSize:theme_fontPixelSizeLarge
@@ -345,7 +358,7 @@ Item {
                                                         width: dayBox.width
                                                         Text {
                                                             id:dayText
-                                                            text: dateValString
+                                                            text: i18nHelper.localDate(coreDateVal, Labs.LocaleHelper.DateDay) //dateValString
                                                             font.bold:true
                                                             color:isMonthDay?theme_fontColorNormal:theme_fontColorInactive
                                                             font.pixelSize:theme_fontPixelSizeMedium
@@ -473,7 +486,7 @@ Item {
                                         }
                                         Text {
                                             id: dateText
-                                            text: dateInFocusVal
+                                            text:i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateWeekdayMonthDay); //dateInFocusVal
                                             anchors.verticalCenter: parent.verticalCenter
                                             anchors.left: parent.left
                                             anchors.leftMargin: 10
@@ -532,7 +545,8 @@ Item {
 
                                                             Text {
                                                                   id: eventTime
-                                                                  text: allDay?qsTr("All day"):qsTr("%1 - %2").arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale))
+                                                                  //text: allDay?qsTr("All day"):qsTr("%1 - %2").arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale))
+                                                                  text: allDay?qsTr("All day"):qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
                                                                   color:theme_fontColorNormal
                                                                   font.pixelSize: theme_fontPixelSizeMedium
                                                                   width: eventBox.width

@@ -8,6 +8,7 @@
 
 import Qt 4.7
 import MeeGo.App.Calendar 0.1
+import MeeGo.Labs.Components 0.1 as Labs
 
 Item {
     id: centerPane
@@ -25,7 +26,10 @@ Item {
         scene.eventDay=tmpDate.getDate();
         scene.eventMonth=(tmpDate.getMonth()+1);
         scene.eventYear=tmpDate.getFullYear();
-        dateInFocusVal = utilities.getWeekHeaderTitle(scene.eventDay,scene.eventMonth,scene.eventYear);
+        //dateInFocusVal = utilities.getWeekHeaderTitle(scene.eventDay,scene.eventMonth,scene.eventYear);
+        var startDate = utilities.getStartDateOfWeek(dateInFocus);
+        var endDate = utilities.getEndDateOfWeek(startDate);
+        dateInFocusVal = qsTr("%1 - %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
         dayInFocusIndex = tmpDate.getDay();
         if(dayInFocusIndex==0) {//i.e if day is sunday
             dayInFocusIndex = 7;
@@ -43,8 +47,10 @@ Item {
                 dateInFocus =  scene.dateFromOutside;
                 scene.appDateInFocus = dateInFocus;
                 daysModel.loadGivenWeekValuesFromDate(dateInFocus)
-                var tmpDate = dateInFocus;
-                dateInFocusVal = utilities.getWeekHeaderTitle(tmpDate.getDate(),(tmpDate.getMonth()+1),tmpDate.getFullYear());
+                //dateInFocusVal = utilities.getWeekHeaderTitle(tmpDate.getDate(),(tmpDate.getMonth()+1),tmpDate.getFullYear());
+                var startDate = utilities.getStartDateOfWeek(dateInFocus);
+                var endDate = utilities.getEndDateOfWeek(startDate);
+                dateInFocusVal = qsTr("%1 - %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
                 dayInFocusIndex = dateInFocus.getDay();
                 if(dayInFocusIndex==0) {//i.e if day is sunday
                     dayInFocusIndex = 7;
@@ -116,7 +122,10 @@ Item {
         scene.eventYear=tmpDate.getFullYear();
         dateInFocus = tmpDate;
         scene.appDateInFocus = dateInFocus;
-        dateInFocusVal = utilities.getWeekHeaderTitle(scene.eventDay,scene.eventMonth,scene.eventYear);
+        //dateInFocusVal = utilities.getWeekHeaderTitle(scene.eventDay,scene.eventMonth,scene.eventYear);
+        var startDate = utilities.getStartDateOfWeek(dateInFocus);
+        var endDate = utilities.getEndDateOfWeek(startDate);
+        dateInFocusVal = qsTr("%1 - %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
         daysModel.loadGivenWeekValuesFromDate(dateInFocus);
         eventsListView.contentY = (UtilMethods.EDayTimeStart*50);
     }
@@ -172,7 +181,8 @@ Item {
         if(allDay) {
             loader.item.timeVal = qsTr("All day");
         } else  {
-            loader.item.timeVal = qsTr("%1, %2 - %3").arg(utilities.getDateInFormat(startDate,UtilMethods.ESystemLocaleLongDate)).arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale));
+            //loader.item.timeVal = qsTr("%1, %2 - %3").arg(utilities.getDateInFormat(startDate,UtilMethods.ESystemLocaleLongDate)).arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale));
+            loader.item.timeVal = qsTr("%1, %2 - %3").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
         }
         loader.item.initMaps();
     }
@@ -190,6 +200,10 @@ Item {
 
     UtilMethods {
         id: utilities
+    }
+
+    Labs.LocaleHelper {
+        id:i18nHelper
     }
 
     CalendarWeekModel {
@@ -268,7 +282,7 @@ Item {
 
                                         Text {
                                               id: dateValTxt
-                                              text:dateValString
+                                              text:i18nHelper.localDate(coreDateVal,Labs.LocaleHelper.DateWeekdayDayShort)  //dateValString
                                               font.bold: true
                                               color:isCurrentDate(coreDateVal,index)?theme_buttonFontColorActive:theme_fontColorNormal
                                               font.pixelSize: (scene.isLandscapeView())?theme_fontPixelSizeLarge:theme_fontPixelSizeMedium
@@ -507,7 +521,8 @@ Item {
 
                                                                     Text {
                                                                           id: eventTime
-                                                                          text: qsTr("%1 - %2").arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale))
+                                                                          //text: qsTr("%1 - %2").arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale))
+                                                                          text: qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
                                                                           color:theme_fontColorNormal
                                                                           font.pixelSize:theme_fontPixelSizeSmall
                                                                           width:descriptionBox.width

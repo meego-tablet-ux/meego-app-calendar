@@ -7,14 +7,14 @@
  */
 
 import Qt 4.7
-import MeeGo.Labs.Components 0.1
+import MeeGo.Labs.Components 0.1 as Labs
 Item {
     id: container
 
     property alias label: itemCrumb.label
     property variant model
     property alias crumb: itemCrumb
-    Crumb {
+    Labs.Crumb {
         id: itemCrumb
     }
 }

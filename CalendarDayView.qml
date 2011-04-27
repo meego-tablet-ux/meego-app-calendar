@@ -27,7 +27,8 @@ Item {
         scene.eventDay=tmpDate.getDate();
         scene.eventMonth=(tmpDate.getMonth()+1);
         scene.eventYear=tmpDate.getFullYear();
-        dateInFocusVal = utilities.getDateInFormat(dateInFocus,UtilMethods.EDefault);
+        //dateInFocusVal = utilities.getDateInFormat(dateInFocus,UtilMethods.EDefault);
+        dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
     }
 
 
@@ -41,7 +42,8 @@ Item {
                 allDayViewModel.loadGivenDayModel(dateInFocus);
                 allDayEventsCount = allDayViewModel.count;
                 timeListModel.loadGivenDayModel(dateInFocus);
-                dateInFocusVal = utilities.getDateInFormat(dateInFocus,UtilMethods.EDefault);
+                //dateInFocusVal = utilities.getDateInFormat(dateInFocus,UtilMethods.EDefault);
+                dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
                 timeListView.positionViewAtIndex(UtilMethods.EDayTimeStart,ListView.Beginning);
                 scene.gotoDate=false;
             }
@@ -85,7 +87,8 @@ Item {
             if(scene.triggeredExternally) {
                 dateInFocus =  scene.dateFromOutside;
                 scene.appDateInFocus = dateInFocus;
-                dateInFocusVal = utilities.getDateInFormat(dateInFocus,UtilMethods.EDefault);
+                //dateInFocusVal = utilities.getDateInFormat(dateInFocus,UtilMethods.EDefault);
+                dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
                 daysModel.loadGivenWeekValuesFromDate(dateInFocus)
                 allDayViewModel.loadGivenDayModel(dateInFocus);
                 allDayEventsCount = allDayViewModel.count;
@@ -131,7 +134,8 @@ Item {
         scene.eventYear=tmpDate.getFullYear();
         dateInFocus = tmpDate;
         scene.appDateInFocus = dateInFocus;
-        dateInFocusVal = utilities.getDateInFormat(dateInFocus,UtilMethods.EDefault);
+        //dateInFocusVal = utilities.getDateInFormat(dateInFocus,UtilMethods.EDefault);
+        dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
         timeListView.positionViewAtIndex(UtilMethods.EDayTimeStart,ListView.Beginning);
     }
 
@@ -175,7 +179,8 @@ Item {
         if(allDay) {
             loader.item.timeVal = qsTr("All day");
         } else  {
-            loader.item.timeVal = qsTr("%1, %2 - %3").arg(utilities.getDateInFormat(startDate,UtilMethods.ESystemLocaleLongDate)).arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale));
+            //loader.item.timeVal = qsTr("%1, %2 - %3").arg(utilities.getDateInFormat(startDate,UtilMethods.ESystemLocaleLongDate)).arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale));
+            loader.item.timeVal = qsTr("%1, %2 - %3").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
         }
         loader.item.initMaps();
         //contextmenu.setPosition( windowMenuButton.x + windowMenuButton.width / 2, mapToItem( window, window.width / 2, windowMenuButton.y + windowMenuButton.height ).y )
@@ -192,6 +197,10 @@ Item {
         EventActionsPopup {
             onClose: popUpLoader.sourceComponent = undefined
         }
+    }
+
+    Labs.LocaleHelper {
+        id:i18nHelper
     }
 
     UtilMethods {
@@ -284,7 +293,7 @@ Item {
 
                                     Text {
                                           id: dateValTxt
-                                          text:dateValString
+                                          text:i18nHelper.localDate(coreDateVal,Labs.LocaleHelper.DateWeekdayDayShort) //dateValString
                                           font.bold: true
                                           color:isCurrentDate(coreDateVal,index)?theme_buttonFontColorActive:theme_fontColorNormal
                                           font.pixelSize: (scene.isLandscapeView())?theme_fontPixelSizeLarge:theme_fontPixelSizeMedium
@@ -563,7 +572,8 @@ Item {
 
                                                                  Text {
                                                                        id: eventTime
-                                                                       text: qsTr("%1 - %2").arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale))
+                                                                       //text: qsTr("%1 - %2").arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale))
+                                                                       text: qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
                                                                        color:theme_fontColorNormal
                                                                        width: descriptionBox.width
                                                                        font.pixelSize:theme_fontPixelSizeMedium

@@ -77,7 +77,7 @@ Labs.AbstractContext {
                 width: eventViewBox.width
                 Text {
                     id: dateText
-                    text: utilities.getDateInFormat(coreDateVal,UtilMethods.ESystemLocaleLongDate)
+                    text: i18nHelper.localDate(coreDateVal, Labs.LocaleHelper.DateWeekdayMonthDay) //utilities.getDateInFormat(coreDateVal,UtilMethods.ESystemLocaleLongDate)
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.leftMargin: 10
@@ -120,7 +120,8 @@ Labs.AbstractContext {
                             height: 75
                             width:parent.width
                             radius: 5
-                            property string timeVal:(allDay)?qsTr("All day"):qsTr("%1, %2 - %3").arg(utilities.getDateInFormat(startDate,UtilMethods.EDefault)).arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale));
+                            //property string timeVal:(allDay)?qsTr("All day"):qsTr("%1, %2 - %3").arg(utilities.getDateInFormat(startDate,UtilMethods.EDefault)).arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale));
+                            property string timeVal:(allDay)?qsTr("All day"):qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort))
                             BorderImage {
                                 id:eventImage
                                 source:"image://theme/calendar/calendar_month_panel_p"

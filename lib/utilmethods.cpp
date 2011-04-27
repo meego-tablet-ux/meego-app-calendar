@@ -173,6 +173,23 @@ QString UtilMethods::getWeekHeaderTitle(int day,int mon,int year)
     return toTxt;
 }
 
+QDate UtilMethods::getStartDateOfWeek(QDate inFocusDate)
+{
+    QDate startDateVal;
+
+    int dayOfWeek = inFocusDate.dayOfWeek();
+    startDateVal = inFocusDate.addDays(1-dayOfWeek);
+    return startDateVal;
+}
+
+
+QDate UtilMethods::getEndDateOfWeek(QDate startDate)
+{
+    QDate endDateVal;
+    endDateVal = startDate.addDays(6);
+    return endDateVal;
+}
+
 QTime UtilMethods::createTimeFromVals(int hr,int min)
 {
     QTime timeVal;

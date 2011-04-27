@@ -8,6 +8,7 @@
 
 import Qt 4.7
 import MeeGo.App.Calendar 0.1
+import MeeGo.Labs.Components 0.1 as Labs
 
 Item {
     id: centerPane
@@ -67,6 +68,10 @@ Item {
 
     CalendarListModel {
         id:eventsListModel
+    }
+
+    Labs.LocaleHelper {
+        id:i18nHelper
     }
 
     Component {
@@ -130,7 +135,7 @@ Item {
                         color:"gray"
                         Text {
                             id:dateText
-                            text: utilities.getDateInFormat(startDate,UtilMethods.ESystemLocaleLongDate)
+                            text:i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFullLong)  //utilities.getDateInFormat(startDate,UtilMethods.ESystemLocaleLongDate)
                             font.bold: true
                             color:theme_fontColorNormal
                             font.pixelSize: theme_fontPixelSizeLarge
@@ -169,7 +174,8 @@ Item {
                         width:displayBox.width
                         Text {
                             id:timeText
-                            text: allDay?qsTr("All day"):qsTr("%1 - %2").arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale))
+                            //text: allDay?qsTr("All day"):qsTr("%1 - %2").arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale))
+                            text: allDay?qsTr("All day"):qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
                             font.bold: true
                             font.pixelSize: theme_fontPixelSizeMedium
                             color:theme_fontColorInactive
@@ -189,7 +195,8 @@ Item {
                         eventSummary = summary;
                         eventLocation = location;
                         eventAlarmType = alarmType;
-                        eventEventTime = allDay?qsTr("%1, ").arg(utilities.getDateInFormat(dateInFocus,UtilMethods.EDefault))+qsTr("All day"):qsTr("%1 - %2").arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale));
+                        //eventEventTime = allDay?qsTr("%1, ").arg(utilities.getDateInFormat(dateInFocus,UtilMethods.EDefault))+qsTr("All day"):qsTr("%1 - %2").arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale));
+                        eventEventTime = allDay?qsTr("%1, ").arg(i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull))+qsTr("All day"):qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
                         var dateVal = new Date(utilities.getLongDate(startDate));
                         var map = mapToItem (scene.content, mouseX, mouseY);
                         openView (map.x,map.y,viewDetails,eventDetailsLoader,scene.container,dateVal);
