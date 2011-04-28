@@ -162,7 +162,7 @@ Labs.AbstractContext {
                 //cancelButtonText: qsTr( "Error" )
                 acceptButtonText: qsTr( "OK" )
                 autoCenter:true
-                aligneTitleCenter:true
+                alignTitleCenter:true
 
                 content: Item {
                     id: myContent

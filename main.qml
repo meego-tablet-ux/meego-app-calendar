@@ -324,7 +324,7 @@ Labs.Window {
             acceptButtonText: qsTr( "Delete" )
             property string eventId
             autoCenter:true
-            aligneTitleCenter:true
+            alignTitleCenter:true
 
             content: Item {
                 id: myContent
