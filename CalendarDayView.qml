@@ -27,7 +27,6 @@ Item {
         scene.eventDay=tmpDate.getDate();
         scene.eventMonth=(tmpDate.getMonth()+1);
         scene.eventYear=tmpDate.getFullYear();
-        //dateInFocusVal = utilities.getDateInFormat(dateInFocus,UtilMethods.EDefault);
         dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
     }
 
@@ -42,7 +41,6 @@ Item {
                 allDayViewModel.loadGivenDayModel(dateInFocus);
                 allDayEventsCount = allDayViewModel.count;
                 timeListModel.loadGivenDayModel(dateInFocus);
-                //dateInFocusVal = utilities.getDateInFormat(dateInFocus,UtilMethods.EDefault);
                 dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
                 timeListView.positionViewAtIndex(UtilMethods.EDayTimeStart,ListView.Beginning);
                 scene.gotoDate=false;
@@ -87,7 +85,6 @@ Item {
             if(scene.triggeredExternally) {
                 dateInFocus =  scene.dateFromOutside;
                 scene.appDateInFocus = dateInFocus;
-                //dateInFocusVal = utilities.getDateInFormat(dateInFocus,UtilMethods.EDefault);
                 dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
                 daysModel.loadGivenWeekValuesFromDate(dateInFocus)
                 allDayViewModel.loadGivenDayModel(dateInFocus);
@@ -134,7 +131,6 @@ Item {
         scene.eventYear=tmpDate.getFullYear();
         dateInFocus = tmpDate;
         scene.appDateInFocus = dateInFocus;
-        //dateInFocusVal = utilities.getDateInFormat(dateInFocus,UtilMethods.EDefault);
         dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
         timeListView.positionViewAtIndex(UtilMethods.EDayTimeStart,ListView.Beginning);
     }
@@ -179,13 +175,9 @@ Item {
         if(allDay) {
             loader.item.timeVal = qsTr("All day");
         } else  {
-            //loader.item.timeVal = qsTr("%1, %2 - %3").arg(utilities.getDateInFormat(startDate,UtilMethods.ESystemLocaleLongDate)).arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale));
             loader.item.timeVal = qsTr("%1, %2 - %3").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
         }
         loader.item.initMaps();
-        //contextmenu.setPosition( windowMenuButton.x + windowMenuButton.width / 2, mapToItem( window, window.width / 2, windowMenuButton.y + windowMenuButton.height ).y )
-        //loader.item.setPosition(xVal,yVal);
-        //loader.item.show()
     }
 
     Loader {
@@ -572,7 +564,6 @@ Item {
 
                                                                  Text {
                                                                        id: eventTime
-                                                                       //text: qsTr("%1 - %2").arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale))
                                                                        text: qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
                                                                        color:theme_fontColorNormal
                                                                        width: descriptionBox.width

@@ -247,10 +247,8 @@ Labs.Window {
         eventDetailsLoader.item.location = location;
         eventDetailsLoader.item.alarmType = alarmType;
         if(allDay) {
-            //eventDetailsLoader.item.eventTime = qsTr("%1, %2").arg(utilities.getDateInFormat(startDate,UtilMethods.ESystemLocaleLongDate)).arg(qsTr("All day"));
             eventDetailsLoader.item.eventTime = qsTr("%1, %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(qsTr("All day"));
         } else  {
-            //eventDetailsLoader.item.eventTime = qsTr("%1, %2 - %3").arg(utilities.getDateInFormat(startDate,UtilMethods.ESystemLocaleLongDate)).arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale));
             eventDetailsLoader.item.eventTime = qsTr("%1, %2 - %3").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
         }
         eventDetailsLoader.item.displayDetails(xVal,yVal);

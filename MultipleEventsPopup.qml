@@ -34,6 +34,10 @@ Labs.AbstractContext {
         id:utilities
     }
 
+    Labs.LocaleHelper {
+        id:i18nHelper
+    }
+
     DayViewModel {
         id:selectedDayModel
         modelType:UtilMethods.EAllEvents
@@ -77,7 +81,7 @@ Labs.AbstractContext {
                 width: eventViewBox.width
                 Text {
                     id: dateText
-                    text: i18nHelper.localDate(coreDateVal, Labs.LocaleHelper.DateWeekdayMonthDay) //utilities.getDateInFormat(coreDateVal,UtilMethods.ESystemLocaleLongDate)
+                    text: i18nHelper.localDate(coreDateVal, Labs.LocaleHelper.DateWeekdayMonthDay)
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.leftMargin: 10
@@ -120,44 +124,39 @@ Labs.AbstractContext {
                             height: 75
                             width:parent.width
                             radius: 5
-                            //property string timeVal:(allDay)?qsTr("All day"):qsTr("%1, %2 - %3").arg(utilities.getDateInFormat(startDate,UtilMethods.EDefault)).arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale));
                             property string timeVal:(allDay)?qsTr("All day"):qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort))
-                            BorderImage {
-                                id:eventImage
-                                source:"image://theme/calendar/calendar_month_panel_p"
-                                anchors.fill: parent
-                                Column {
-                                    spacing: 5
-                                    anchors.top: parent.top
-                                    anchors.topMargin: 3
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 10
-                                    Text {
-                                          id: eventDescription
-                                          text:summary
-                                          font.bold: true
-                                          color:theme_fontColorNormal
-                                          font.pixelSize: theme_fontPixelSizeMedium
-                                          width: eventBox.width
-                                          elide: Text.ElideRight
-                                     }
+                            Column {
+                                spacing: 5
+                                anchors.top: parent.top
+                                anchors.topMargin: 3
+                                anchors.left: parent.left
+                                anchors.leftMargin: 10
+                                Text {
+                                      id: eventDescription
+                                      text:summary
+                                      font.bold: true
+                                      color:theme_fontColorNormal
+                                      font.pixelSize: theme_fontPixelSizeMedium
+                                      width: eventBox.width
+                                      elide: Text.ElideRight
+                                 }
 
-                                    Text {
-                                          id: eventTime
-                                          text: timeVal
-                                          color:theme_fontColorNormal
-                                          font.pixelSize: theme_fontPixelSizeMedium
-                                          width: eventBox.width
-                                          elide: Text.ElideRight
-                                     }
-                                }
-                                ExtendedMouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        scene.openViewFromMonthMultiEvents( eventListPopup.mouseX,eventListPopup.mouseY,scene.container,uid,description,summary,location,alarmType,timeVal,coreDateVal);
-                                        eventListPopup.close();
-                                        eventListPopup.visible = false;
-                                    }
+                                Text {
+                                      id: eventTime
+                                      text: timeVal
+                                      color:theme_fontColorNormal
+                                      font.pixelSize: theme_fontPixelSizeMedium
+                                      width: eventBox.width
+                                      elide: Text.ElideRight
+                                 }
+                            }
+                            ExtendedMouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    var dateTimeStr = qsTr("%1, %2").arg(i18nHelper.localDate(coreDateVal, Labs.LocaleHelper.DateFull)).arg(timeVal)
+                                    scene.openViewFromMonthMultiEvents( eventListPopup.mouseX,eventListPopup.mouseY,scene.container,uid,description,summary,location,alarmType,dateTimeStr,coreDateVal);
+                                    eventListPopup.close();
+                                    eventListPopup.visible = false;
                                 }
                             }
 
@@ -179,7 +178,6 @@ Labs.AbstractContext {
                 height:50                
                 Button {
                     id: closeButton
-                    width:buttonBox.width/3
                     height:30
                     anchors.centerIn: parent
                     bgSourceUp: "image://theme/btn_grey_up"

@@ -26,7 +26,6 @@ Item {
         scene.eventDay=tmpDate.getDate();
         scene.eventMonth=(tmpDate.getMonth()+1);
         scene.eventYear=tmpDate.getFullYear();
-        //dateInFocusVal = utilities.getWeekHeaderTitle(scene.eventDay,scene.eventMonth,scene.eventYear);
         var startDate = utilities.getStartDateOfWeek(dateInFocus);
         var endDate = utilities.getEndDateOfWeek(startDate);
         dateInFocusVal = qsTr("%1 - %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
@@ -47,7 +46,6 @@ Item {
                 dateInFocus =  scene.dateFromOutside;
                 scene.appDateInFocus = dateInFocus;
                 daysModel.loadGivenWeekValuesFromDate(dateInFocus)
-                //dateInFocusVal = utilities.getWeekHeaderTitle(tmpDate.getDate(),(tmpDate.getMonth()+1),tmpDate.getFullYear());
                 var startDate = utilities.getStartDateOfWeek(dateInFocus);
                 var endDate = utilities.getEndDateOfWeek(startDate);
                 dateInFocusVal = qsTr("%1 - %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
@@ -122,7 +120,6 @@ Item {
         scene.eventYear=tmpDate.getFullYear();
         dateInFocus = tmpDate;
         scene.appDateInFocus = dateInFocus;
-        //dateInFocusVal = utilities.getWeekHeaderTitle(scene.eventDay,scene.eventMonth,scene.eventYear);
         var startDate = utilities.getStartDateOfWeek(dateInFocus);
         var endDate = utilities.getEndDateOfWeek(startDate);
         dateInFocusVal = qsTr("%1 - %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
@@ -181,7 +178,6 @@ Item {
         if(allDay) {
             loader.item.timeVal = qsTr("All day");
         } else  {
-            //loader.item.timeVal = qsTr("%1, %2 - %3").arg(utilities.getDateInFormat(startDate,UtilMethods.ESystemLocaleLongDate)).arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale));
             loader.item.timeVal = qsTr("%1, %2 - %3").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
         }
         loader.item.initMaps();
@@ -282,7 +278,7 @@ Item {
 
                                         Text {
                                               id: dateValTxt
-                                              text:i18nHelper.localDate(coreDateVal,Labs.LocaleHelper.DateWeekdayDayShort)  //dateValString
+                                              text:i18nHelper.localDate(coreDateVal,Labs.LocaleHelper.DateWeekdayDayShort)
                                               font.bold: true
                                               color:isCurrentDate(coreDateVal,index)?theme_buttonFontColorActive:theme_fontColorNormal
                                               font.pixelSize: (scene.isLandscapeView())?theme_fontPixelSizeLarge:theme_fontPixelSizeMedium
@@ -305,7 +301,6 @@ Item {
                                         border.width:1
                                         border.color:(isDateInFocus(coreDateVal))?"lightgray":"lightgray"
                                         property int parentIndex:index
-                                        //property bool highlightCol:(isDateInFocus(coreDateVal))?true:false
                                         color:(isDateInFocus(coreDateVal))?"lightgray":"white"
 
                                         DayViewModel {
@@ -521,7 +516,6 @@ Item {
 
                                                                     Text {
                                                                           id: eventTime
-                                                                          //text: qsTr("%1 - %2").arg(utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale)).arg(utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale))
                                                                           text: qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
                                                                           color:theme_fontColorNormal
                                                                           font.pixelSize:theme_fontPixelSizeSmall

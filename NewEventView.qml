@@ -111,8 +111,7 @@ Labs.AbstractContext {
             }
 
             if(!validData) {
-               //showErrorMessage();
-                confirmDialog.show();
+               confirmDialog.show();
             }
             return validData;
         }
@@ -142,7 +141,6 @@ Labs.AbstractContext {
 
         function showErrorMessage()
         {
-            //messageBoxLoader.sourceComponent = messageBoxcomponent;
             messageBoxLoader.item.parent = scene.container;
             messageBoxLoader.item.show();
          }
@@ -249,11 +247,11 @@ Labs.AbstractContext {
             if(eventDay==0 ||eventMonth==0 ||eventYear==0) {
                 startDate = utilities.getCurrentDateVal();
                 endDate = utilities.getCurrentDateVal();
-                startDateStr = i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFullShort); //utilities.getDateInFormat(startDate,UtilMethods.EDefault);
-                endDateStr = i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFullShort); //utilities.getDateInFormat(endDate,UtilMethods.EDefault);
+                startDateStr = i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFullShort);
+                endDateStr = i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFullShort);
             } else {
                 startDate = utilities.createDateFromVals(eventDay,eventMonth,eventYear);
-                startDateStr=i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFullShort); //utilities.getDateInFormat(startDate,UtilMethods.EDefault);
+                startDateStr=i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFullShort);
                 endDate = startDate;
                 endDateStr = startDateStr;
             }
@@ -267,13 +265,13 @@ Labs.AbstractContext {
             if(eventStartHr==-1 || eventEndHr==-1) {
                 startTime = utilities.getCurrentTimeVal();
                 startTime = utilities.roundTime(startTime);
-                startTimeStr = i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort); //utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale);
+                startTimeStr = i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort);
                 endTime = utilities.addHMToCurrentTime(1,0);
                 endTime = utilities.roundTime(endTime);
-                endTimeStr = i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort); //utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale);
+                endTimeStr = i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort);
             } else {
                 startTime = utilities.createTimeFromVals(eventStartHr,0);
-                startTimeStr = i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort); //utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale);
+                startTimeStr = i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort);
 
                 var eventEndTimeStr = eventEndHr.toString();
                 if(eventEndTimeStr.length > 3) {
@@ -281,7 +279,7 @@ Labs.AbstractContext {
                 } else {
                     endTime = utilities.createTimeFromVals(parseInt(eventEndTimeStr.substr(0,1)),parseInt(eventEndTimeStr.substr(1,2)));
                 }
-                endTimeStr = i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort); //utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale);
+                endTimeStr = i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort);
             }
 
             startDateTxt.text = startDateStr;
@@ -312,10 +310,10 @@ Labs.AbstractContext {
             startTime = editEvent.getStartTimeFromKDT();
             endTime = editEvent.getEndTimeFromKDT();
 
-            startDateTxt.text = i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFullShort); //utilities.getDateInFormat(startDate,UtilMethods.EDefault);
-            finishDateTxt.text = i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFullShort); //utilities.getDateInFormat(endDate,UtilMethods.EDefault);
-            startTimeTxt.text = i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort); //utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale);
-            finishTimeTxt.text = i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort); //utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale);
+            startDateTxt.text = i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFullShort);
+            finishDateTxt.text = i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFullShort);
+            startTimeTxt.text = i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort);
+            finishTimeTxt.text = i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort);
 
             allDaySet = allDayCheck.on;
             startDateStr= startDateTxt.text;
@@ -366,10 +364,10 @@ Labs.AbstractContext {
         {
             if(fromIndex==1) {
                 startTime = timeVal;
-                startTimeTxt.text = i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort); //utilities.getTimeInFormat(startTime,UtilMethods.ETimeSystemLocale);
+                startTimeTxt.text = i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort);
             } else if(fromIndex==2) {
                 endTime = timeVal;
-                finishTimeTxt.text = i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort); //utilities.getTimeInFormat(endTime,UtilMethods.ETimeSystemLocale);
+                finishTimeTxt.text = i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort);
             }
         }
 
@@ -386,15 +384,15 @@ Labs.AbstractContext {
         {
             if(fromIndex == 1) {
                 startDate = dateVal;
-                startDateTxt.text=i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFullShort); //utilities.getDateInFormat(startDate,UtilMethods.EDefault);
+                startDateTxt.text=i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFullShort);
                 console.log("Obtained startDateTxt.text="+startDateTxt.text);
             } else if(fromIndex == 2) {
                 endDate = dateVal;
-                finishDateTxt.text = i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFullShort); //utilities.getDateInFormat(endDate,UtilMethods.EDefault);
+                finishDateTxt.text = i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFullShort);
                 console.log("Obtained finishDateTxt.text="+finishDateTxt.text);
             } else if(fromIndex == 3) {
                 repeatEndDate = dateVal;
-                endRepeatDayText.text = i18nHelper.localDate(repeatEndDate, Labs.LocaleHelper.DateFullShort); //utilities.getDateInFormat(repeatEndDate,UtilMethods.EDefault);
+                endRepeatDayText.text = i18nHelper.localDate(repeatEndDate, Labs.LocaleHelper.DateFullShort);
                 console.log("Obtained endRepeatDayText.text="+endRepeatDayText.text);
             }
         }

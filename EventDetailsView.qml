@@ -28,6 +28,7 @@ Labs.AbstractContext {
     signal closeSearch()
     property bool showBack:false
     property bool showView:false
+    property int windowWidth:350
 
     property alias mouseX: viewEventDetails.mouseX
     property alias mouseY: viewEventDetails.mouseY
@@ -73,7 +74,7 @@ Labs.AbstractContext {
     content: Item {
             id: eventDetailsBox
             height:titleTimeSpacer.height+locRemSpacer.height+showViewSpacer.height+buttonAreaSpacer.height
-            width:350
+            width:windowWidth
 
             Column {
                 Item {
@@ -152,7 +153,6 @@ Labs.AbstractContext {
                                 id:locBox
                                 width:locRemBox.width
                                 height:(location=="")?0:30
-                                //color: "green"
                                 Text {
                                     id:eventLocTxt
                                     text:location
@@ -170,7 +170,6 @@ Labs.AbstractContext {
                                 id:descBox
                                 width:locRemBox.width
                                 height:(description=="")?0:100
-                                //color: "purple"
                                 clip: true
                                 TextEdit {
                                     id:summaryTxt
@@ -188,7 +187,6 @@ Labs.AbstractContext {
                                 id:reminderBox
                                 width:locRemBox.width
                                 height:40
-                                //color: "yellow"
                                 Text {
                                     id:reminderLabel
                                     text: qsTr("Reminder: ")
@@ -265,7 +263,12 @@ Labs.AbstractContext {
 
                 Item {
                     id:buttonAreaSpacer
-                    width:eventDetailsBox.width
+                    width: {
+                        if((backButton.width+editButton.width+closeButton.width+50) > eventDetailsBox.width) {
+                            windowWidth = (backButton.width+editButton.width+closeButton.width+50)
+                        }
+                        return eventDetailsBox.width;
+                    }
                     height:50
                     Item {
                         id:buttonBox
@@ -288,7 +291,6 @@ Labs.AbstractContext {
                                 text: qsTr("Back")
                                 hasBackground: true
                                 onClicked: {
-                                        //showMultipleEventsPopup(viewEventDetails.mouseX,viewEventDetails.mouseY,startDate,scene.container);
                                         viewEventDetails.close();
                                         viewEventDetails.visible = false;
                                 }
