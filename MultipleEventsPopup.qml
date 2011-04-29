@@ -124,7 +124,7 @@ Labs.AbstractContext {
                             height: 75
                             width:parent.width
                             radius: 5
-                            property string timeVal:(allDay)?qsTr("All day"):qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort))
+                            property string timeVal:(allDay)?qsTr("All day"):qsTr("%1 - %2","StartTime - EndTime").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort))
                             Column {
                                 spacing: 5
                                 anchors.top: parent.top
@@ -153,7 +153,7 @@ Labs.AbstractContext {
                             ExtendedMouseArea {
                                 anchors.fill: parent
                                 onClicked: {
-                                    var dateTimeStr = qsTr("%1, %2").arg(i18nHelper.localDate(coreDateVal, Labs.LocaleHelper.DateFull)).arg(timeVal)
+                                    var dateTimeStr = qsTr("%1, %2","Event StartDate, Start and End Time String").arg(i18nHelper.localDate(coreDateVal, Labs.LocaleHelper.DateFull)).arg(timeVal)
                                     scene.openViewFromMonthMultiEvents( eventListPopup.mouseX,eventListPopup.mouseY,scene.container,uid,description,summary,location,alarmType,dateTimeStr,coreDateVal);
                                     eventListPopup.close();
                                     eventListPopup.visible = false;
@@ -175,10 +175,10 @@ Labs.AbstractContext {
             Item {
                 id: buttonBox
                 width:eventViewBox.width
-                height:50                
+                height:70
                 Button {
                     id: closeButton
-                    height:30
+                    height:50
                     anchors.centerIn: parent
                     bgSourceUp: "image://theme/btn_grey_up"
                     bgSourceDn: "image://theme/btn_grey_dn"

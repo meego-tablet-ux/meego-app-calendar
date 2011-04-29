@@ -43,7 +43,7 @@ Item {
         target:scene
         onSearchResultCountChanged: {
             searchCount = scene.searchResultCount;
-            results.text = qsTr("%1 results found").arg(searchCount)
+            results.text = qsTr("%1 results found","Search result count").arg(searchCount)
         }
     }
 
@@ -103,7 +103,7 @@ Item {
             height:50
             Text {
                 id:results
-                text: qsTr("%1 results found").arg(searchCount)
+                text: qsTr("%1 results found","Search result count").arg(searchCount)
                 anchors.left: parent.left
                 anchors.leftMargin: 10
                 font.bold: true
@@ -174,7 +174,7 @@ Item {
                         width:displayBox.width
                         Text {
                             id:timeText
-                            text: allDay?qsTr("All day"):qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
+                            text: allDay?qsTr("All day"):qsTr("%1 - %2","StartTime - EndTime").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
                             font.bold: true
                             font.pixelSize: theme_fontPixelSizeMedium
                             color:theme_fontColorInactive
@@ -193,7 +193,7 @@ Item {
                         eventSummary = summary;
                         eventLocation = location;
                         eventAlarmType = alarmType;
-                        eventEventTime = allDay?qsTr("%1, ").arg(i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull))+qsTr("All day"):qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
+                        eventEventTime = allDay?qsTr("%1, ","Event StartDate,").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull))+qsTr("All day"):qsTr("%1, %2 - %3","Event StartDate, StartTime - EndTime").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
                         var dateVal = new Date(utilities.getLongDate(startDate));
                         var map = mapToItem (scene.content, mouseX, mouseY);
                         openView (map.x,map.y,viewDetails,eventDetailsLoader,scene.container,dateVal);

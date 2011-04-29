@@ -28,7 +28,7 @@ Item {
         scene.eventYear=tmpDate.getFullYear();
         var startDate = utilities.getStartDateOfWeek(dateInFocus);
         var endDate = utilities.getEndDateOfWeek(startDate);
-        dateInFocusVal = qsTr("%1 - %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
+        dateInFocusVal = qsTr("%1 - %2","Week's StartDate - Week's EndDate").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
         dayInFocusIndex = tmpDate.getDay();
         if(dayInFocusIndex==0) {//i.e if day is sunday
             dayInFocusIndex = 7;
@@ -48,7 +48,7 @@ Item {
                 daysModel.loadGivenWeekValuesFromDate(dateInFocus)
                 var startDate = utilities.getStartDateOfWeek(dateInFocus);
                 var endDate = utilities.getEndDateOfWeek(startDate);
-                dateInFocusVal = qsTr("%1 - %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
+                dateInFocusVal = qsTr("%1 - %2","Week's StartDate - Week's EndDate").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
                 dayInFocusIndex = dateInFocus.getDay();
                 if(dayInFocusIndex==0) {//i.e if day is sunday
                     dayInFocusIndex = 7;
@@ -122,7 +122,7 @@ Item {
         scene.appDateInFocus = dateInFocus;
         var startDate = utilities.getStartDateOfWeek(dateInFocus);
         var endDate = utilities.getEndDateOfWeek(startDate);
-        dateInFocusVal = qsTr("%1 - %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
+        dateInFocusVal = qsTr("%1 - %2","Week's StartDate - Week's EndDate").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
         daysModel.loadGivenWeekValuesFromDate(dateInFocus);
         eventsListView.contentY = (UtilMethods.EDayTimeStart*50);
     }
@@ -178,7 +178,7 @@ Item {
         if(allDay) {
             loader.item.timeVal = qsTr("All day");
         } else  {
-            loader.item.timeVal = qsTr("%1, %2 - %3").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
+            loader.item.timeVal = qsTr("%1, %2 - %3","Event StartDate, StartTime - EndTime").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
         }
         loader.item.initMaps();
     }
@@ -354,7 +354,7 @@ Item {
                                                             anchors.top: parent.top
                                                             Text {
                                                                 id: allDayDescText
-                                                                text: (index==2 && (allDayViewModel.count>3))?qsTr("%1 more events exist").arg(allDayViewModel.count-2):summary
+                                                                text: (index==2 && (allDayViewModel.count>3))?qsTr("%1 more events exist","Events count").arg(allDayViewModel.count-2):summary
                                                                 anchors.left: parent.left
                                                                 anchors.leftMargin: 2
                                                                 anchors.verticalCenter: parent.verticalCenter
@@ -516,7 +516,7 @@ Item {
 
                                                                     Text {
                                                                           id: eventTime
-                                                                          text: qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
+                                                                          text: qsTr("%1 - %2","StartTime - EndTime").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
                                                                           color:theme_fontColorNormal
                                                                           font.pixelSize:theme_fontPixelSizeSmall
                                                                           width:descriptionBox.width

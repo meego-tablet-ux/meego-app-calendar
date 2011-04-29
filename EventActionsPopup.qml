@@ -65,7 +65,7 @@ Item {
 
     TopItem { id: topItem }
 
-    ModalContextMenu {
+    ContextMenu {
         id: eventOptionsContextMenu
         content:  ActionMenu {
             id: actionMenu
@@ -95,6 +95,6 @@ Item {
             }
          }
 
-    }//end ModalContextMenu
+    }//end ContextMenu
 
 }

@@ -175,7 +175,7 @@ Item {
         if(allDay) {
             loader.item.timeVal = qsTr("All day");
         } else  {
-            loader.item.timeVal = qsTr("%1, %2 - %3").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
+            loader.item.timeVal = qsTr("%1, %2 - %3","Event StartDate, StartTime - EndTime ").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
         }
         loader.item.initMaps();
     }
@@ -412,7 +412,7 @@ Item {
                                                          anchors.top: parent.top
                                                          Text {
                                                              id: allDayDescText
-                                                             text: (index==2 && (allDayViewModel.count>3))?qsTr("%1 more events exist").arg(allDayViewModel.count-2):summary
+                                                             text: (index==2 && (allDayViewModel.count>3))?qsTr("%1 more events exist","Events count").arg(allDayViewModel.count-2):summary
                                                              anchors.left: parent.left
                                                              anchors.leftMargin: 20
                                                              anchors.verticalCenter: parent.verticalCenter
@@ -564,7 +564,7 @@ Item {
 
                                                                  Text {
                                                                        id: eventTime
-                                                                       text: qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
+                                                                       text: qsTr("%1 - %2","StartTime - EndTime").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
                                                                        color:theme_fontColorNormal
                                                                        width: descriptionBox.width
                                                                        font.pixelSize:theme_fontPixelSizeMedium

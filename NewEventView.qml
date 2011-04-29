@@ -111,7 +111,8 @@ Labs.AbstractContext {
             }
 
             if(!validData) {
-               confirmDialog.show();
+               //confirmDialog.show();
+                showErrorMessage();
             }
             return validData;
         }
@@ -141,6 +142,7 @@ Labs.AbstractContext {
 
         function showErrorMessage()
         {
+            messageBoxLoader.sourceComponent = messageBoxcomponent;
             messageBoxLoader.item.parent = scene.container;
             messageBoxLoader.item.show();
          }
@@ -149,8 +151,8 @@ Labs.AbstractContext {
             id:messageBoxLoader
         }
 
-        //Component {
-            //id:messageBoxcomponent
+        Component {
+            id:messageBoxcomponent
             ModalDialog {
                 id:confirmDialog
                 title :qsTr("Error")
@@ -180,7 +182,7 @@ Labs.AbstractContext {
                 }
 
             }
-       // }
+       }
 
         function createIOObject() {
             //Initialize variables
@@ -973,9 +975,9 @@ Labs.AbstractContext {
                                       id:tzCmbBlock
                                       width: 2*(dateTimeBlock.width/3)
                                       height:50
+                                      z:500
                                       DataLoaderCombo {
                                             id: tzCmb
-                                            z:10
                                             anchors.left: parent.left
                                             anchors.leftMargin: 25
                                             width: parent.width
@@ -995,6 +997,7 @@ Labs.AbstractContext {
                                   width: editList.width
                                   height: 30
                                   color: "Gray"
+                                  z:-5
                                   Text {
                                       id:repeatTxt
                                       text: qsTr("Repeat")
@@ -1016,7 +1019,7 @@ Labs.AbstractContext {
                                   anchors.leftMargin: 25
                                   height:30
                                   property int repeatType:repeatCmb.selectedIndex
-
+                                  z:-5
                                   DropDown {
                                       id: repeatCmb
 
@@ -1061,7 +1064,7 @@ Labs.AbstractContext {
                                   width: editList.innerBoxWidth
                                   height:0
                                   opacity: 0
-
+                                  z:-5
                                   Row {
                                       spacing: 10
                                       move: Transition {
@@ -1142,7 +1145,7 @@ Labs.AbstractContext {
                                   anchors.leftMargin: 25
                                   height:0
                                   opacity: 0
-
+                                  z:-5
                                   Row {
                                       spacing: 5
                                       Item {
@@ -1207,7 +1210,7 @@ Labs.AbstractContext {
                                   anchors.left: parent.left
                                   anchors.leftMargin: 25
                                   height:30
-
+                                  z:-5
                                   DropDown {
                                       id: alarmCmb
                                       anchors.top: parent.top
@@ -1362,10 +1365,12 @@ Labs.AbstractContext {
                                   id:deleteButtonBox
                                   height:50
                                   width:editList.innerBoxWidth
+                                  anchors.left: parent.left
+                                  anchors.leftMargin: 25
                                   Button {
                                       id: deleteButton
                                       height:(windowType==UtilMethods.EAddEvent)?0:50
-                                      anchors.centerIn: parent
+                                      anchors.horizontalCenter: parent.horizontalCenter
                                       text: qsTr("Delete event")
                                       opacity: (windowType==UtilMethods.EAddEvent)?0:1
                                       hasBackground: true

@@ -269,11 +269,11 @@ Labs.AbstractContext {
                         }
                         return eventDetailsBox.width;
                     }
-                    height:50
+                    height:70
                     Item {
                         id:buttonBox
                         width:eventDetailsBox.width -20
-                        height: 30
+                        height: 50
                         anchors.left: parent.left
                         anchors.leftMargin: 10
                         anchors.verticalCenter: parent.verticalCenter
@@ -285,7 +285,7 @@ Labs.AbstractContext {
                             Button {
                                 id: backButton
                                 visible:(viewEventDetails.showBack)?true:false
-                                height:(viewEventDetails.showBack)?30:0
+                                //height:(viewEventDetails.showBack)?30:0
                                 bgSourceUp: "image://theme/btn_grey_up"
                                 bgSourceDn: "image://theme/btn_grey_dn"
                                 text: qsTr("Back")
@@ -299,7 +299,7 @@ Labs.AbstractContext {
 
                             Button {
                                 id: editButton
-                                height:30
+                                //height:30
                                 bgSourceUp: "image://theme/btn_blue_up"
                                 bgSourceDn: "image://theme/btn_blue_dn"
                                 text: qsTr("Edit")
@@ -314,7 +314,7 @@ Labs.AbstractContext {
 
                             Button {
                                 id: closeButton
-                                height:30
+                                //height:30
                                 bgSourceUp: "image://theme/btn_grey_up"
                                 bgSourceDn: "image://theme/btn_grey_dn"
                                 text: qsTr("Close")
