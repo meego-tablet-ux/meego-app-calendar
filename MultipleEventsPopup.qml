@@ -47,7 +47,7 @@ Labs.AbstractContext {
         id:eventViewBox
         property int itemsCount:selectedDayModel.count
         width:300
-        height: popupTitleBox.height+dateBox.height+300+buttonBox.height //(scene.isLandscapeView())?((scene.height)-100):(scene.width/2)
+        height: popupTitleBox.height+dateBox.height+300+buttonBox.height
 
         Column {
             anchors.top: parent.top
@@ -154,7 +154,7 @@ Labs.AbstractContext {
                                 anchors.fill: parent
                                 onClicked: {
                                     var dateTimeStr = qsTr("%1, %2","Event StartDate, Start and End Time String").arg(i18nHelper.localDate(coreDateVal, Labs.LocaleHelper.DateFull)).arg(timeVal)
-                                    scene.openViewFromMonthMultiEvents( eventListPopup.mouseX,eventListPopup.mouseY,scene.container,uid,description,summary,location,alarmType,dateTimeStr,coreDateVal);
+                                    window.openViewFromMonthMultiEvents( eventListPopup.mouseX,eventListPopup.mouseY,window.container,uid,description,summary,location,alarmType,dateTimeStr,coreDateVal);
                                     eventListPopup.close();
                                     eventListPopup.visible = false;
                                 }

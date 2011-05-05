@@ -22,10 +22,10 @@ Item {
     {
         var tmpDate = utilities.getCurrentDateVal();
         dateInFocus = tmpDate;
-        scene.appDateInFocus = dateInFocus;
-        scene.eventDay=tmpDate.getDate();
-        scene.eventMonth=(tmpDate.getMonth()+1);
-        scene.eventYear=tmpDate.getFullYear();
+        window.appDateInFocus = dateInFocus;
+        window.eventDay=tmpDate.getDate();
+        window.eventMonth=(tmpDate.getMonth()+1);
+        window.eventYear=tmpDate.getFullYear();
         var startDate = utilities.getStartDateOfWeek(dateInFocus);
         var endDate = utilities.getEndDateOfWeek(startDate);
         dateInFocusVal = qsTr("%1 - %2","Week's StartDate - Week's EndDate").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
@@ -39,12 +39,12 @@ Item {
 
 
     Connections {
-        target:scene
+        target:window
         onGotoDateChanged: {
-            if(scene.gotoDate) {
-                scene.gotoDate=false;
-                dateInFocus =  scene.dateFromOutside;
-                scene.appDateInFocus = dateInFocus;
+            if(window.gotoDate) {
+                window.gotoDate=false;
+                dateInFocus =  window.dateFromOutside;
+                window.appDateInFocus = dateInFocus;
                 daysModel.loadGivenWeekValuesFromDate(dateInFocus)
                 var startDate = utilities.getStartDateOfWeek(dateInFocus);
                 var endDate = utilities.getEndDateOfWeek(startDate);
@@ -59,29 +59,29 @@ Item {
         }
 
         onGotoTodayChanged: {
-            if(scene.gotoToday) {
+            if(window.gotoToday) {
                 initDate();
                 daysModel.loadGivenWeekValuesFromDate(dateInFocus)
                 eventsListView.contentY = (UtilMethods.EDayTimeStart*50);
-                scene.gotoToday=false;
+                window.gotoToday=false;
             }
         }
 
         onAddedEventChanged: {
-            if(scene.addedEvent) {
+            if(window.addedEvent) {
                 daysModel.loadGivenWeekValuesFromDate(dateInFocus)
                 searchList.listModel.refresh();
                 eventsListView.contentY = (UtilMethods.EDayTimeStart*50);
-                scene.addedEvent = false;
+                window.addedEvent = false;
             }
         }
 
         onDeletedEventChanged: {
-            if(scene.deletedEvent) {
+            if(window.deletedEvent) {
                 daysModel.loadGivenWeekValuesFromDate(dateInFocus)
                 searchList.listModel.refresh();
                 eventsListView.contentY = (UtilMethods.EDayTimeStart*50);
-                scene.deletedEvent = false;
+                window.deletedEvent = false;
             }
         }
 
@@ -95,19 +95,19 @@ Item {
             }
             searchList.visible = !searchList.visible;
             weekViewData.visible = !weekViewData.visible;
-            scene.searchResultCount = searchList.listModel.count;
+            window.searchResultCount = searchList.listModel.count;
         }
 
         onSearch: {
             if(!searchList.visible) {
                 searchList.visible = true;
                 weekViewData.visible = false;
-                scene.searchResultCount = searchList.listModel.count;
+                window.searchResultCount = searchList.listModel.count;
             }
             if(searchList.visible) {
                 searchList.listModel.filterOut(needle);
                 searchList.listIndex = 0;
-                scene.searchResultCount = searchList.listModel.count;
+                window.searchResultCount = searchList.listModel.count;
             }
         }
     }
@@ -115,11 +115,11 @@ Item {
 
     function resetCalendarDayModels(coreDateVal) {
         var tmpDate = new Date(utilities.getLongDate(coreDateVal));
-        scene.eventDay=tmpDate.getDate();
-        scene.eventMonth=(tmpDate.getMonth()+1);
-        scene.eventYear=tmpDate.getFullYear();
+        window.eventDay=tmpDate.getDate();
+        window.eventMonth=(tmpDate.getMonth()+1);
+        window.eventYear=tmpDate.getFullYear();
         dateInFocus = tmpDate;
-        scene.appDateInFocus = dateInFocus;
+        window.appDateInFocus = dateInFocus;
         var startDate = utilities.getStartDateOfWeek(dateInFocus);
         var endDate = utilities.getEndDateOfWeek(startDate);
         dateInFocusVal = qsTr("%1 - %2","Week's StartDate - Week's EndDate").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
@@ -130,17 +130,17 @@ Item {
     function setDateInFocus(coreDateVal)
     {
         var tmpDate = new Date(utilities.getLongDate(coreDateVal));
-        scene.eventDay=tmpDate.getDate();
-        scene.eventMonth=(tmpDate.getMonth()+1);
-        scene.eventYear=tmpDate.getFullYear();
+        window.eventDay=tmpDate.getDate();
+        window.eventMonth=(tmpDate.getMonth()+1);
+        window.eventYear=tmpDate.getFullYear();
         dateInFocus = tmpDate;
-        scene.appDateInFocus = dateInFocus;
+        window.appDateInFocus = dateInFocus;
     }
 
     function resetFocus(offset)
     {
         dateInFocus = utilities.addDMYToGivenDate(dateInFocus,(offset*7),0,0);
-        scene.appDateInFocus = dateInFocus;
+        window.appDateInFocus = dateInFocus;
         resetCalendarDayModels(dateInFocus);
     }
 
@@ -237,14 +237,14 @@ Item {
 
         Rectangle {
             id:spacerbox
-            height:scene.content.height - (navHeader.height)
-            width: scene.content.width
+            height:window.content.height - (navHeader.height)
+            width: window.content.width
             color:"lightgray"
 
             Rectangle {
                 id: calDataBox
-                height:scene.content.height - (navHeader.height)-20
-                width: scene.content.width-20
+                height:window.content.height - (navHeader.height)-20
+                width: window.content.width-20
                 anchors.centerIn: parent
                 color: "white"
                 border.width:2
@@ -281,7 +281,7 @@ Item {
                                               text:i18nHelper.localDate(coreDateVal,Labs.LocaleHelper.DateWeekdayDayShort)
                                               font.bold: true
                                               color:isCurrentDate(coreDateVal,index)?theme_buttonFontColorActive:theme_fontColorNormal
-                                              font.pixelSize: (scene.isLandscapeView())?theme_fontPixelSizeLarge:theme_fontPixelSizeMedium
+                                              font.pixelSize: (window.isLandscapeView())?theme_fontPixelSizeLarge:theme_fontPixelSizeMedium
                                               anchors.centerIn: parent
                                               elide: Text.ElideRight
                                          }
@@ -374,11 +374,11 @@ Item {
                                                                     if(index ==2 && (allDayViewModel.count>3)) {
                                                                         allDayDescText.text = summary;
                                                                     }
-                                                                    var map = mapToItem (scene.content, mouseX, mouseY);
-                                                                    scene.openView (map.x,map.y,scene.container,uid,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
+                                                                    var map = mapToItem (window.content, mouseX, mouseY);
+                                                                    window.openView (map.x,map.y,window.container,uid,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
                                                                 }
                                                                 onLongPressAndHold: {
-                                                                    var map = mapToItem (scene.content, mouseX, mouseY);
+                                                                    var map = mapToItem (window.content, mouseX, mouseY);
                                                                     displayContextMenu (map.x, map.y,uid,eventActionsPopup,popUpLoader,calItemBox,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
                                                                 }
 
@@ -395,8 +395,8 @@ Item {
                                         ExtendedMouseArea {
                                             anchors.fill: parent
                                             onClicked: {
-                                                var map = mapToItem (scene.content, mouseX, mouseY);
-                                                scene.openNewEventView(map.x,map.y,addNewEventComponent, addNewEventLoader,true);
+                                                var map = mapToItem (window.content, mouseX, mouseY);
+                                                window.openNewEventView(map.x,map.y,addNewEventComponent, addNewEventLoader,true);
                                             }
                                         }
 
@@ -473,7 +473,7 @@ Item {
                                                     anchors.left:parent.left
                                                     anchors.leftMargin: 5
                                                     color:theme_fontColorNormal
-                                                    font.pixelSize: (scene.isLandscapeView())?theme_fontPixelSizeMedium:theme_fontPixelSizeSmall
+                                                    font.pixelSize: (window.isLandscapeView())?theme_fontPixelSizeMedium:theme_fontPixelSizeSmall
                                                     elide: Text.ElideRight
                                                     visible:(dayInFocusIndex==weekDayIndex)?true:false
                                                 }
@@ -529,11 +529,11 @@ Item {
                                                             ExtendedMouseArea {
                                                                 anchors.fill: parent
                                                                 onClicked: {
-                                                                    var map = mapToItem (scene.content, mouseX, mouseY);
-                                                                    scene.openView (map.x,map.y,scene.container,uid,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
+                                                                    var map = mapToItem (window.content, mouseX, mouseY);
+                                                                    window.openView (map.x,map.y,window.container,uid,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
                                                                 }
                                                                 onLongPressAndHold: {
-                                                                    var map = mapToItem (scene.content, mouseX, mouseY);
+                                                                    var map = mapToItem (window.content, mouseX, mouseY);
                                                                     displayContextMenu (map.x, map.y,uid,eventActionsPopup,popUpLoader,displayRect,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
                                                                 }
                                                             }
@@ -545,16 +545,16 @@ Item {
                                                 ExtendedMouseArea {
                                                     anchors.fill: parent
                                                     onClicked: {
-                                                        scene.eventStartHr=startHr;
-                                                        scene.eventEndHr=endHr;
-                                                        var map = mapToItem (scene.content, mouseX, mouseY);
-                                                        scene.openNewEventView(map.x,map.y,addNewEventComponent, addNewEventLoader,false);
+                                                        window.eventStartHr=startHr;
+                                                        window.eventEndHr=endHr;
+                                                        var map = mapToItem (window.content, mouseX, mouseY);
+                                                        window.openNewEventView(map.x,map.y,addNewEventComponent, addNewEventLoader,false);
                                                     }
                                                     onLongPressAndHold: {
-                                                        scene.eventStartHr=startHr;
-                                                        scene.eventEndHr=endHr;
-                                                        var map = mapToItem (scene.content, mouseX, mouseY);
-                                                        scene.openNewEventView(map.x,map.y,addNewEventComponent, addNewEventLoader,false);
+                                                        window.eventStartHr=startHr;
+                                                        window.eventEndHr=endHr;
+                                                        var map = mapToItem (window.content, mouseX, mouseY);
+                                                        window.openNewEventView(map.x,map.y,addNewEventComponent, addNewEventLoader,false);
                                                     }
                                                 }
 

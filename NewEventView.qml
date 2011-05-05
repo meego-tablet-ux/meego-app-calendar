@@ -143,7 +143,7 @@ Labs.AbstractContext {
         function showErrorMessage()
         {
             messageBoxLoader.sourceComponent = messageBoxcomponent;
-            messageBoxLoader.item.parent = scene.container;
+            messageBoxLoader.item.parent = window.container;
             messageBoxLoader.item.show();
          }
 
@@ -240,7 +240,7 @@ Labs.AbstractContext {
                 controller.addModifyEvent(UtilMethods.EModifyEvent,eventIO);
             }
 
-            scene.addedEvent = true;
+            window.addedEvent = true;
         }
 
 
@@ -408,8 +408,8 @@ Labs.AbstractContext {
             id:datePickerComponent
             DatePicker {
                 id:datePicker
-                height:(scene.isLandscapeView())? scene.container.height:scene.container.width
-                width:(scene.isLandscapeView())?scene.container.width/2:scene.container.height/3
+                height:(window.isLandscapeView())? window.container.height:window.container.width
+                width:(window.isLandscapeView())?window.container.width/2:window.container.height/3
                 property date dateVal
                 property int fromIndex:0
 
@@ -736,7 +736,7 @@ Labs.AbstractContext {
                                           MouseArea {
                                               anchors.fill: parent
                                               onClicked: {
-                                                   openDatePicker(1,scene.container);
+                                                   openDatePicker(1,window.container);
                                               }
                                               onFocusChanged: {
                                                   startDateStr = startDateTxt.text;
@@ -767,7 +767,7 @@ Labs.AbstractContext {
                                           MouseArea {
                                               anchors.fill: parent
                                               onClicked: {
-                                                  openTimePicker(1,scene.container);
+                                                  openTimePicker(1,window.container);
                                               }
                                               onFocusChanged: {
                                                   startTimeStr = startTimeTxt.text;
@@ -825,7 +825,7 @@ Labs.AbstractContext {
                                           MouseArea {
                                               anchors.fill: parent
                                               onClicked: {
-                                                   openDatePicker(2,scene.container);
+                                                   openDatePicker(2,window.container);
                                               }
                                               onFocusChanged: {
                                                   endDateStr = finishDateTxt.text;
@@ -856,7 +856,7 @@ Labs.AbstractContext {
                                           MouseArea {
                                               anchors.fill: parent
                                               onClicked: {
-                                                  openTimePicker(2,scene.container);
+                                                  openTimePicker(2,window.container);
                                               }
                                               onFocusChanged: {
                                                   endTimeStr = finishTimeTxt.text;
@@ -1128,10 +1128,12 @@ Labs.AbstractContext {
                                           height: 0
                                           width:0
                                           opacity:0
-                                          TextField {
+                                          TextEntry {
                                               id:repeatCountText
                                               anchors.fill: parent
-                                          }
+                                              defaultText:"0"
+                                              inputMethodHints:Qt.ImhDigitsOnly
+                                          }                                          
                                       }
                                   }//end row
 
@@ -1173,7 +1175,7 @@ Labs.AbstractContext {
                                           MouseArea {
                                               anchors.fill: parent
                                               onClicked: {
-                                                   openDatePicker(3,scene.container);
+                                                   openDatePicker(3,window.container);
                                               }
                                           }
                                       }//end repeatend icon
@@ -1377,7 +1379,7 @@ Labs.AbstractContext {
                                       bgSourceUp: "image://theme/btn_grey_up"
                                       bgSourceDn: "image://theme/btn_grey_dn"
                                       onClicked: {
-                                          scene.deleteEvent(uid);
+                                          window.deleteEvent(uid);
                                           outer.close();
                                           outer.visible = false;
                                       }
@@ -1503,7 +1505,7 @@ Labs.AbstractContext {
             states: [
                 State {
                     name: "windowExpanded"
-                    PropertyChanges { target: container; height:(scene.isLandscapeView())?((scene.height)-100):(2*(scene.width/3)) }
+                    PropertyChanges { target: container; height:(window.isLandscapeView())?((window.height)-100):(2*(window.width/3)) }
                     PropertyChanges { target: scrollableSection; height:800;}
                     PropertyChanges { target: scrollableEditArea; height:editList.height;}
                     when: (editList.windowExpanded==true)

@@ -21,7 +21,7 @@ Item {
     property string eventLocation
     property int eventAlarmType:0
     property string eventEventTime
-    property int searchCount:scene.searchResultCount
+    property int searchCount:window.searchResultCount
     signal close();
 
     function openView (xVal,yVal,component,loader,popUpParent,dateVal)
@@ -40,9 +40,9 @@ Item {
     }
 
     Connections {
-        target:scene
+        target:window
         onSearchResultCountChanged: {
-            searchCount = scene.searchResultCount;
+            searchCount = window.searchResultCount;
             results.text = qsTr("%1 results found","Search result count").arg(searchCount)
         }
     }
@@ -93,8 +93,8 @@ Item {
 
     Rectangle {
         id: eventsListBox
-        height:scene.content.height
-        width: scene.content.width
+        height:window.content.height
+        width: window.content.width
         color: "lightgray"
 
         Item {
@@ -195,8 +195,8 @@ Item {
                         eventAlarmType = alarmType;
                         eventEventTime = allDay?qsTr("%1, ","Event StartDate,").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull))+qsTr("All day"):qsTr("%1, %2 - %3","Event StartDate, StartTime - EndTime").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
                         var dateVal = new Date(utilities.getLongDate(startDate));
-                        var map = mapToItem (scene.content, mouseX, mouseY);
-                        openView (map.x,map.y,viewDetails,eventDetailsLoader,scene.container,dateVal);
+                        var map = mapToItem (window.content, mouseX, mouseY);
+                        openView (map.x,map.y,viewDetails,eventDetailsLoader,window.container,dateVal);
                     }
                 }
             }//end delegate rectangle

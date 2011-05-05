@@ -13,7 +13,7 @@ import MeeGo.Components 0.1
 
 Item {
     id:navHeader
-    width: scene.content.width
+    width: window.content.width
     height: 50
     z: 100
     property string dateVal:qsTr("Date")
@@ -44,7 +44,7 @@ Item {
     Item {
         id: innerNavigation
         height: 30
-        width: (scene.isLandscapeView())? (scene.width/2):(2*(scene.height/3))
+        width: (window.isLandscapeView())? (window.width/2):(2*(window.height/3))
         anchors.centerIn: parent
         anchors.margins: 5
         anchors.top: parent.top
@@ -70,7 +70,7 @@ Item {
             anchors.fill: parent
             anchors.centerIn: parent
             height: parent.height
-            width: (scene.isLandscapeView())?200:150
+            width: (window.isLandscapeView())?200:150
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             color:theme_fontColorNormal

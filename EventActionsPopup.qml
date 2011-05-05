@@ -77,19 +77,19 @@ Item {
                 if (index == 0)
                 {
                     console.log("Uid received is "+eventId);
-                    openView (viewDetails,eventDetailsLoader,scene.container);
+                    openView (viewDetails,eventDetailsLoader,window.container);
                     eventOptionsContextMenu.hide();
                 }
                 else if (index == 1)
                 {
                     console.log("Uid received is "+eventId);
-                    scene.editEvent(mapX,mapY,eventId);
+                    window.editEvent(mapX,mapY,eventId);
                     eventOptionsContextMenu.hide();
                 }
                 else if (index == 2)
                 {
                     console.log("Uid received is "+eventId);
-                    scene.deleteEvent(eventId);
+                    window.deleteEvent(eventId);
                     eventOptionsContextMenu.hide();
                  }
             }

@@ -245,8 +245,8 @@ Labs.AbstractContext {
                             anchors.fill: parent
                             onClicked: {
                                 console.log("Inside Show in Calendar View mouseArea,startDate="+startDate.toString("dd mmm yyyy"));
-                                scene.dateFromOutside = startDate;
-                                scene.gotoDate=true;
+                                window.dateFromOutside = startDate;
+                                window.gotoDate=true;
                                 viewEventDetails.closeSearch();
                                 viewEventDetails.visible = false;
                             }
@@ -305,7 +305,7 @@ Labs.AbstractContext {
                                 text: qsTr("Edit")
                                 hasBackground: true
                                 onClicked: {
-                                    scene.editEvent(mouseX,mouseY,eventId);
+                                    window.editEvent(mouseX,mouseY,eventId);
                                     viewEventDetails.close();
                                     viewEventDetails.visible = false;
                                 }

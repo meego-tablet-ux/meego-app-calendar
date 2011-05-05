@@ -23,9 +23,9 @@ Item {
     {
         var tmpDate = utilities.getCurrentDateVal();
         dateInFocus = tmpDate;
-        scene.eventDay=tmpDate.getDate();
-        scene.eventMonth=(tmpDate.getMonth()+1);
-        scene.eventYear=tmpDate.getFullYear();
+        window.eventDay=tmpDate.getDate();
+        window.eventMonth=(tmpDate.getMonth()+1);
+        window.eventYear=tmpDate.getFullYear();
         dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
         monthInFocusVal = i18nHelper.localDate(tmpDate, Labs.LocaleHelper.DateMonthYear);
     }
@@ -44,9 +44,9 @@ Item {
         monthModel.loadGivenMonthValuesFromOffset(coreDateVal);
         allEventsViewModel.loadGivenDayModel(coreDateVal);
 
-        scene.eventDay=tmpDate.getDate();
-        scene.eventMonth=(tmpDate.getMonth()+1);
-        scene.eventYear=tmpDate.getFullYear();
+        window.eventDay=tmpDate.getDate();
+        window.eventMonth=(tmpDate.getMonth()+1);
+        window.eventYear=tmpDate.getFullYear();
         dateInFocus = tmpDate;
         dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
         monthInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateMonthYear);
@@ -56,9 +56,9 @@ Item {
         var tmpDate = new Date(utilities.getLongDate(coreDateVal));
         allEventsViewModel.loadGivenDayModel(coreDateVal);
         monthModel.loadGivenMonthValuesFromOffset(coreDateVal);
-        scene.eventDay=tmpDate.getDate();
-        scene.eventMonth=(tmpDate.getMonth()+1);
-        scene.eventYear=tmpDate.getFullYear();
+        window.eventDay=tmpDate.getDate();
+        window.eventMonth=(tmpDate.getMonth()+1);
+        window.eventYear=tmpDate.getFullYear();
         dateInFocus = tmpDate;
         dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
         monthInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateMonthYear);
@@ -90,39 +90,39 @@ Item {
 
 
     Connections {
-        target:scene
+        target:window
         onGotoDateChanged: {
-            if(scene.gotoDate) {
-                dateInFocus = scene.dateFromOutside;
+            if(window.gotoDate) {
+                dateInFocus = window.dateFromOutside;
                 resetDataModel(dateInFocus);
-                scene.gotoDate = false;
+                window.gotoDate = false;
             }
         }
 
         onGotoTodayChanged: {
-            if(scene.gotoToday) {
+            if(window.gotoToday) {
                 initDate();
                 allEventsViewModel.loadGivenDayModel(dateInFocus);
                 monthModel.loadGivenMonthValuesFromOffset(dateInFocus);
-                scene.gotoToday=false;
+                window.gotoToday=false;
             }
         }
 
         onAddedEventChanged: {
-            if(scene.addedEvent) {
+            if(window.addedEvent) {
                 allEventsViewModel.loadGivenDayModel(dateInFocus);
                 monthModel.loadGivenMonthValuesFromOffset(dateInFocus);
                 searchList.listModel.refresh();
-                scene.addedEvent = false;
+                window.addedEvent = false;
             }
         }
 
         onDeletedEventChanged: {
-            if(scene.deletedEvent) {
+            if(window.deletedEvent) {
                 allEventsViewModel.loadGivenDayModel(dateInFocus);
                 monthModel.loadGivenMonthValuesFromOffset(dateInFocus);
                 searchList.listModel.refresh();
-                scene.deletedEvent = false;
+                window.deletedEvent = false;
             }
         }
     }
@@ -136,19 +136,19 @@ Item {
             }
             searchList.visible = !searchList.visible;
             monthViewData.visible = !monthViewData.visible;
-            scene.searchResultCount = searchList.listModel.count;
+            window.searchResultCount = searchList.listModel.count;
         }
 
         onSearch: {
             if(!searchList.visible) {
                 searchList.visible = true;
                 monthViewData.visible = false;
-                scene.searchResultCount = searchList.listModel.count;
+                window.searchResultCount = searchList.listModel.count;
             }
             if(searchList.visible) {
                 searchList.listModel.filterOut(needle);
                 searchList.listIndex = 0;
-                scene.searchResultCount = searchList.listModel.count;
+                window.searchResultCount = searchList.listModel.count;
             }
         }
     }
@@ -254,8 +254,8 @@ Item {
         }
         Item {
             id:spacerbox
-            height:scene.content.height - (navHeader.height)
-            width: scene.content.width
+            height:window.content.height - (navHeader.height)
+            width: window.content.width
             BorderImage {
                     id: spacerImage
                     anchors.fill: parent
@@ -263,15 +263,15 @@ Item {
 
                     Item {
                         id: calDataBox
-                        height:scene.content.height - (navHeader.height)-20
-                        width: scene.content.width-20
+                        height:window.content.height - (navHeader.height)-20
+                        width: window.content.width-20
                         anchors.centerIn: parent
 
                         Flickable {
                             id:centerContent
                             height: calDataBox.height
                             width: calDataBox.width
-                            contentHeight: (scene.isLandscapeView())?calDataBox.height:(monthViewBox.height + eventViewBox.height)
+                            contentHeight: (window.isLandscapeView())?calDataBox.height:(monthViewBox.height + eventViewBox.height)
                             contentWidth: calDataBox.width
                             property real cellHeight: (monthViewBox.height-weekBox.height)/(6.5)
                             property real cellWidth: monthViewBox.width/7.0
@@ -279,8 +279,8 @@ Item {
 
                             Item {
                                 id:monthViewBox
-                                height: (scene.isLandscapeView())?calDataBox.height:(2*(calDataBox.height/3))
-                                width:(scene.isLandscapeView())?(3*(calDataBox.width/4)):(calDataBox.width)
+                                height: (window.isLandscapeView())?calDataBox.height:(2*(calDataBox.height/3))
+                                width:(window.isLandscapeView())?(3*(calDataBox.width/4)):(calDataBox.width)
                                 anchors.top: parent.top
                                 Column {
                                     anchors.top: parent.top
@@ -434,14 +434,14 @@ Item {
                                                     anchors.fill: parent
                                                     onClicked: {
                                                         if(isMonthDay) {
-                                                            scene.appDateInFocus = coreDateVal;
+                                                            window.appDateInFocus = coreDateVal;
                                                             resetDataModel(coreDateVal);
                                                         }
                                                     }
                                                     onPressAndHold: {
                                                         if(isMonthDay && eventsCount>0) {
-                                                             var map = mapToItem (scene.content, mouseX, mouseY);
-                                                            showMultipleEventsPopup(map.x,map.y,coreDateVal,scene.container);
+                                                             var map = mapToItem (window.content, mouseX, mouseY);
+                                                            showMultipleEventsPopup(map.x,map.y,coreDateVal,window.container);
                                                         }
                                                     }
                                                 }
@@ -456,11 +456,11 @@ Item {
 
                             Rectangle {
                                 id:eventViewBox
-                                height: (scene.isLandscapeView())?(calDataBox.height):(calDataBox.height/3)
-                                width:(scene.isLandscapeView())?(calDataBox.width/4):(calDataBox.width)
-                                anchors.left: (scene.isLandscapeView())?monthViewBox.right:parent.left
-                                anchors.leftMargin:(scene.isLandscapeView())?5:0
-                                anchors.top: (scene.isLandscapeView())?parent.top:monthViewBox.bottom
+                                height: (window.isLandscapeView())?(calDataBox.height):(calDataBox.height/3)
+                                width:(window.isLandscapeView())?(calDataBox.width/4):(calDataBox.width)
+                                anchors.left: (window.isLandscapeView())?monthViewBox.right:parent.left
+                                anchors.leftMargin:(window.isLandscapeView())?5:0
+                                anchors.top: (window.isLandscapeView())?parent.top:monthViewBox.bottom
                                 border.width: 2
                                 border.color: "gray"
 
@@ -547,17 +547,17 @@ Item {
                                                     ExtendedMouseArea {
                                                         anchors.fill: parent
                                                         onClicked: {
-                                                            //scene.editEvent(uid);
-                                                            var map = mapToItem (scene.content, mouseX, mouseY);
+                                                            //window.editEvent(uid);
+                                                            var map = mapToItem (window.content, mouseX, mouseY);
                                                             //console.log("allDayEventsCount="+allDayEventsCount);
                                                             //if(allDayEventsCount>0) {
-                                                                scene.openView (map.x,map.y,scene.container,uid,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
+                                                                window.openView (map.x,map.y,window.container,uid,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
                                                             /*} else  {
-                                                                scene.openNewEventView(map.x,map.y,addNewEventComponent, addNewEventLoader,false);
+                                                                window.openNewEventView(map.x,map.y,addNewEventComponent, addNewEventLoader,false);
                                                             }*/
                                                         }
                                                         onLongPressAndHold: {
-                                                            var map = mapToItem (scene.content, mouseX, mouseY);
+                                                            var map = mapToItem (window.content, mouseX, mouseY);
                                                             displayContextMenu (map.x, map.y,uid,eventActionsPopup,popUpLoader,eventBox,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
                                                         }                                                       
                                                     }

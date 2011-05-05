@@ -12,7 +12,7 @@ import MeeGo.App.Calendar 0.1
 import MeeGo.Components 0.1
 
 Labs.Window {
-    id: scene
+    id: window
     showsearch: false
     title: qsTr("Calendar")
     filterModel: [qsTr("Day"),qsTr("Week"),qsTr("Month")]
@@ -48,11 +48,11 @@ Labs.Window {
             var cmd = applicationData[0];
             var cdata = applicationData[1];
 
-            scene.applicationData = undefined;
+            window.applicationData = undefined;
 
             if (cmd == "openCalendar")
             {
-                scene.applicationPage=dayViewComponent;
+                window.applicationPage=dayViewComponent;
                 var calData = cdata;
                 var calDataList = calData.split(',');
                 var uid = calDataList[0];
@@ -67,13 +67,13 @@ Labs.Window {
     onFilterTriggered: {
         if (index == 0) {
             buttonval=0;
-            scene.applicationPage=dayViewComponent;
+            window.applicationPage=dayViewComponent;
         }else if( index == 1) {
             buttonval=1;
-            scene.applicationPage=weekViewComponent;
+            window.applicationPage=weekViewComponent;
         }else if(index ==2) {
             buttonval=2;
-            scene.applicationPage=monthViewComponent;
+            window.applicationPage=monthViewComponent;
         }
     }
 
@@ -184,18 +184,18 @@ Labs.Window {
     function initEventDateVals()
     {
         var tmpDate = utilities.getCurrentDateVal();
-        scene.eventDay=tmpDate.getDate();
-        scene.eventMonth=(tmpDate.getMonth()+1);
-        scene.eventYear=tmpDate.getFullYear();
+        window.eventDay=tmpDate.getDate();
+        window.eventMonth=(tmpDate.getMonth()+1);
+        window.eventYear=tmpDate.getFullYear();
     }
 
     function openNewEventView(xVal,yVal,component, loader,isAllDay)
     {
-        scene.eventDay=scene.appDateInFocus.getDate();
-        scene.eventMonth=(scene.appDateInFocus.getMonth()+1);
-        scene.eventYear=scene.appDateInFocus.getFullYear();
+        window.eventDay=window.appDateInFocus.getDate();
+        window.eventMonth=(window.appDateInFocus.getMonth()+1);
+        window.eventYear=window.appDateInFocus.getFullYear();
         loader.sourceComponent = component
-        loader.item.parent = scene.container
+        loader.item.parent = window.container
         loader.item.windowType = UtilMethods.EAddEvent;
         loader.item.eventDay = eventDay;
         loader.item.eventMonth = eventMonth;
@@ -210,7 +210,7 @@ Labs.Window {
     function editEvent(xVal,yVal,uid)
     {
         addNewEventLoader.sourceComponent = addNewEventComponent;
-        addNewEventLoader.item.parent = scene.container;
+        addNewEventLoader.item.parent = window.container;
         addNewEventLoader.item.windowType = UtilMethods.EModifyEvent;
 
         addNewEventLoader.item.editEventId = uid;
@@ -221,7 +221,7 @@ Labs.Window {
     function deleteEvent(uid)
     {
         dialogLoader.sourceComponent = confirmDelete;
-        dialogLoader.item.parent = scene.container;
+        dialogLoader.item.parent = window.container;
         dialogLoader.item.eventId = uid;
         dialogLoader.item.show();
     }
@@ -293,13 +293,13 @@ Labs.Window {
         id:datePickerComponent
         DatePicker {
             id:datePicker
-            height:(scene.isLandscapeView())? scene.container.height:scene.container.width
-            width:(scene.isLandscapeView())?scene.container.width/2:scene.container.height/3
+            height:(window.isLandscapeView())? window.container.height:window.container.width
+            width:(window.isLandscapeView())?window.container.width/2:window.container.height/3
             autoCenter:true
             onDateSelected: {
-                scene.dateFromOutside = selectedDate;
-                scene.appDateInFocus = selectedDate;
-                scene.gotoDate = true;
+                window.dateFromOutside = selectedDate;
+                window.appDateInFocus = selectedDate;
+                window.gotoDate = true;
                 datePickerLoader.sourceComponent=undefined;
             }
         }
@@ -346,7 +346,7 @@ Labs.Window {
             // handle signals:
             onAccepted: {
                 controller.deleteEvent(eventId);
-                scene.deletedEvent = true;
+                window.deletedEvent = true;
                 dialogLoader.sourceComponent = undefined;
             }
             onRejected: {
@@ -366,17 +366,17 @@ Labs.Window {
                 switch (index) {
                     case 0: {
                         actionsMenuItem.closeActionsMenu();
-                        scene.openNewEventView(scene.container.width-(actionsMenuItem.contentWidth)/3,(actionsMenuItem.contentHeight)/3, addNewEventComponent, addNewEventLoader,false);
+                        window.openNewEventView(window.container.width-(actionsMenuItem.contentWidth)/3,(actionsMenuItem.contentHeight)/3, addNewEventComponent, addNewEventLoader,false);
                         break;
                     }
                     case 1: {
-                        scene.gotoToday=true;
+                        window.gotoToday=true;
                         actionsMenuItem.closeActionsMenu();
                         break;
                     }
                     case 2: {
                         actionsMenuItem.closeActionsMenu();
-                        openDatePicker(scene.container);
+                        openDatePicker(window.container);
                         break;
                     }
                 }
