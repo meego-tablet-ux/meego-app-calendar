@@ -31,39 +31,31 @@ Item {
 
     function initMaps()
     {
-        //eventOptionsContextMenu.displayContextMenu(mapX,mapY);
         eventOptionsContextMenu.setPosition( mapX,mapY );
         eventOptionsContextMenu.show();
 
     }
 
-    function openView (component,loader,popUpParent)
+    function openView (component,popUpParent)
     {
-        loader.sourceComponent = component
-        loader.item.parent = popUpParent
-        loader.item.eventId = eventId;
-        loader.item.description = description;
-        loader.item.summary = summary;
-        loader.item.location = location;
-        loader.item.alarmType = alarmType;
-        loader.item.eventTime = timeVal;
-        loader.item.displayDetails(mapX,mapY);
+        viewEventDetails.eventId = eventId;
+        viewEventDetails.description = description;
+        viewEventDetails.summary = summary;
+        viewEventDetails.location = location;
+        viewEventDetails.alarmType = alarmType;
+        viewEventDetails.eventTime = timeVal;
+        viewEventDetails.displayDetails(mapX,mapY);
+        viewEventDetails.show();
+        console.log("showing the details window")
+
     }
 
-    Loader {
-        id:eventDetailsLoader
+
+    EventDetailsView {
+        id:viewEventDetails
+        eventId:eventId
     }
 
-    Component {
-        id:viewDetails
-        EventDetailsView {
-            id:viewEventDetails
-            eventId:eventId
-            onClose: eventDetailsLoader.sourceComponent = undefined
-        }
-    }
-
-    TopItem { id: topItem }
 
     ContextMenu {
         id: eventOptionsContextMenu
@@ -77,20 +69,20 @@ Item {
                 if (index == 0)
                 {
                     console.log("Uid received is "+eventId);
-                    openView (viewDetails,eventDetailsLoader,window.container);
                     eventOptionsContextMenu.hide();
+                    openView (viewEventDetails,window);
                 }
                 else if (index == 1)
                 {
                     console.log("Uid received is "+eventId);
-                    window.editEvent(mapX,mapY,eventId);
                     eventOptionsContextMenu.hide();
+                    window.editEvent(mapX,mapY,eventId);
                 }
                 else if (index == 2)
                 {
                     console.log("Uid received is "+eventId);
-                    window.deleteEvent(eventId);
                     eventOptionsContextMenu.hide();
+                    window.deleteEvent(eventId);
                  }
             }
          }

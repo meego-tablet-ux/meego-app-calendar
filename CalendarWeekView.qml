@@ -9,14 +9,41 @@
 import Qt 4.7
 import MeeGo.App.Calendar 0.1
 import MeeGo.Labs.Components 0.1 as Labs
+import MeeGo.Components 0.1
 
-Item {
+AppPage {
     id: centerPane
+    pageTitle: qsTr("Week")
     property int offset:0
     property date dateInFocus:initDate()
     property string dateInFocusVal
     property int currDayIndex:0
     property int dayInFocusIndex:0
+    property int xVal:0
+    property int yVal:0
+    actionMenuModel:  [ qsTr("Create new event"), qsTr("Go to today"), qsTr("Go to date")]
+    actionMenuPayload: [0,1,2]
+    onActionMenuIconClicked: {
+        xVal = mouseX;
+        yVal = mouseY;
+    }
+
+    onActionMenuTriggered: {
+        switch (selectedItem) {
+            case 0: {
+                window.openNewEventView(xVal,yVal,false);
+                break;
+            }
+            case 1: {
+                window.gotoToday=true;
+                break;
+            }
+            case 2: {
+                window.openDatePicker();
+                break;
+            }
+        }
+    }
 
     function initDate()
     {
@@ -70,7 +97,6 @@ Item {
         onAddedEventChanged: {
             if(window.addedEvent) {
                 daysModel.loadGivenWeekValuesFromDate(dateInFocus)
-                searchList.listModel.refresh();
                 eventsListView.contentY = (UtilMethods.EDayTimeStart*50);
                 window.addedEvent = false;
             }
@@ -79,39 +105,12 @@ Item {
         onDeletedEventChanged: {
             if(window.deletedEvent) {
                 daysModel.loadGivenWeekValuesFromDate(dateInFocus)
-                searchList.listModel.refresh();
                 eventsListView.contentY = (UtilMethods.EDayTimeStart*50);
                 window.deletedEvent = false;
             }
         }
 
     }
-
-    Connections {
-        target:weekPage
-        onShowSearchChanged: {
-            if(!showSearch) {
-                searchList.listModel.filterOut("");
-            }
-            searchList.visible = !searchList.visible;
-            weekViewData.visible = !weekViewData.visible;
-            window.searchResultCount = searchList.listModel.count;
-        }
-
-        onSearch: {
-            if(!searchList.visible) {
-                searchList.visible = true;
-                weekViewData.visible = false;
-                window.searchResultCount = searchList.listModel.count;
-            }
-            if(searchList.visible) {
-                searchList.listModel.filterOut(needle);
-                searchList.listIndex = 0;
-                window.searchResultCount = searchList.listModel.count;
-            }
-        }
-    }
-
 
     function resetCalendarDayModels(coreDateVal) {
         var tmpDate = new Date(utilities.getLongDate(coreDateVal));
@@ -210,20 +209,18 @@ Item {
         id:timeListModel
     }
 
-    CalendarListView {
-        id: searchList
-        visible:false
-        onClose: {
-            weekPage.showSearch=false;
-        }
+    TopItem {
+        id:weekViewTopItem
     }
 
     Column {
         id: weekViewData
         spacing: 2
-        anchors.top:  parent.top
+        anchors.fill:parent
         HeaderComponentView {
             id:navHeader
+            width: weekViewTopItem.topWidth
+            height: 50
             dateVal: dateInFocusVal
             onNextTriggered: {
                 daysModel.loadGivenWeekValuesFromOffset(dateInFocus,1);
@@ -237,14 +234,14 @@ Item {
 
         Rectangle {
             id:spacerbox
-            height:window.content.height - (navHeader.height)
-            width: window.content.width
+            height:weekViewTopItem.topHeight - (navHeader.height)
+            width: weekViewTopItem.topWidth
             color:"lightgray"
 
             Rectangle {
                 id: calDataBox
-                height:window.content.height - (navHeader.height)-20
-                width: window.content.width-20
+                height:weekViewTopItem.topHeight - (navHeader.height)-20
+                width: weekViewTopItem.topWidth-20
                 anchors.centerIn: parent
                 color: "white"
                 border.width:2
@@ -281,7 +278,7 @@ Item {
                                               text:i18nHelper.localDate(coreDateVal,Labs.LocaleHelper.DateWeekdayDayShort)
                                               font.bold: true
                                               color:isCurrentDate(coreDateVal,index)?theme_buttonFontColorActive:theme_fontColorNormal
-                                              font.pixelSize: (window.isLandscapeView())?theme_fontPixelSizeLarge:theme_fontPixelSizeMedium
+                                              font.pixelSize: (window.inLandscape)?theme_fontPixelSizeLarge:theme_fontPixelSizeMedium
                                               anchors.centerIn: parent
                                               elide: Text.ElideRight
                                          }
@@ -374,11 +371,13 @@ Item {
                                                                     if(index ==2 && (allDayViewModel.count>3)) {
                                                                         allDayDescText.text = summary;
                                                                     }
-                                                                    var map = mapToItem (window.content, mouseX, mouseY);
-                                                                    window.openView (map.x,map.y,window.container,uid,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
+                                                                    weekViewTopItem.calcTopParent();
+                                                                    var map = mapToItem (weekViewTopItem.topItem,mouseX,mouseY);
+                                                                    window.openView (map.x,map.y,window,uid,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
                                                                 }
                                                                 onLongPressAndHold: {
-                                                                    var map = mapToItem (window.content, mouseX, mouseY);
+                                                                    weekViewTopItem.calcTopParent();
+                                                                    var map = mapToItem (weekViewTopItem.topItem,mouseX,mouseY);
                                                                     displayContextMenu (map.x, map.y,uid,eventActionsPopup,popUpLoader,calItemBox,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
                                                                 }
 
@@ -395,8 +394,9 @@ Item {
                                         ExtendedMouseArea {
                                             anchors.fill: parent
                                             onClicked: {
-                                                var map = mapToItem (window.content, mouseX, mouseY);
-                                                window.openNewEventView(map.x,map.y,addNewEventComponent, addNewEventLoader,true);
+                                                weekViewTopItem.calcTopParent();
+                                                var map = mapToItem (weekViewTopItem.topItem,mouseX,mouseY);
+                                                window.openNewEventView(map.x,map.y,true);
                                             }
                                         }
 
@@ -473,7 +473,7 @@ Item {
                                                     anchors.left:parent.left
                                                     anchors.leftMargin: 5
                                                     color:theme_fontColorNormal
-                                                    font.pixelSize: (window.isLandscapeView())?theme_fontPixelSizeMedium:theme_fontPixelSizeSmall
+                                                    font.pixelSize: (window.inLandscape)?theme_fontPixelSizeMedium:theme_fontPixelSizeSmall
                                                     elide: Text.ElideRight
                                                     visible:(dayInFocusIndex==weekDayIndex)?true:false
                                                 }
@@ -529,11 +529,13 @@ Item {
                                                             ExtendedMouseArea {
                                                                 anchors.fill: parent
                                                                 onClicked: {
-                                                                    var map = mapToItem (window.content, mouseX, mouseY);
-                                                                    window.openView (map.x,map.y,window.container,uid,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
+                                                                    weekViewTopItem.calcTopParent();
+                                                                    var map = mapToItem (weekViewTopItem.topItem,mouseX,mouseY);
+                                                                    window.openView (map.x,map.y,window,uid,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
                                                                 }
                                                                 onLongPressAndHold: {
-                                                                    var map = mapToItem (window.content, mouseX, mouseY);
+                                                                    weekViewTopItem.calcTopParent();
+                                                                    var map = mapToItem (weekViewTopItem.topItem,mouseX,mouseY);
                                                                     displayContextMenu (map.x, map.y,uid,eventActionsPopup,popUpLoader,displayRect,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
                                                                 }
                                                             }
@@ -547,14 +549,16 @@ Item {
                                                     onClicked: {
                                                         window.eventStartHr=startHr;
                                                         window.eventEndHr=endHr;
-                                                        var map = mapToItem (window.content, mouseX, mouseY);
-                                                        window.openNewEventView(map.x,map.y,addNewEventComponent, addNewEventLoader,false);
+                                                        weekViewTopItem.calcTopParent();
+                                                        var map = mapToItem (weekViewTopItem.topItem,mouseX,mouseY);
+                                                        window.openNewEventView(map.x,map.y,false);
                                                     }
                                                     onLongPressAndHold: {
                                                         window.eventStartHr=startHr;
                                                         window.eventEndHr=endHr;
-                                                        var map = mapToItem (window.content, mouseX, mouseY);
-                                                        window.openNewEventView(map.x,map.y,addNewEventComponent, addNewEventLoader,false);
+                                                        weekViewTopItem.calcTopParent();
+                                                        var map = mapToItem (weekViewTopItem.topItem,mouseX,mouseY);
+                                                        window.openNewEventView(map.x,map.y,false);
                                                     }
                                                 }
 

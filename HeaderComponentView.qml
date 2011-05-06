@@ -13,8 +13,6 @@ import MeeGo.Components 0.1
 
 Item {
     id:navHeader
-    width: window.content.width
-    height: 50
     z: 100
     property string dateVal:qsTr("Date")
     function closeMenu() { optionsMenu.visible = false; }
@@ -44,7 +42,7 @@ Item {
     Item {
         id: innerNavigation
         height: 30
-        width: (window.isLandscapeView())? (window.width/2):(2*(window.height/3))
+        width: (window.inLandscape)? (window.width/2):(2*(window.height/3))
         anchors.centerIn: parent
         anchors.margins: 5
         anchors.top: parent.top
@@ -70,7 +68,7 @@ Item {
             anchors.fill: parent
             anchors.centerIn: parent
             height: parent.height
-            width: (window.isLandscapeView())?200:150
+            width: (window.inLandscape)?200:150
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             color:theme_fontColorNormal

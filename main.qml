@@ -11,12 +11,123 @@ import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.App.Calendar 0.1
 import MeeGo.Components 0.1
 
-Labs.Window {
+Window {
     id: window
-    showsearch: false
-    title: qsTr("Calendar")
-    filterModel: [qsTr("Day"),qsTr("Week"),qsTr("Month")]
-    applicationPage: dayViewComponent
+    toolBarTitle: qsTr("Calendar")
+    bookMenuModel: [qsTr("Day"),qsTr("Week"),qsTr("Month")]
+    bookMenuPayload: [dayViewComponent,weekViewComponent,monthViewComponent]
+
+    overlayItem:  Item {
+        id: globalSpaceItems
+        anchors.fill: parent
+
+        Connections {
+            target:window
+            onSearch: {
+                if(!searchList.visible) {
+                    console.log("Inside if(!searchList.visible)")
+                    searchList.visible = true;
+                } else {
+                    console.log("Inside else")
+                    searchList.listModel.filterOut(needle);
+                    searchList.listIndex = 0;
+                    window.searchResultCount = searchList.listModel.count;
+
+                }
+            }
+            onSearchExpanded: {
+                searchList.listModel.refresh();
+                window.searchResultCount = searchList.listModel.count;
+            }
+
+            onSearchRetracted: {
+                if(searchList.visible)
+                    searchList.visible = false;
+            }
+        }
+
+        CalendarListView {
+            id: searchList
+            anchors.fill: parent
+            visible:false
+
+            MouseArea {
+                anchors.fill: parent
+                z:-1
+            }
+        }
+
+        /*NewEventView {
+            id:newEventItem
+        }*/
+
+        Loader {
+            id: addNewEventLoader
+        }
+
+        Component {
+            id: addNewEventComponent
+            NewEventView {
+                onClose: addNewEventLoader.sourceComponent = undefined
+            }
+        }
+
+        EventDetailsView {
+            id:viewEventDetails
+            eventId:eventId
+        }
+
+        DatePicker {
+            id:datePicker
+            onDateSelected: {
+                window.dateFromOutside = selectedDate;
+                window.appDateInFocus = selectedDate;
+                window.gotoDate = true;
+            }
+        }
+
+        ModalDialog {
+            id:confirmDeleteDialog
+            title :qsTr("Delete event?")
+            buttonHeight: 35
+            showCancelButton: true
+            showAcceptButton: true
+            cancelButtonText: qsTr( "Cancel" )
+            acceptButtonText: qsTr( "Delete" )
+            property string eventId
+            alignTitleCenter:true
+
+            content: Item {
+                id: myContent
+                anchors.fill:parent
+                anchors.margins: 10
+                Text {
+                    id:errorMsg
+                    text: qsTr("Are you sure you want to delete this event?")
+                    anchors.fill:parent
+                    wrapMode:Text.Wrap
+                    font.pixelSize: theme_fontPixelSizeLarge
+                }
+            }
+
+            // handle signals:
+            onAccepted: {
+                controller.deleteEvent(eventId);
+                window.deletedEvent = true;
+                confirmDeleteDialog.hide();
+            }
+            onRejected: {
+                confirmDeleteDialog.hide();
+            }
+        }
+
+    }
+
+
+
+    Component.onCompleted: {
+        switchBook(dayViewComponent)
+    }
 
     property int animationduration:250
     property int buttonval:1
@@ -35,7 +146,7 @@ Labs.Window {
     property date appDateInFocus
 
 
-    Connections {
+    /*Connections {
         target: mainWindow
         onCall: {
             applicationData = parameters;
@@ -61,30 +172,7 @@ Labs.Window {
                 triggeredExternally = true;
             }
         }
-    }
-
-
-    onFilterTriggered: {
-        if (index == 0) {
-            buttonval=0;
-            window.applicationPage=dayViewComponent;
-        }else if( index == 1) {
-            buttonval=1;
-            window.applicationPage=weekViewComponent;
-        }else if(index ==2) {
-            buttonval=2;
-            window.applicationPage=monthViewComponent;
-        }
-    }
-
-    onSearch: {
-        searchTriggered = true;
-    }
-
-    // callback used when the user touches the statusbar
-    onStatusBarTriggered: {
-        orientation = (orientation +1)%4;
-    }
+    }*/
 
     UtilMethods {
         id: utilities
@@ -94,90 +182,27 @@ Labs.Window {
         id:i18nHelper
     }
 
-    Loader {
-        id: addNewEventLoader
-    }
-
-    Component {
-        id: addNewEventComponent
-        NewEventView {
-            onClose: addNewEventLoader.sourceComponent = undefined
-        }
-    }
-
-
     Component {
         id:dayViewComponent
-        Labs.ApplicationPage {
+        CalendarDayView {
             id: dayPage
-            anchors.fill:parent
-            title:qsTr("Day")
-            menuContent: actionsMenu
-
-            Connections {
-                target:  dayPage.menuItem
-                onCloseActionsMenu: {
-                    dayPage.closeMenu();
-                }
-            }
-
-            Item {
-                id: landingScreenItem
-                parent: dayPage.content
-                anchors.fill: dayPage.content
-                CalendarDayView {
-                    id:dayPane
-                }
-            }
+            anchors.fill:parent            
         }
     }
 
     Component {
         id:weekViewComponent
-        Labs.ApplicationPage {
+        CalendarWeekView {
             id: weekPage
             anchors.fill:parent
-            title:qsTr("Week")
-            menuContent: actionsMenu
-            Connections {
-                target:  weekPage.menuItem
-                onCloseActionsMenu: {
-                    weekPage.closeMenu();
-                }
-            }
-            Item {
-                id: landingScreenItem
-                parent: weekPage.content
-                anchors.fill: weekPage.content
-                CalendarWeekView {
-                    id:weekPane
-                }
-            }
-
         }
     }
 
     Component {
         id:monthViewComponent
-        Labs.ApplicationPage {
+        CalendarMonthView {
             id: monthPage
-            anchors.fill:parent
-            title:qsTr("Month")
-            menuContent: actionsMenu
-            Connections {
-                target:  monthPage.menuItem
-                onCloseActionsMenu: {
-                    monthPage.closeMenu();
-                }
-            }
-            Item {
-                id: landingScreenItem
-                parent: monthPage.content
-                anchors.fill: monthPage.content
-                CalendarMonthView {
-                    id:dayPane
-                }
-            }
+            anchors.fill:parent            
         }
     }
 
@@ -189,200 +214,107 @@ Labs.Window {
         window.eventYear=tmpDate.getFullYear();
     }
 
-    function openNewEventView(xVal,yVal,component, loader,isAllDay)
+    function openNewEventView(xVal,yVal,isAllDay)
     {
+        /*window.eventDay=window.appDateInFocus.getDate();
+        window.eventMonth=(window.appDateInFocus.getMonth()+1);
+        window.eventYear=window.appDateInFocus.getFullYear();
+        newEventItem.windowType = UtilMethods.EAddEvent;
+        newEventItem.eventDay = eventDay;
+        newEventItem.eventMonth = eventMonth;
+        newEventItem.eventYear = eventYear;
+        newEventItem.eventStartHr = eventStartHr;
+        newEventItem.eventEndHr = eventEndHr;
+        newEventItem.isAllDay = isAllDay;
+        newEventItem.initView=true;
+        newEventItem.setPosition(xVal,yVal);
+        newEventItem.show();
+        newEventItem.newEvent();*/
         window.eventDay=window.appDateInFocus.getDate();
         window.eventMonth=(window.appDateInFocus.getMonth()+1);
         window.eventYear=window.appDateInFocus.getFullYear();
-        loader.sourceComponent = component
-        loader.item.parent = window.container
-        loader.item.windowType = UtilMethods.EAddEvent;
-        loader.item.eventDay = eventDay;
-        loader.item.eventMonth = eventMonth;
-        loader.item.eventYear = eventYear;
-        loader.item.eventStartHr = eventStartHr;
-        loader.item.eventEndHr = eventEndHr;
-        loader.item.isAllDay = isAllDay;
-        loader.item.initView=true;
-        loader.item.displayNewEvent(xVal,yVal);
+        addNewEventLoader.sourceComponent = addNewEventComponent
+        //addNewEventLoader.item.parent = window.container
+        addNewEventLoader.item.windowType = UtilMethods.EAddEvent;
+        addNewEventLoader.item.eventDay = eventDay;
+        addNewEventLoader.item.eventMonth = eventMonth;
+        addNewEventLoader.item.eventYear = eventYear;
+        addNewEventLoader.item.eventStartHr = eventStartHr;
+        addNewEventLoader.item.eventEndHr = eventEndHr;
+        addNewEventLoader.item.isAllDay = isAllDay;
+        addNewEventLoader.item.initView=true;
+        addNewEventLoader.item.setPosition(xVal,yVal);
+        addNewEventLoader.item.show();
+        addNewEventLoader.item.newEvent();
     }
 
     function editEvent(xVal,yVal,uid)
     {
-        addNewEventLoader.sourceComponent = addNewEventComponent;
-        addNewEventLoader.item.parent = window.container;
-        addNewEventLoader.item.windowType = UtilMethods.EModifyEvent;
+        /*newEventItem.windowType = UtilMethods.EModifyEvent;
 
+        console.log("Inside editEvent, uid="+uid);
+        newEventItem.editEventId = uid;
+        newEventItem.editView=true;
+        newEventItem.setPosition(xVal,yVal);
+        newEventItem.show();
+        newEventItem.editEvent();*/
+        addNewEventLoader.sourceComponent = addNewEventComponent;
+        //addNewEventLoader.item.parent = window.container;
+        addNewEventLoader.item.windowType = UtilMethods.EModifyEvent;
         addNewEventLoader.item.editEventId = uid;
         addNewEventLoader.item.editView=true;
-        addNewEventLoader.item.displayNewEvent(xVal,yVal);
+        addNewEventLoader.item.setPosition(xVal,yVal);
+        addNewEventLoader.item.show();
+        addNewEventLoader.item.editEvent();
     }
 
     function deleteEvent(uid)
     {
-        dialogLoader.sourceComponent = confirmDelete;
-        dialogLoader.item.parent = window.container;
-        dialogLoader.item.eventId = uid;
-        dialogLoader.item.show();
+        confirmDeleteDialog.eventId = uid;
+        confirmDeleteDialog.show();
     }
 
 
-    function openDatePicker(popUpParent)
+    function openDatePicker()
     {
-        datePickerLoader.sourceComponent = datePickerComponent;
-        datePickerLoader.item.parent = popUpParent;
-        datePickerLoader.item.show();
+        datePicker.show();
     }
 
 
 
     function openView (xVal,yVal,popUpParent,eventId,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay)
     {
-        eventDetailsLoader.sourceComponent = viewDetails
-        eventDetailsLoader.item.initEventDetails(false,false);
-        eventDetailsLoader.item.parent = popUpParent
-        eventDetailsLoader.item.eventId = eventId;
-        eventDetailsLoader.item.description = description;
-        eventDetailsLoader.item.summary = summary;
-        eventDetailsLoader.item.location = location;
-        eventDetailsLoader.item.alarmType = alarmType;
+        viewEventDetails.initEventDetails(false,false);
+        viewEventDetails.eventId = eventId;
+        viewEventDetails.description = description;
+        viewEventDetails.summary = summary;
+        viewEventDetails.location = location;
+        viewEventDetails.alarmType = alarmType;
         if(allDay) {
-            eventDetailsLoader.item.eventTime = qsTr("%1, %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(qsTr("All day"));
+            viewEventDetails.eventTime = qsTr("%1, %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(qsTr("All day"));
         } else  {
-            eventDetailsLoader.item.eventTime = qsTr("%1, %2 - %3").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
+            viewEventDetails.eventTime = qsTr("%1, %2 - %3").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
         }
-        eventDetailsLoader.item.displayDetails(xVal,yVal);
+        viewEventDetails.displayDetails(xVal,yVal);
+        viewEventDetails.show();
     }
 
     function  openViewFromMonthMultiEvents(xVal,yVal,popUpParent,eventId,description,summary,location,alarmType,timeVal,coreDateVal)
     {
-        eventDetailsLoader.sourceComponent = viewDetails
-        eventDetailsLoader.item.initEventDetails(false,true);
-        eventDetailsLoader.item.parent = popUpParent
-        eventDetailsLoader.item.eventId = eventId;
-        eventDetailsLoader.item.description = description;
-        eventDetailsLoader.item.summary = summary;
-        eventDetailsLoader.item.location = location;
-        eventDetailsLoader.item.alarmType = alarmType;
-        eventDetailsLoader.item.eventTime = timeVal;
-        eventDetailsLoader.item.startDate = coreDateVal;
-        eventDetailsLoader.item.displayDetails(xVal,yVal);
-    }
-
-    Loader {
-        id:eventDetailsLoader
-    }
-
-    Component {
-        id:viewDetails
-        EventDetailsView {
-            id:viewEventDetails
-            eventId:eventId
-            onClose: {
-                eventDetailsLoader.sourceComponent = undefined
-            }
-        }
-    }
-
-
-    Loader {
-        id:datePickerLoader
-    }
-
-    Component {
-        id:datePickerComponent
-        DatePicker {
-            id:datePicker
-            height:(window.isLandscapeView())? window.container.height:window.container.width
-            width:(window.isLandscapeView())?window.container.width/2:window.container.height/3
-            autoCenter:true
-            onDateSelected: {
-                window.dateFromOutside = selectedDate;
-                window.appDateInFocus = selectedDate;
-                window.gotoDate = true;
-                datePickerLoader.sourceComponent=undefined;
-            }
-        }
-
-    }
-
-
-
-    Loader {
-        id:dialogLoader
+        viewEventDetails.initEventDetails(false,true);
+        viewEventDetails.eventId = eventId;
+        viewEventDetails.description = description;
+        viewEventDetails.summary = summary;
+        viewEventDetails.location = location;
+        viewEventDetails.alarmType = alarmType;
+        viewEventDetails.eventTime = timeVal;
+        viewEventDetails.startDate = coreDateVal;
+        viewEventDetails.displayDetails(xVal,yVal);
+        viewEventDetails.show();
     }
 
     CalendarController {
         id: controller
     }
-
-    Component {
-        id:confirmDelete
-        ModalDialog {
-            id:confirmDeleteDialog
-            title :qsTr("Delete event?")
-            buttonHeight: 35
-            showCancelButton: true
-            showAcceptButton: true
-            cancelButtonText: qsTr( "Cancel" )
-            acceptButtonText: qsTr( "Delete" )
-            property string eventId
-            autoCenter:true
-            alignTitleCenter:true
-
-            content: Item {
-                id: myContent
-                anchors.fill:parent
-                anchors.margins: 10
-                Text {
-                    id:errorMsg
-                    text: qsTr("Are you sure you want to delete this event?")
-                    anchors.fill:parent
-                    wrapMode:Text.Wrap
-                    font.pixelSize: theme_fontPixelSizeLarge
-                }
-            }
-
-            // handle signals:
-            onAccepted: {
-                controller.deleteEvent(eventId);
-                window.deletedEvent = true;
-                dialogLoader.sourceComponent = undefined;
-            }
-            onRejected: {
-                dialogLoader.sourceComponent = undefined;
-            }
-        }
-    }
-
-    Component {
-        id: actionsMenu
-        ActionMenu {
-            id: actionsMenuItem
-            signal closeActionsMenu()
-            model: [ qsTr("Create new event"), qsTr("Go to today"), qsTr("Go to date")]
-
-            onTriggered: {
-                switch (index) {
-                    case 0: {
-                        actionsMenuItem.closeActionsMenu();
-                        window.openNewEventView(window.container.width-(actionsMenuItem.contentWidth)/3,(actionsMenuItem.contentHeight)/3, addNewEventComponent, addNewEventLoader,false);
-                        break;
-                    }
-                    case 1: {
-                        window.gotoToday=true;
-                        actionsMenuItem.closeActionsMenu();
-                        break;
-                    }
-                    case 2: {
-                        actionsMenuItem.closeActionsMenu();
-                        openDatePicker(window.container);
-                        break;
-                    }
-                }
-            }
-        }
-    }//end actionsMenu
-
 }//end Window
 

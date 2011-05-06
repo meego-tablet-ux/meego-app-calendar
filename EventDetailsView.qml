@@ -11,9 +11,8 @@ import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.App.Calendar 0.1
 import MeeGo.Components 0.1
 
-Labs.AbstractContext {
+ContextMenu {
     id: viewEventDetails    
-    z:100
     property string eventId
     property string description
     property string summary
@@ -21,8 +20,8 @@ Labs.AbstractContext {
     property int alarmType
     property string eventTime
     property date startDate
-    //property int xVal:0
-   // property int yVal:0
+    property int xVal:0
+    property int yVal:0
     signal close()
     signal back()
     signal closeSearch()
@@ -30,12 +29,10 @@ Labs.AbstractContext {
     property bool showView:false
     property int windowWidth:350
 
-    property alias mouseX: viewEventDetails.mouseX
-    property alias mouseY: viewEventDetails.mouseY
-
     function displayDetails (mouseX, mouseY) {
-        viewEventDetails.mouseX = mouseX
-        viewEventDetails.mouseY = mouseY
+        viewEventDetails.setPosition(mouseX,mouseY)
+        xVal = mouseX;
+        yVal = mouseY;
         visible = true;
     }
 
@@ -291,8 +288,7 @@ Labs.AbstractContext {
                                 text: qsTr("Back")
                                 hasBackground: true
                                 onClicked: {
-                                        viewEventDetails.close();
-                                        viewEventDetails.visible = false;
+                                        viewEventDetails.hide();
                                 }
                             }//backButton
 
@@ -305,9 +301,8 @@ Labs.AbstractContext {
                                 text: qsTr("Edit")
                                 hasBackground: true
                                 onClicked: {
-                                    window.editEvent(mouseX,mouseY,eventId);
-                                    viewEventDetails.close();
-                                    viewEventDetails.visible = false;
+                                    viewEventDetails.hide();
+                                    window.editEvent(xVal,yVal,eventId);
                                 }
                             }//editbutton
 
@@ -320,8 +315,7 @@ Labs.AbstractContext {
                                 text: qsTr("Close")
                                 hasBackground: true
                                 onClicked: {
-                                    viewEventDetails.close();
-                                    viewEventDetails.visible = false;
+                                    viewEventDetails.hide();
                                 }
                             }//closebutton
 

@@ -11,8 +11,9 @@ import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.App.Calendar 0.1
 import MeeGo.Components 0.1
 
-Labs.AbstractContext {
+ContextMenu {
     id:outer
+    title:container.titleBlockText
 
     property int windowType:0
     property bool initView:false
@@ -26,18 +27,25 @@ Labs.AbstractContext {
     property bool isAllDay
     property string editEventId
     property int paintedTextMaxWidth:400
+    signal close();
 
-    signal close()
-
-    function displayNewEvent (mouseX, mouseY) {
-        outer.mouseX = mouseX
-        outer.mouseY = mouseY
-        visible = true;
-        outer.modalSurfaceItem.autoCenter = true;
-        outer.modalSurfaceItem.closeUponFogClicked = false;
+    function editEvent() {
+        if(editView) {
+            console.log("Entered inside onEditViewChanged with eventId:"+editEventId);
+            container.initializeModifyView(editEventId);
+            editView = false;
+        }
     }
 
+    function newEvent() {
+        if(initView) {
+            console.log("Entered inside newEvent");
+            container.initializeView(eventDay,eventMonth,eventYear,eventStartHr,eventEndHr,isAllDay);
+            initView = false;
+        }
+    }
 
+    TopItem { id: topItem }
 
     content:Item {
         id: container
@@ -47,31 +55,10 @@ Labs.AbstractContext {
         property bool initView:outer.initView
         property bool editView:outer.editView
 
-        onInitViewChanged: {
-            if(initView) {
-                initializeView(eventDay,eventMonth,eventYear,eventStartHr,eventEndHr,isAllDay);
-                initView = false;
-            }
-
-        }
-        onEditViewChanged: {
-            if(editView) {
-                initializeModifyView(editEventId);
-                editView = false;
-            }
-        }
-
-
         property int windowType:outer.windowType
-
-        property alias dateTimeBoxSeen: dateTimeBox.visible
-        property alias dTBox: dateTimeBox
-        property variant model: undefined
-        property int itemHeight: 50
         property bool allDaySet:false
         property string eventTitle
         property string titleBlockText
-        property int titleClickCount:0
         property string startDateStr
         property string endDateStr
         property string startTimeStr
@@ -82,10 +69,10 @@ Labs.AbstractContext {
         property variant startTime
         property variant endTime
         property string uid
-        property int gmtOffset
         property variant editEvent
-        property string errorMsg:qsTr("Check the date and time inputs")
-
+        property int repeatType
+        property int alarmType
+        property string zoneName
 
         function resetValues(date1,time1,date2,time2)
         {
@@ -93,10 +80,10 @@ Labs.AbstractContext {
             endDate = date2;
             startTime = time1;
             endTime = time2;
-            startDateTxt.text = i18nHelper.localDate(date1, Labs.LocaleHelper.DateFullShort); //utilities.getDateInFormat(date1,UtilMethods.EDefault);
-            finishDateTxt.text = i18nHelper.localDate(date2, Labs.LocaleHelper.DateFullShort); //utilities.getDateInFormat(date2,UtilMethods.EDefault);
-            startTimeTxt.text = i18nHelper.localTime(time1, Labs.LocaleHelper.TimeFullShort); //utilities.getTimeInFormat(time1,UtilMethods.ETimeSystemLocale);
-            finishTimeTxt.text = i18nHelper.localTime(time2, Labs.LocaleHelper.TimeFullShort); //utilities.getTimeInFormat(time2,UtilMethods.ETimeSystemLocale);
+            startDateTxt.text = i18nHelper.localDate(date1, Labs.LocaleHelper.DateFullShort);
+            finishDateTxt.text = i18nHelper.localDate(date2, Labs.LocaleHelper.DateFullShort);
+            startTimeTxt.text = i18nHelper.localTime(time1, Labs.LocaleHelper.TimeFullShort);
+            finishTimeTxt.text = i18nHelper.localTime(time2, Labs.LocaleHelper.TimeFullShort);
         }
 
         function setEndRepeatDateValues() {
@@ -106,13 +93,12 @@ Labs.AbstractContext {
         function  validateInputs() {
             var validData = true;
 
-            if(!allDaySet) {
+            if(!container.allDaySet) {
                 validData = validateDateTime(startDate,endDate,startTime,endTime);
             }
 
             if(!validData) {
-               //confirmDialog.show();
-                showErrorMessage();
+               confirmDialog.show();
             }
             return validData;
         }
@@ -139,50 +125,33 @@ Labs.AbstractContext {
             return isValid;
         }
 
+       ModalDialog {
+            id:confirmDialog
+            title :qsTr("Error")
+            buttonHeight: 35
+            showCancelButton: false
+            showAcceptButton: true
+            acceptButtonText: qsTr( "OK" )
+            alignTitleCenter:true
 
-        function showErrorMessage()
-        {
-            messageBoxLoader.sourceComponent = messageBoxcomponent;
-            messageBoxLoader.item.parent = window.container;
-            messageBoxLoader.item.show();
-         }
-
-        Loader {
-            id:messageBoxLoader
-        }
-
-        Component {
-            id:messageBoxcomponent
-            ModalDialog {
-                id:confirmDialog
-                title :qsTr("Error")
-                buttonHeight: 35
-                showCancelButton: false
-                showAcceptButton: true
-                //cancelButtonText: qsTr( "Error" )
-                acceptButtonText: qsTr( "OK" )
-                autoCenter:true
-                alignTitleCenter:true
-
-                content: Item {
-                    id: myContent
+            content: Item {
+                id: myContent
+                anchors.fill:parent
+                anchors.margins: 10
+                Text {
+                    id:confirmMsg
+                    text: qsTr("Please check the date and time entered")
                     anchors.fill:parent
-                    anchors.margins: 10
-                    Text {
-                        id:confirmMsg
-                        text: qsTr("Please check the date and time entered")
-                        anchors.fill:parent
-                        wrapMode:Text.Wrap
-                        font.pixelSize: theme_fontPixelSizeLarge
-                    }
+                    wrapMode:Text.Wrap
+                    font.pixelSize: theme_fontPixelSizeLarge
                 }
-
-                onAccepted: {
-                    messageBoxLoader.sourceComponent = undefined
-                }
-
             }
-       }
+
+            onAccepted: {
+                confirmDialog.hide();
+            }
+
+        }//end confirmDialog
 
         function createIOObject() {
             //Initialize variables
@@ -246,6 +215,13 @@ Labs.AbstractContext {
 
         function initializeView(eventDay,eventMonth,eventYear,eventStartHr,eventEndHr,isAllDay) {
             titleBlockText = qsTr("New event");
+            //Clear all the initial Values
+            eventTitleText.text = "";
+            startDateTxt.text = "";
+            finishDateTxt.text = "";
+            startTimeTxt.text = "";
+            finishTimeTxt.text = "";
+
             if(eventDay==0 ||eventMonth==0 ||eventYear==0) {
                 startDate = utilities.getCurrentDateVal();
                 endDate = utilities.getCurrentDateVal();
@@ -295,6 +271,7 @@ Labs.AbstractContext {
 
         function initializeModifyView(eventId)
         {
+           console.log("Inside initializeModifyView");
             titleBlockText = "";
             uid = eventId;
             editEvent = controller.getEventForEdit(eventId);
@@ -317,20 +294,22 @@ Labs.AbstractContext {
             startTimeTxt.text = i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort);
             finishTimeTxt.text = i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort);
 
-            allDaySet = allDayCheck.on;
+            container.allDaySet = allDayCheck.on;
             startDateStr= startDateTxt.text;
             endDateStr = finishDateTxt.text;
             startTimeStr = startTimeTxt.text;
             endTimeStr = finishTimeTxt.text;
 
-            tzCmb.modelVal = editEvent.zoneOffset;
-            tzCmb.selectedVal = editEvent.zoneName;
+            //tzCmb.modelVal = editEvent.zoneOffset;
+            //tzCmb.selectedVal = editEvent.zoneName;
+            container.repeatType = editEvent.repeatType;
+            container.alarmType = editEvent.alarmType;
+            container.zoneName = editEvent.zoneName;
 
-            alarmCmb.selectedVal = utilities.getAlarmString(editEvent.alarmType);
-            alarmCmb.modelVal = editEvent.alarmType;
-
+            alarmCmb.selectedTitle = utilities.getAlarmString(editEvent.alarmType);
+            alarmCmb.selectedIndex = editEvent.alarmType;
             repeatCmb.selectedIndex = editEvent.repeatType;
-            repeatCmb.title = utilities.getRepeatTypeString(editEvent.repeatType);
+            repeatCmb.selectedTitle = utilities.getRepeatTypeString(editEvent.repeatType);
             repeatEndCmb.selectedIndex = editEvent.repeatEndType;
 
             if(editEvent.repeatType != UtilMethods.ENoRepeat) {
@@ -346,10 +325,8 @@ Labs.AbstractContext {
 
         function openTimePicker(index,parentVal)
         {
-            timePickerLoader.sourceComponent = timePickerComponent;
-            timePickerLoader.item.parent = parentVal;
-            timePickerLoader.item.fromIndex = index;
-            timePickerLoader.item.show();
+            timePicker.fromIndex = index;
+            timePicker.show();
         }
 
         function formatInteger(intVal)
@@ -375,10 +352,8 @@ Labs.AbstractContext {
 
         function openDatePicker(index,parentVal)
         {
-            datePickerLoader.sourceComponent = datePickerComponent;
-            datePickerLoader.item.parent = parentVal;
-            datePickerLoader.item.fromIndex = index;
-            datePickerLoader.item.show();
+            datePicker.fromIndex = index;
+            datePicker.show();
         }
 
 
@@ -400,44 +375,29 @@ Labs.AbstractContext {
         }
 
 
-        Loader {
-            id:datePickerLoader
-        }
 
-        Component {
-            id:datePickerComponent
-            DatePicker {
-                id:datePicker
-                height:(window.isLandscapeView())? window.container.height:window.container.width
-                width:(window.isLandscapeView())?window.container.width/2:window.container.height/3
-                property date dateVal
-                property int fromIndex:0
+        DatePicker {
+            id:datePicker
+            property date dateVal
+            property int fromIndex:0
 
-                onDateSelected: {
-                    dateVal=datePicker.selectedDate;
-                    console.log("Obtained dateVal="+dateVal.toString());
-                    setDateValues(fromIndex,dateVal);
-                }
+            onDateSelected: {
+                dateVal=datePicker.selectedDate;
+                console.log("Obtained dateVal="+dateVal.toString());
+                container.setDateValues(fromIndex,dateVal);
             }
         }
 
-        Loader {
-            id:timePickerLoader
-        }
-
-        Component {
-            id:timePickerComponent
-            TimePicker {
-                id: timePicker
-                property int fromIndex:0
-                property variant timeVal                
-                onAccepted: {
-                    timeVal = utilities.createTimeFromVals(hours,minutes);
-                    setTimeValues(fromIndex,timeVal);
-                    console.log("timeVal changed to: "+timeVal);
-                }
-                minutesIncrement:5
+        TimePicker {
+            id: timePicker
+            property int fromIndex:0
+            property variant timeVal
+            onAccepted: {
+                timeVal = utilities.createTimeFromVals(hours,minutes);
+                container.setTimeValues(fromIndex,timeVal);
+                console.log("timeVal changed to: "+timeVal);
             }
+            minutesIncrement:5
         }
 
         CalendarController {
@@ -461,24 +421,6 @@ Labs.AbstractContext {
             id: timezonelist
         }
 
-        Component {
-            id: highlighter
-            Rectangle {
-                color: "darkgray"
-            }
-        }
-
-        Component {
-            id: highlighteroff
-            Rectangle {
-                color: "transparent"
-            }
-        }
-
-        Loader {
-            id: dateTimePopUpLoader
-        }
-
 
         Item {
             id: editList
@@ -499,32 +441,15 @@ Labs.AbstractContext {
             Item {
                 id: titleBlock
                 width: editList.innerBoxWidth
-                height:titleEditArea.height+titleArea.height
+                height:titleEditArea.height
                 anchors.left: parent.left
                 anchors.top: parent.top
                 anchors.topMargin: 10
                 anchors.leftMargin: 25
-                Item{
-                    id: titleArea
-                    width: parent.width
-                    anchors.top: parent.top
-                    anchors.margins: 5
-                    height: (windowType==UtilMethods.EAddEvent)?30:0
-                    Text {
-                        id: eventTitle
-                        text: titleBlockText
-                        font.bold: true
-                        color:theme_fontColorNormal
-                        font.pixelSize: theme_fontPixelSizeLarge
-                        width: parent.width
-                        anchors.fill: parent
-                        elide: Text.ElideRight
-                    }
-                }
+
                 Item {
                     id:titleEditArea
-                    anchors.top: titleArea.bottom
-                    anchors.margins: 5
+                    anchors.top:parent.top
                     width: parent.width
                     height: 30
                     TextEntry {
@@ -542,7 +467,7 @@ Labs.AbstractContext {
                 width: parent.width
                 anchors.top: titleBlock.bottom
                 anchors.left: parent.left
-                anchors.topMargin: 30
+                anchors.topMargin: 10
                 source: "image://theme/menu_item_separator"
             } //end of titleDivider
 
@@ -669,7 +594,7 @@ Labs.AbstractContext {
 
                                   onAllDayChanged: {
                                         if(allDay) {
-                                            allDaySet =  true;
+                                            container.allDaySet =  true;
                                             finishTimeBlock.opacity = 0;
                                             finishTimeBox.height = 0;
                                             finishTimeCmbBlock.opacity = 0;
@@ -677,7 +602,7 @@ Labs.AbstractContext {
                                             startTimeBox.opacity = 0;
                                             startTimeBox.height = 0;
                                         } else {
-                                            allDaySet = false;
+                                            container.allDaySet = false;
                                             finishTimeBlock.opacity = 1;
                                             finishTimeBox.height = 30;
                                             finishTimeCmbBlock.opacity = 1;
@@ -736,10 +661,10 @@ Labs.AbstractContext {
                                           MouseArea {
                                               anchors.fill: parent
                                               onClicked: {
-                                                   openDatePicker(1,window.container);
+                                                  container.openDatePicker(1,window);
                                               }
                                               onFocusChanged: {
-                                                  startDateStr = startDateTxt.text;
+                                                  container.startDateStr = startDateTxt.text;
                                                   startDateTxt.cursorVisible=false;
                                               }
                                           }
@@ -767,7 +692,7 @@ Labs.AbstractContext {
                                           MouseArea {
                                               anchors.fill: parent
                                               onClicked: {
-                                                  openTimePicker(1,window.container);
+                                                  container.openTimePicker(1,window);
                                               }
                                               onFocusChanged: {
                                                   startTimeStr = startTimeTxt.text;
@@ -825,7 +750,7 @@ Labs.AbstractContext {
                                           MouseArea {
                                               anchors.fill: parent
                                               onClicked: {
-                                                   openDatePicker(2,window.container);
+                                                   container.openDatePicker(2,window);
                                               }
                                               onFocusChanged: {
                                                   endDateStr = finishDateTxt.text;
@@ -856,7 +781,7 @@ Labs.AbstractContext {
                                           MouseArea {
                                               anchors.fill: parent
                                               onClicked: {
-                                                  openTimePicker(2,window.container);
+                                                  container.openTimePicker(2,window);
                                               }
                                               onFocusChanged: {
                                                   endTimeStr = finishTimeTxt.text;
@@ -984,7 +909,7 @@ Labs.AbstractContext {
                                             height:30
                                             type: 1
                                             anchors.verticalCenter: parent.verticalCenter
-                                            selectedVal:(windowType==UtilMethods.EAddEvent)?utilities.getLocalTimeZoneName():editEvent.zoneName
+                                            selectedVal:(windowType==UtilMethods.EAddEvent)?utilities.getLocalTimeZoneName():container.zoneName
                                         }
 
                                   }//end of tzcmb block
@@ -1026,11 +951,11 @@ Labs.AbstractContext {
                                       width: editList.innerBoxWidth
                                       anchors.fill: parent
 
-                                      title: (windowType==UtilMethods.EAddEvent)?qsTr("Never"):utilities.getRepeatTypeString(editEvent.repeatType)
+                                      title: (windowType==UtilMethods.EAddEvent)?qsTr("Never"):utilities.getRepeatTypeString(container.repeatType)
                                       replaceDropDownTitle:true
                                       titleColor: "black"
-                                      model: [  qsTr("Never"), qsTr("Every day"), qsTr("Every week") , qsTr("Every 2 weeks"),qsTr("Every 2 weeks"),qsTr("Every month"),qsTr("Every year"),qsTr("Other...")]
-                                      payload: [ UtilMethods.ENoRepeat,UtilMethods.ENoRepeat,UtilMethods.EEveryDay,UtilMethods.EEveryWeek,UtilMethods.EEvery2Weeks,UtilMethods.EEveryMonth,UtilMethods.EEveryYear,UtilMethods.EOtherRepeat ]
+                                      model: [  qsTr("Never"), qsTr("Every day"), qsTr("Every week") , qsTr("Every 2 weeks"),qsTr("Every month"),qsTr("Every year"),qsTr("Other...")]
+                                      payload: [ UtilMethods.ENoRepeat,UtilMethods.EEveryDay,UtilMethods.EEveryWeek,UtilMethods.EEvery2Weeks,UtilMethods.EEveryMonth,UtilMethods.EEveryYear,UtilMethods.EOtherRepeat ]
                                       onTriggered: {
                                           repeatType = payload[index];
                                       }
@@ -1106,7 +1031,7 @@ Labs.AbstractContext {
                                                   repeatEndComboBox.width = repeatEndCmbBlock.width;
                                                   repeatEndDateBox.opacity = 1;
                                                   repeatEndDateBox.height = 30;
-                                                  setEndRepeatDateValues();
+                                                  container.setEndRepeatDateValues();
                                                   if(repeatCountBox.opacity==1) {
                                                       repeatCountBox.opacity = 0;
                                                       repeatCountBox.height = 0;
@@ -1175,7 +1100,7 @@ Labs.AbstractContext {
                                           MouseArea {
                                               anchors.fill: parent
                                               onClicked: {
-                                                   openDatePicker(3,window.container);
+                                                   openDatePicker(3,window);
                                               }
                                           }
                                       }//end repeatend icon
@@ -1219,7 +1144,7 @@ Labs.AbstractContext {
                                       anchors.left: parent.left
                                       width: (parent.width)
                                       height:30
-                                      title: (windowType==UtilMethods.EAddEvent)?qsTr("No reminder"):utilities.getAlarmString(editEvent.alarmType)
+                                      title: (windowType==UtilMethods.EAddEvent)?qsTr("No reminder"):utilities.getAlarmString(container.alarmType)
                                       replaceDropDownTitle:true
                                       titleColor: "black"
 
@@ -1379,9 +1304,9 @@ Labs.AbstractContext {
                                       bgSourceUp: "image://theme/btn_grey_up"
                                       bgSourceDn: "image://theme/btn_grey_dn"
                                       onClicked: {
-                                          window.deleteEvent(uid);
+                                          window.deleteEvent(container.uid);
+                                          outer.hide();
                                           outer.close();
-                                          outer.visible = false;
                                       }
                                   }
 
@@ -1475,10 +1400,10 @@ Labs.AbstractContext {
                     anchors.leftMargin: 20
                     anchors.verticalCenter: parent.verticalCenter
                     onClicked: {
-                        if(validateInputs()) {
-                            createIOObject();
-                            outer.close()
-                            outer.visible = false;
+                        if(container.validateInputs()) {
+                            container.createIOObject();
+                            outer.hide();
+                            outer.close();
                         }
                     }
                 }//savebutton
@@ -1495,8 +1420,8 @@ Labs.AbstractContext {
                     anchors.rightMargin:20
                     anchors.verticalCenter: parent.verticalCenter
                     onClicked: {
-                        outer.close()
-                        outer.visible = false;
+                        outer.hide();
+                        outer.close();
                     }
                 }//closebutton
 
@@ -1505,7 +1430,15 @@ Labs.AbstractContext {
             states: [
                 State {
                     name: "windowExpanded"
-                    PropertyChanges { target: container; height:(window.isLandscapeView())?((window.height)-100):(2*(window.width/3)) }
+                    PropertyChanges {
+                        target: container;
+                        height:{
+                            topItem.calcTopParent();
+                            if(window.inLandscape || window.inInvertedLandscape)
+                                return ((topItem.topHeight)-200);
+                            else return(2*(topItem.topWidth/3));
+                        }
+                    }
                     PropertyChanges { target: scrollableSection; height:800;}
                     PropertyChanges { target: scrollableEditArea; height:editList.height;}
                     when: (editList.windowExpanded==true)

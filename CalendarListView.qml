@@ -9,6 +9,7 @@
 import Qt 4.7
 import MeeGo.App.Calendar 0.1
 import MeeGo.Labs.Components 0.1 as Labs
+import MeeGo.Components 0.1
 
 Item {
     id: centerPane
@@ -21,22 +22,26 @@ Item {
     property string eventLocation
     property int eventAlarmType:0
     property string eventEventTime
+    property bool eventAllDay:false
+    property date eventDate
     property int searchCount:window.searchResultCount
     signal close();
 
-    function openView (xVal,yVal,component,loader,popUpParent,dateVal)
+    function openView (xVal,yVal,popUpParent,eventId,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay)
     {
-        loader.sourceComponent = component
-        loader.item.parent = popUpParent
-        loader.item.eventId = uId;
-        loader.item.description = eventDescription;
-        loader.item.summary = eventSummary;
-        loader.item.location = eventLocation;
-        loader.item.alarmType = eventAlarmType;
-        loader.item.eventTime = eventEventTime;
-        loader.item.startDate = dateVal;
-        loader.item.initEventDetails(true,false);
-        loader.item.displayDetails(xVal,yVal);
+        viewEventDetails.initEventDetails(true,false);
+        viewEventDetails.eventId = eventId;
+        viewEventDetails.description = description;
+        viewEventDetails.summary = summary;
+        viewEventDetails.location = location;
+        viewEventDetails.alarmType = alarmType;
+        if(allDay) {
+            viewEventDetails.eventTime = qsTr("%1, %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(qsTr("All day"));
+        } else  {
+            viewEventDetails.eventTime = qsTr("%1, %2 - %3").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
+        }
+        viewEventDetails.displayDetails(xVal,yVal);
+        viewEventDetails.show();
     }
 
     Connections {
@@ -51,20 +56,18 @@ Item {
         id:eventDetailsLoader
     }
 
-    Component {
-        id:viewDetails
-        EventDetailsView {
-            id:viewEventDetails
-            eventId:eventId
-            onClose: {
-                eventDetailsLoader.sourceComponent = undefined
-            }
-            onCloseSearch: {
-                centerPane.close();
-                eventDetailsLoader.sourceComponent = undefined
-            }
+    EventDetailsView {
+        id:viewEventDetails
+        eventId:eventId
+        onClose: {
+            eventDetailsLoader.sourceComponent = undefined
+        }
+        onCloseSearch: {
+            centerPane.close();
+            eventDetailsLoader.sourceComponent = undefined
         }
     }
+
 
     CalendarListModel {
         id:eventsListModel
@@ -93,10 +96,8 @@ Item {
 
     Rectangle {
         id: eventsListBox
-        height:window.content.height
-        width: window.content.width
+        anchors.fill: parent
         color: "lightgray"
-
         Item {
             id:searchResultsBox
             width:parent.width
@@ -188,15 +189,19 @@ Item {
                     onClicked: {
                         calendarEventsList.currentIndex = index;
                         calendarEventsList.highlight = highlighter;
-                        uId = uid;
-                        eventDescription = description;
-                        eventSummary = summary;
-                        eventLocation = location;
-                        eventAlarmType = alarmType;
-                        eventEventTime = allDay?qsTr("%1, ","Event StartDate,").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull))+qsTr("All day"):qsTr("%1, %2 - %3","Event StartDate, StartTime - EndTime").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
-                        var dateVal = new Date(utilities.getLongDate(startDate));
-                        var map = mapToItem (window.content, mouseX, mouseY);
-                        openView (map.x,map.y,viewDetails,eventDetailsLoader,window.container,dateVal);
+                       /* viewEventDetails.eventId = uid;
+                        viewEventDetails.startDate = startDate;
+                        viewEventDetails.description = description;
+                        viewEventDetails.summary = summary;
+                        viewEventDetails.location = location;
+                        viewEventDetails.alarmType = alarmType;
+                        if(allDay) {
+                            viewEventDetails.eventTime = qsTr("%1, %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(qsTr("All day"));
+                        } else  {
+                            viewEventDetails.eventTime = qsTr("%1, %2 - %3").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
+                        }*/
+                        var map = mapToItem (window, mouseX, mouseY);
+                        openView (map.x,map.y,window,uid,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
                     }
                 }
             }//end delegate rectangle

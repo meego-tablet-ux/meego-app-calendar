@@ -9,15 +9,42 @@
 import Qt 4.7
 import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.App.Calendar 0.1
+import MeeGo.Components 0.1
 
-Item {
+AppPage {
     id: centerPane
+    pageTitle: qsTr("Month")
     property int offset:0
     property date dateInFocus:initDate()
     property string dateInFocusVal
     property string monthInFocusVal
     property int currDayIndex:0
     property int allDayEventsCount:allEventsViewModel.count
+    property int xVal:0
+    property int yVal:0
+    actionMenuModel:  [ qsTr("Create new event"), qsTr("Go to today"), qsTr("Go to date")]
+    actionMenuPayload: [0,1,2]
+    onActionMenuIconClicked: {
+        xVal = mouseX;
+        yVal = mouseY;
+    }
+
+    onActionMenuTriggered: {
+        switch (selectedItem) {
+            case 0: {
+                window.openNewEventView(xVal,yVal,false);
+                break;
+            }
+            case 1: {
+                window.gotoToday=true;
+                break;
+            }
+            case 2: {
+                window.openDatePicker();
+                break;
+            }
+        }
+    }
 
     function initDate()
     {
@@ -112,7 +139,6 @@ Item {
             if(window.addedEvent) {
                 allEventsViewModel.loadGivenDayModel(dateInFocus);
                 monthModel.loadGivenMonthValuesFromOffset(dateInFocus);
-                searchList.listModel.refresh();
                 window.addedEvent = false;
             }
         }
@@ -121,34 +147,7 @@ Item {
             if(window.deletedEvent) {
                 allEventsViewModel.loadGivenDayModel(dateInFocus);
                 monthModel.loadGivenMonthValuesFromOffset(dateInFocus);
-                searchList.listModel.refresh();
                 window.deletedEvent = false;
-            }
-        }
-    }
-
-
-    Connections {
-        target:monthPage
-        onShowSearchChanged: {
-            if(!showSearch) {
-                searchList.listModel.filterOut("");
-            }
-            searchList.visible = !searchList.visible;
-            monthViewData.visible = !monthViewData.visible;
-            window.searchResultCount = searchList.listModel.count;
-        }
-
-        onSearch: {
-            if(!searchList.visible) {
-                searchList.visible = true;
-                monthViewData.visible = false;
-                window.searchResultCount = searchList.listModel.count;
-            }
-            if(searchList.visible) {
-                searchList.listModel.filterOut(needle);
-                searchList.listIndex = 0;
-                window.searchResultCount = searchList.listModel.count;
             }
         }
     }
@@ -176,28 +175,19 @@ Item {
     }
 
     function showMultipleEventsPopup(xVal,yVal,coreDateVal,popUpParent) {
-        multipleEventsPopupLoader.sourceComponent = multipleEventsPopup
-        multipleEventsPopupLoader.item.parent = popUpParent
-        multipleEventsPopupLoader.item.coreDateVal = coreDateVal;
-        multipleEventsPopupLoader.item.initModel();
-        multipleEventsPopupLoader.item.displayMultiEvents(xVal,yVal);
+        multipleEventsPopup.coreDateVal = coreDateVal;
+        multipleEventsPopup.initModel();
+        multipleEventsPopup.displayMultiEvents(xVal,yVal);
+        multipleEventsPopup.show();
     }
 
     Loader {
         id:popUpLoader
     }
 
-    Loader {
-        id:multipleEventsPopupLoader
-    }
 
-    Component {
+    MultipleEventsPopup {
         id:multipleEventsPopup
-        MultipleEventsPopup {
-            onClose: {
-                multipleEventsPopupLoader.sourceComponent = undefined
-            }
-        }
     }
 
     Component {
@@ -230,20 +220,18 @@ Item {
         id:weekDaysModel
     }
 
-    CalendarListView {
-        id: searchList
-        visible:false
-        onClose: {
-            monthPage.showSearch=false;
-        }
+    TopItem {
+        id:monthViewTopItem
     }
 
     Column {
         id: monthViewData
         spacing: 2
-        anchors.top:  parent.top
+        anchors.fill:parent
         HeaderComponentView {
             id:navHeader
+            width: monthViewTopItem.topWidth
+            height: 50
             dateVal: monthInFocusVal
             onNextTriggered: {
                 resetFocus(1);
@@ -254,8 +242,8 @@ Item {
         }
         Item {
             id:spacerbox
-            height:window.content.height - (navHeader.height)
-            width: window.content.width
+            height:monthViewTopItem.topHeight - (navHeader.height)
+            width: monthViewTopItem.topWidth
             BorderImage {
                     id: spacerImage
                     anchors.fill: parent
@@ -263,15 +251,15 @@ Item {
 
                     Item {
                         id: calDataBox
-                        height:window.content.height - (navHeader.height)-20
-                        width: window.content.width-20
+                        height:monthViewTopItem.topHeight - (navHeader.height)-20
+                        width: monthViewTopItem.topWidth-20
                         anchors.centerIn: parent
 
                         Flickable {
                             id:centerContent
                             height: calDataBox.height
                             width: calDataBox.width
-                            contentHeight: (window.isLandscapeView())?calDataBox.height:(monthViewBox.height + eventViewBox.height)
+                            contentHeight: (window.inLandscape)?calDataBox.height:(monthViewBox.height + eventViewBox.height)
                             contentWidth: calDataBox.width
                             property real cellHeight: (monthViewBox.height-weekBox.height)/(6.5)
                             property real cellWidth: monthViewBox.width/7.0
@@ -279,8 +267,8 @@ Item {
 
                             Item {
                                 id:monthViewBox
-                                height: (window.isLandscapeView())?calDataBox.height:(2*(calDataBox.height/3))
-                                width:(window.isLandscapeView())?(3*(calDataBox.width/4)):(calDataBox.width)
+                                height: (window.inLandscape)?calDataBox.height:(2*(calDataBox.height/3))
+                                width:(window.inLandscape)?(3*(calDataBox.width/4)):(calDataBox.width)
                                 anchors.top: parent.top
                                 Column {
                                     anchors.top: parent.top
@@ -440,8 +428,9 @@ Item {
                                                     }
                                                     onPressAndHold: {
                                                         if(isMonthDay && eventsCount>0) {
-                                                             var map = mapToItem (window.content, mouseX, mouseY);
-                                                            showMultipleEventsPopup(map.x,map.y,coreDateVal,window.container);
+                                                            monthViewTopItem.calcTopParent();
+                                                            var map = mapToItem (monthViewTopItem.topItem,mouseX,mouseY);
+                                                            showMultipleEventsPopup(map.x,map.y,coreDateVal,window);
                                                         }
                                                     }
                                                 }
@@ -456,11 +445,11 @@ Item {
 
                             Rectangle {
                                 id:eventViewBox
-                                height: (window.isLandscapeView())?(calDataBox.height):(calDataBox.height/3)
-                                width:(window.isLandscapeView())?(calDataBox.width/4):(calDataBox.width)
-                                anchors.left: (window.isLandscapeView())?monthViewBox.right:parent.left
-                                anchors.leftMargin:(window.isLandscapeView())?5:0
-                                anchors.top: (window.isLandscapeView())?parent.top:monthViewBox.bottom
+                                height: (window.inLandscape)?(calDataBox.height):(calDataBox.height/3)
+                                width:(window.inLandscape)?(calDataBox.width/4):(calDataBox.width)
+                                anchors.left: (window.inLandscape)?monthViewBox.right:parent.left
+                                anchors.leftMargin:(window.inLandscape)?5:0
+                                anchors.top: (window.inLandscape)?parent.top:monthViewBox.bottom
                                 border.width: 2
                                 border.color: "gray"
 
@@ -548,16 +537,18 @@ Item {
                                                         anchors.fill: parent
                                                         onClicked: {
                                                             //window.editEvent(uid);
-                                                            var map = mapToItem (window.content, mouseX, mouseY);
+                                                            monthViewTopItem.calcTopParent();
+                                                            var map = mapToItem (monthViewTopItem.topItem,mouseX,mouseY);
                                                             //console.log("allDayEventsCount="+allDayEventsCount);
                                                             //if(allDayEventsCount>0) {
-                                                                window.openView (map.x,map.y,window.container,uid,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
+                                                                window.openView (map.x,map.y,window,uid,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
                                                             /*} else  {
-                                                                window.openNewEventView(map.x,map.y,addNewEventComponent, addNewEventLoader,false);
+                                                                window.openNewEventView(map.x,map.y,false);
                                                             }*/
                                                         }
                                                         onLongPressAndHold: {
-                                                            var map = mapToItem (window.content, mouseX, mouseY);
+                                                            monthViewTopItem.calcTopParent();
+                                                            var map = mapToItem (monthViewTopItem.topItem,mouseX,mouseY);
                                                             displayContextMenu (map.x, map.y,uid,eventActionsPopup,popUpLoader,eventBox,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
                                                         }                                                       
                                                     }

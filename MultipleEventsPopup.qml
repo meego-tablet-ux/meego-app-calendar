@@ -11,17 +11,18 @@ import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.App.Calendar 0.1
 import MeeGo.Components 0.1
 
-Labs.AbstractContext {
+ContextMenu {
     id: eventListPopup
     property date coreDateVal
     signal close()
 
-    property alias mouseX: eventListPopup.mouseX
-    property alias mouseY: eventListPopup.mouseY
+    property int xVal: 0
+    property int yVal: 0
 
     function displayMultiEvents (mouseX, mouseY) {
-        eventListPopup.mouseX = mouseX
-        eventListPopup.mouseY = mouseY
+        eventListPopup.setPosition(mouseX,mouseY)
+        xVal = mouseX
+        yVal = mouseY
         visible = true;
     }
 
@@ -154,7 +155,7 @@ Labs.AbstractContext {
                                 anchors.fill: parent
                                 onClicked: {
                                     var dateTimeStr = qsTr("%1, %2","Event StartDate, Start and End Time String").arg(i18nHelper.localDate(coreDateVal, Labs.LocaleHelper.DateFull)).arg(timeVal)
-                                    window.openViewFromMonthMultiEvents( eventListPopup.mouseX,eventListPopup.mouseY,window.container,uid,description,summary,location,alarmType,dateTimeStr,coreDateVal);
+                                    window.openViewFromMonthMultiEvents( eventListPopup.xVal,eventListPopup.yVal,window,uid,description,summary,location,alarmType,dateTimeStr,coreDateVal);
                                     eventListPopup.close();
                                     eventListPopup.visible = false;
                                 }
