@@ -305,8 +305,8 @@ ContextMenu {
             startTimeStr = startTimeTxt.text;
             endTimeStr = finishTimeTxt.text;
 
-            //tzCmb.modelVal = editEvent.zoneOffset;
-            //tzCmb.selectedVal = editEvent.zoneName;
+            tzCmb.modelVal = editEvent.zoneOffset;
+            tzCmb.selectedVal = editEvent.zoneName;
             container.repeatType = editEvent.repeatType;
             container.alarmType = editEvent.alarmType;
             container.zoneName = editEvent.zoneName;
