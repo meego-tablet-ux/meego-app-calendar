@@ -26,12 +26,13 @@ ContextMenu {
     property int eventEndHr
     property bool isAllDay
     property string editEventId
-    property int paintedTextMaxWidth:400
+    property int paintedTextMaxWidth:500
+    property int outerPainterTextWidth : 2*(paintedTextMaxWidth / 3)
+
     signal close();
 
     function editEvent() {
         if(editView) {
-            console.log("Entered inside onEditViewChanged with eventId:"+editEventId);
             container.initializeModifyView(editEventId);
             editView = false;
         }
@@ -39,7 +40,6 @@ ContextMenu {
 
     function newEvent() {
         if(initView) {
-            console.log("Entered inside newEvent");
             container.initializeView(eventDay,eventMonth,eventYear,eventStartHr,eventEndHr,isAllDay);
             initView = false;
         }
@@ -50,7 +50,13 @@ ContextMenu {
     content:Item {
         id: container
         height:400
-        width:paintedTextMaxWidth
+        width: //outer.paintedTextMaxWidth
+               {
+                    if (outerPainterTextWidth == 500)
+                        return paintedTextMaxWidth
+                    else
+                        return outerPainterTextWidth
+               }
 
         property bool initView:outer.initView
         property bool editView:outer.editView
@@ -271,7 +277,6 @@ ContextMenu {
 
         function initializeModifyView(eventId)
         {
-           console.log("Inside initializeModifyView");
             titleBlockText = "";
             uid = eventId;
             editEvent = controller.getEventForEdit(eventId);
@@ -344,9 +349,15 @@ ContextMenu {
             if(fromIndex==1) {
                 startTime = timeVal;
                 startTimeTxt.text = i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort);
+                //Temporary Fix to bug BMC:17374
+                startTimeTxt.visible=false;
+                startTimeTxt.visible=true;
             } else if(fromIndex==2) {
                 endTime = timeVal;
                 finishTimeTxt.text = i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort);
+                //Temporary Fix to bug BMC:17374
+                finishTimeTxt.visible=false;
+                finishTimeTxt.visible=true;
             }
         }
 
@@ -362,15 +373,21 @@ ContextMenu {
             if(fromIndex == 1) {
                 startDate = dateVal;
                 startDateTxt.text=i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFullShort);
-                console.log("Obtained startDateTxt.text="+startDateTxt.text);
+                //Temporary Fix to bug BMC:17374
+                startDateTxt.visible=false;
+                startDateTxt.visible=true;
             } else if(fromIndex == 2) {
                 endDate = dateVal;
                 finishDateTxt.text = i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFullShort);
-                console.log("Obtained finishDateTxt.text="+finishDateTxt.text);
+                //Temporary Fix to bug BMC:17374
+                finishDateTxt.visible=false;
+                finishDateTxt.visible=true;
             } else if(fromIndex == 3) {
                 repeatEndDate = dateVal;
                 endRepeatDayText.text = i18nHelper.localDate(repeatEndDate, Labs.LocaleHelper.DateFullShort);
-                console.log("Obtained endRepeatDayText.text="+endRepeatDayText.text);
+                //Temporary Fix to bug BMC:17374
+                endRepeatDayText.visible=false;
+                endRepeatDayText.visible=true;
             }
         }
 
@@ -383,7 +400,6 @@ ContextMenu {
 
             onDateSelected: {
                 dateVal=datePicker.selectedDate;
-                console.log("Obtained dateVal="+dateVal.toString());
                 container.setDateValues(fromIndex,dateVal);
             }
         }
@@ -395,7 +411,6 @@ ContextMenu {
             onAccepted: {
                 timeVal = utilities.createTimeFromVals(hours,minutes);
                 container.setTimeValues(fromIndex,timeVal);
-                console.log("timeVal changed to: "+timeVal);
             }
             minutesIncrement:5
         }
@@ -566,7 +581,8 @@ ContextMenu {
                                       anchors.left:parent.left
                                       width: {
                                           if(parent.width/3<allDayTxt.paintedWidth){
-                                              (outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+allDayTxt.paintedWidth+50)
+                                              //(outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+allDayTxt.paintedWidth+75)
+                                              (outer.outerPainterTextWidth=2*(outer.paintedTextMaxWidth/3)+allDayTxt.paintedWidth+75)
                                           }
                                           return parent.width/3;
                                       }
@@ -620,7 +636,8 @@ ContextMenu {
                                       id:startTimeBlock
                                       width: {
                                           if(dateTimeBlock.width/3<startTxt.paintedWidth) {
-                                              (outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+startTxt.paintedWidth+50)
+                                              //(outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+startTxt.paintedWidth+75)
+                                              (outer.outerPainterTextWidth=2*(outer.paintedTextMaxWidth/3)+startTxt.paintedWidth+75)
                                           }
                                           return dateTimeBlock.width/3;
                                       }
@@ -640,64 +657,46 @@ ContextMenu {
                                       id:startTimeCmbBlock
                                       width:2*(dateTimeBlock.width/3)
                                       height:50
-                                      Rectangle{
+                                      Item{
                                           id:startDateBox
                                           height:30
-                                          width: 2*(parent.width/3)-5
-                                          radius:2
-                                          border.width: 2
-                                          border.color: "Gray"
+                                          width: 2*(parent.width/3)-20
                                           anchors.left: parent.left
                                           anchors.verticalCenter: parent.verticalCenter
-                                          TextInput {
+                                          TextEntry {
                                                 id: startDateTxt
-                                                text:""
-                                                anchors.left: parent.left
-                                                anchors.leftMargin: 10
-                                                anchors.verticalCenter: parent.verticalCenter
-                                                color:theme_fontColorNormal
-                                                font.pixelSize:theme_fontPixelSizeMedium
-                                           }
+                                                text: ""
+                                                anchors.fill:parent
+                                                readOnly: false
+                                                textInput.font.pixelSize:theme_fontPixelSizeMedium
+                                          }
                                           MouseArea {
                                               anchors.fill: parent
                                               onClicked: {
                                                   container.openDatePicker(1,window);
-                                              }
-                                              onFocusChanged: {
-                                                  container.startDateStr = startDateTxt.text;
-                                                  startDateTxt.cursorVisible=false;
-                                              }
+                                              }                                              
                                           }
 
                                       }
 
-                                      Rectangle {
+                                      Item {
                                           id:startTimeBox
                                           anchors.right: parent.right
+                                          anchors.left: startDateBox.right
+                                          anchors.margins: 5
                                           anchors.verticalCenter: parent.verticalCenter
-                                          width: parent.width/3
                                           height:30
-                                          radius:2
-                                          border.width: 2
-                                          border.color: "Gray"
-                                          TextInput {
+                                          TextEntry {
                                                 id: startTimeTxt
                                                 text: ""
-                                                anchors.left: parent.left
-                                                anchors.leftMargin: 10
-                                                anchors.verticalCenter: parent.verticalCenter
-                                                color:theme_fontColorNormal
-                                                font.pixelSize: theme_fontPixelSizeMedium
+                                                anchors.fill: parent
+                                                textInput.font.pixelSize:theme_fontPixelSizeMedium
                                           }
                                           MouseArea {
                                               anchors.fill: parent
                                               onClicked: {
                                                   container.openTimePicker(1,window);
-                                              }
-                                              onFocusChanged: {
-                                                  startTimeStr = startTimeTxt.text;
-                                                  startTimeTxt.cursorVisible=false;
-                                              }
+                                              }                                              
                                           }
                                       }
                                   }//end of startTimeCmbBlock
@@ -708,7 +707,8 @@ ContextMenu {
                                       id:finishTimeBlock
                                       width:{
                                           if(dateTimeBlock.width/3<finishTxt.paintedWidth){
-                                              (outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+finishTxt.paintedWidth+50)
+                                              //(outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+finishTxt.paintedWidth+75)
+                                              (outer.outerPainterTextWidth=2*(outer.paintedTextMaxWidth/3)+finishTxt.paintedWidth+75)
                                           }
                                           return dateTimeBlock.width/3;
                                       }
@@ -729,64 +729,45 @@ ContextMenu {
                                       width: 2*(dateTimeBlock.width/3)
                                       height:30
 
-                                      Rectangle{
+                                      Item{
                                           id:finishDateBox
                                           anchors.top: parent.top
                                           anchors.left: parent.left
-                                          width: 2*(parent.width/3)-5
+                                          width: 2*(parent.width/3)-20
                                           height:parent.height
-                                          radius:2
-                                          border.width: 2
-                                          border.color: "Gray"
-                                          TextInput {
+                                          TextEntry {
                                                 id: finishDateTxt
                                                 text:""
-                                                anchors.left: parent.left
-                                                anchors.leftMargin: 10
-                                                anchors.verticalCenter: parent.verticalCenter
-                                                color:theme_fontColorNormal
-                                                font.pixelSize: theme_fontPixelSizeMedium
+                                                anchors.fill: parent
+                                                textInput.font.pixelSize:theme_fontPixelSizeMedium
                                            }
                                           MouseArea {
                                               anchors.fill: parent
                                               onClicked: {
                                                    container.openDatePicker(2,window);
-                                              }
-                                              onFocusChanged: {
-                                                  endDateStr = finishDateTxt.text;
-                                                  finishDateTxt.cursorVisible=false;
-                                              }
+                                              }                                              
                                           }
 
                                       }
 
-                                      Rectangle {
+                                      Item {
                                           id:finishTimeBox
-                                          anchors.top: parent.top
                                           anchors.right: parent.right
-                                          width: parent.width/3
-                                          height:parent.height
-                                          radius:2
-                                          border.width: 2
-                                          border.color: "Gray"
-                                          TextInput {
+                                          anchors.left: finishDateBox.right
+                                          anchors.margins: 5
+                                          anchors.verticalCenter: parent.verticalCenter
+                                          height:30
+                                          TextEntry {
                                                 id: finishTimeTxt
                                                 text: ""
-                                                anchors.left: parent.left
-                                                anchors.leftMargin: 10
-                                                anchors.verticalCenter: parent.verticalCenter
-                                                color:theme_fontColorNormal
-                                                font.pixelSize: theme_fontPixelSizeMedium
+                                                anchors.fill: parent
+                                                textInput.font.pixelSize:theme_fontPixelSizeMedium
                                           }
                                           MouseArea {
                                               anchors.fill: parent
                                               onClicked: {
                                                   container.openTimePicker(2,window);
-                                              }
-                                              onFocusChanged: {
-                                                  endTimeStr = finishTimeTxt.text;
-                                                  finishTimeTxt.cursorVisible=false;
-                                              }
+                                              }                                             
                                           }
                                       }
                                   }//end of finishTimeCmbBlock
@@ -879,7 +860,8 @@ ContextMenu {
                                       id:tzText
                                       width: {
                                           if(dateTimeBlock.width/3<tzTxt.paintedWidth){
-                                              (outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+tzTxt.paintedWidth+50)
+                                              //(outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+tzTxt.paintedWidth+75)
+                                              (outer.outerPainterTextWidth=2*(outer.paintedTextMaxWidth/3)+tzTxt.paintedWidth+75)
                                           }
                                           return dateTimeBlock.width/3;
                                       }
@@ -957,7 +939,7 @@ ContextMenu {
                                       model: [  qsTr("Never"), qsTr("Every day"), qsTr("Every week") , qsTr("Every 2 weeks"),qsTr("Every month"),qsTr("Every year"),qsTr("Other...")]
                                       payload: [ UtilMethods.ENoRepeat,UtilMethods.EEveryDay,UtilMethods.EEveryWeek,UtilMethods.EEvery2Weeks,UtilMethods.EEveryMonth,UtilMethods.EEveryYear,UtilMethods.EOtherRepeat ]
                                       onTriggered: {
-                                          repeatType = payload[index];
+                                          repeatCmbBlock.repeatType = payload[index];
                                       }
                                   }
 
@@ -1013,7 +995,7 @@ ContextMenu {
                                               model: [  qsTr("Repeats forever"), qsTr("Ends after number of times..."), qsTr("Ends after date...")]
                                               payload: [UtilMethods.EForever,UtilMethods.EForNTimes,UtilMethods.EAfterDate]
                                               onTriggered: {
-                                                  repeatEndType = payload[index];
+                                                  repeatEndComboBox.repeatEndType = payload[index];
                                               }
                                           }
 
@@ -1022,7 +1004,7 @@ ContextMenu {
                                                   repeatEndComboBox.width = repeatEndCmbBlock.width -50;
                                                   repeatCountBox.opacity = 1;
                                                   repeatCountBox.height= 30;
-                                                  repeatCountBox.width = 30;
+                                                  repeatCountBox.width = 40;
                                                   if(repeatEndDateBox.opacity==1) {
                                                       repeatEndDateBox.opacity = 0;
                                                       repeatEndDateBox.height = 0;
@@ -1058,6 +1040,7 @@ ContextMenu {
                                               anchors.fill: parent
                                               defaultText:"0"
                                               inputMethodHints:Qt.ImhDigitsOnly
+                                              font.pixelSize:theme_fontPixelSizeMedium
                                           }                                          
                                       }
                                   }//end row
@@ -1084,7 +1067,7 @@ ContextMenu {
                                                 text: ""
                                                 anchors.fill:parent
                                                 readOnly: true
-                                                textInput.font.pixelSize:theme_fontPixelSizeMedium
+                                                font.pixelSize:theme_fontPixelSizeMedium
                                           }
                                       }//end repeatendday
 
@@ -1100,7 +1083,7 @@ ContextMenu {
                                           MouseArea {
                                               anchors.fill: parent
                                               onClicked: {
-                                                   openDatePicker(3,window);
+                                                   container.openDatePicker(3,window);
                                               }
                                           }
                                       }//end repeatend icon

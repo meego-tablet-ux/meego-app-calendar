@@ -149,34 +149,28 @@ ContextMenu {
                             Item {
                                 id:locBox
                                 width:locRemBox.width
-                                height:(location=="")?0:30
-                                Text {
+                                height:(location=="")?0:50
+                                TextField {
                                     id:eventLocTxt
                                     text:location
                                     anchors.fill: parent
-                                    font.pixelSize: theme_fontPixelSizeMedium
-                                    color:theme_fontColorNormal
                                     font.bold: true
-                                    wrapMode: Text.Wrap
-                                    width: locBox.width
-                                    elide: Text.ElideRight
+                                    readOnly: true
                                 }
+
                             }//locBox
 
                             Item {
                                 id:descBox
                                 width:locRemBox.width
-                                height:(description=="")?0:100
+                                height:(description=="")?0:80
                                 clip: true
-                                TextEdit {
+                                TextField {
                                     id:summaryTxt
                                     text:description
                                     anchors.fill: parent
-                                    font.pixelSize: theme_fontPixelSizeMedium
-                                    color:theme_fontColorNormal
-                                    wrapMode: Text.Wrap
+                                    readOnly: true
                                     width: descBox.width
-                                    //elide: Text.ElideRight
                                 }
                             }//summary
 
