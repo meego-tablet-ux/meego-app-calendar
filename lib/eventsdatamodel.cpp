@@ -178,9 +178,8 @@ void EventsDataModel::clearData()
     if(!itemsList.isEmpty())
     {
         beginResetModel();
-        for(int i = 0; i < itemsList.count(); i++)
-            delete itemsList[i];
-        itemsList.clear();
+        while (!itemsList.isEmpty())
+            delete itemsList.takeFirst();
         endResetModel();
     }
 }

@@ -123,7 +123,6 @@ void DayViewModel::assignDisplayValues()
         }
         htVal = round(htVal);
         ((CalendarDataItem*)(itemsList.at(i)))->heightUnits = htVal;
-        qDebug()<<"xUnits="<<calItem->xUnits<<",yUnits="<<calItem->yUnits<<",widthUnits="<<calItem->widthUnits<<", heightUnits="<<calItem->heightUnits<<",startIndex="<<calItem->startIndex;
 
         for(int j=0;j<calItem->heightUnits;j++) {
             if(hashmap.count(index+j) == 0) {
@@ -416,12 +415,8 @@ int DayViewModel::columnCount(const QModelIndex &parent) const
 
 void DayViewModel::clearData()
 {
-    if(!itemsList.isEmpty())
-    {
-        for(int i = 0; i < itemsList.count(); i++)
-            delete itemsList[i];
-         itemsList.clear();
-    }
+    while (!itemsList.isEmpty())
+        delete itemsList.takeFirst();
 }
 
 QML_DECLARE_TYPE(DayViewModel);

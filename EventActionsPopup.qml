@@ -20,9 +20,12 @@ Item {
     property string summary
     property string location
     property int alarmType:0
+    property string repeatText
     property date startDate
-    property date startTime
+    property variant startTime
+    property variant endTime
     property int zoneOffset
+    property bool allDay
     property string eventTime
     property string timeVal
     property int mapX:0
@@ -36,27 +39,6 @@ Item {
 
     }
 
-    function openView (component,popUpParent)
-    {
-        viewEventDetails.eventId = eventId;
-        viewEventDetails.description = description;
-        viewEventDetails.summary = summary;
-        viewEventDetails.location = location;
-        viewEventDetails.alarmType = alarmType;
-        viewEventDetails.eventTime = timeVal;
-        viewEventDetails.displayDetails(mapX,mapY);
-        viewEventDetails.show();
-        console.log("showing the details window")
-
-    }
-
-
-    EventDetailsView {
-        id:viewEventDetails
-        eventId:eventId
-    }
-
-
     ContextMenu {
         id: eventOptionsContextMenu
         content:  ActionMenu {
@@ -68,21 +50,21 @@ Item {
             onTriggered: {
                 if (index == 0)
                 {
-                    console.log("Uid received is "+eventId);
-                    eventOptionsContextMenu.hide();
-                    openView (viewEventDetails,window);
+                    window.openView(mapX,mapY,eventId,description,summary,location,alarmType,repeatText,startDate,startTime,endTime,zoneOffset,allDay,false,false)
+                    //Deviating from conventional hide() and using my own signal close() because of the way the PopUp is handled from the calling components
+                    eventActionsPopup.close();
                 }
                 else if (index == 1)
                 {
-                    console.log("Uid received is "+eventId);
-                    eventOptionsContextMenu.hide();
                     window.editEvent(mapX,mapY,eventId);
+                    //Deviating from conventional hide() and using my own signal close() because of the way the PopUp is handled from the calling components
+                    eventActionsPopup.close();
                 }
                 else if (index == 2)
                 {
-                    console.log("Uid received is "+eventId);
-                    eventOptionsContextMenu.hide();
                     window.deleteEvent(eventId);
+                    //Deviating from conventional hide() and using my own signal close() because of the way the PopUp is handled from the calling components
+                    eventActionsPopup.close();
                  }
             }
          }

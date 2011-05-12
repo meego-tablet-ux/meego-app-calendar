@@ -25,10 +25,10 @@ Window {
             target:window
             onSearch: {
                 if(!searchList.visible) {
-                    console.log("Inside if(!searchList.visible)")
+                    searchList.listModel.refresh();
                     searchList.visible = true;
+
                 } else {
-                    console.log("Inside else")
                     searchList.listModel.filterOut(needle);
                     searchList.listIndex = 0;
                     window.searchResultCount = searchList.listModel.count;
@@ -57,9 +57,6 @@ Window {
             }
         }
 
-        /*NewEventView {
-            id:newEventItem
-        }*/
 
         Loader {
             id: addNewEventLoader
@@ -215,26 +212,11 @@ Window {
     }
 
     function openNewEventView(xVal,yVal,isAllDay)
-    {
-        /*window.eventDay=window.appDateInFocus.getDate();
-        window.eventMonth=(window.appDateInFocus.getMonth()+1);
-        window.eventYear=window.appDateInFocus.getFullYear();
-        newEventItem.windowType = UtilMethods.EAddEvent;
-        newEventItem.eventDay = eventDay;
-        newEventItem.eventMonth = eventMonth;
-        newEventItem.eventYear = eventYear;
-        newEventItem.eventStartHr = eventStartHr;
-        newEventItem.eventEndHr = eventEndHr;
-        newEventItem.isAllDay = isAllDay;
-        newEventItem.initView=true;
-        newEventItem.setPosition(xVal,yVal);
-        newEventItem.show();
-        newEventItem.newEvent();*/
+    {        
         window.eventDay=window.appDateInFocus.getDate();
         window.eventMonth=(window.appDateInFocus.getMonth()+1);
         window.eventYear=window.appDateInFocus.getFullYear();
         addNewEventLoader.sourceComponent = addNewEventComponent
-        //addNewEventLoader.item.parent = window.container
         addNewEventLoader.item.windowType = UtilMethods.EAddEvent;
         addNewEventLoader.item.eventDay = eventDay;
         addNewEventLoader.item.eventMonth = eventMonth;
@@ -249,17 +231,8 @@ Window {
     }
 
     function editEvent(xVal,yVal,uid)
-    {
-        /*newEventItem.windowType = UtilMethods.EModifyEvent;
-
-        console.log("Inside editEvent, uid="+uid);
-        newEventItem.editEventId = uid;
-        newEventItem.editView=true;
-        newEventItem.setPosition(xVal,yVal);
-        newEventItem.show();
-        newEventItem.editEvent();*/
+    {        
         addNewEventLoader.sourceComponent = addNewEventComponent;
-        //addNewEventLoader.item.parent = window.container;
         addNewEventLoader.item.windowType = UtilMethods.EModifyEvent;
         addNewEventLoader.item.editEventId = uid;
         addNewEventLoader.item.editView=true;
@@ -282,24 +255,25 @@ Window {
 
 
 
-    function openView (xVal,yVal,popUpParent,eventId,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay)
+    function openView (xVal,yVal,eventId,description,summary,location,alarmType,repeatString,startDate,startTime,endTime,zoneOffset,allDay,viewVisible,backVisible)
     {
-        viewEventDetails.initEventDetails(false,false);
+        viewEventDetails.initEventDetails(viewVisible,backVisible);
         viewEventDetails.eventId = eventId;
         viewEventDetails.description = description;
         viewEventDetails.summary = summary;
         viewEventDetails.location = location;
         viewEventDetails.alarmType = alarmType;
-        if(allDay) {
-            viewEventDetails.eventTime = qsTr("%1, %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(qsTr("All day"));
-        } else  {
-            viewEventDetails.eventTime = qsTr("%1, %2 - %3").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
-        }
+        viewEventDetails.repeatText = repeatString;
+        viewEventDetails.startDate = startDate;
+        viewEventDetails.startTime = startTime;
+        viewEventDetails.endTime = endTime;
+        viewEventDetails.allDay = allDay;
+        viewEventDetails.zoneOffset = zoneOffset;
         viewEventDetails.displayDetails(xVal,yVal);
         viewEventDetails.show();
     }
 
-    function  openViewFromMonthMultiEvents(xVal,yVal,popUpParent,eventId,description,summary,location,alarmType,timeVal,coreDateVal)
+    function  openViewFromMonthMultiEvents(xVal,yVal,popUpParent,eventId,description,summary,location,alarmType,repeatString,timeVal,coreDateVal)
     {
         viewEventDetails.initEventDetails(false,true);
         viewEventDetails.eventId = eventId;
@@ -307,6 +281,7 @@ Window {
         viewEventDetails.summary = summary;
         viewEventDetails.location = location;
         viewEventDetails.alarmType = alarmType;
+        viewEventDetails.repeatText = repeatString;
         viewEventDetails.eventTime = timeVal;
         viewEventDetails.startDate = coreDateVal;
         viewEventDetails.displayDetails(xVal,yVal);

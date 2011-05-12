@@ -38,7 +38,6 @@ public:
 
     void setModelType(const int type)
         {
-          qDebug()<<"model set to="<<type;
           modelType = type;
         }
 

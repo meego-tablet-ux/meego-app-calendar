@@ -155,7 +155,7 @@ ContextMenu {
                                 anchors.fill: parent
                                 onClicked: {
                                     var dateTimeStr = qsTr("%1, %2","Event StartDate, Start and End Time String").arg(i18nHelper.localDate(coreDateVal, Labs.LocaleHelper.DateFull)).arg(timeVal)
-                                    window.openViewFromMonthMultiEvents( eventListPopup.xVal,eventListPopup.yVal,window,uid,description,summary,location,alarmType,dateTimeStr,coreDateVal);
+                                    window.openViewFromMonthMultiEvents( eventListPopup.xVal,eventListPopup.yVal,window,uid,description,summary,location,alarmType,utilities.getRepeatTypeString(repeatType),dateTimeStr,coreDateVal);
                                     eventListPopup.close();
                                     eventListPopup.visible = false;
                                 }

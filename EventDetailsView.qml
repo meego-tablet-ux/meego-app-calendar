@@ -17,9 +17,14 @@ ContextMenu {
     property string description
     property string summary
     property string location
+    property string repeatText
     property int alarmType
     property string eventTime
     property date startDate
+    property variant startTime
+    property variant endTime
+    property int zoneOffset
+    property bool allDay
     property int xVal:0
     property int yVal:0
     signal close()
@@ -33,14 +38,19 @@ ContextMenu {
         viewEventDetails.setPosition(mouseX,mouseY)
         xVal = mouseX;
         yVal = mouseY;
+        if(allDay) {
+            eventTime = qsTr("All day");
+        } else  {
+            eventTime = qsTr("%1, %2 - %3","Event StartDate, StartTime - EndTime ").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
+        }
         visible = true;
     }
 
 
     function initEventDetails(viewVisible,backVisible)
     {
-        showBack=backVisible;
         showView=viewVisible;
+        showBack=backVisible;
     }
 
     function showMultipleEventsPopup(xVal,yVal,coreDateVal,popUpParent) {
@@ -49,7 +59,6 @@ ContextMenu {
         multipleEventsPopupLoader.item.coreDateVal = coreDateVal;
         multipleEventsPopupLoader.item.displayMultiEvents(xVal,yVal);
         multipleEventsPopupLoader.item.initModel();
-        console.log("Inside showMultipleEventsPopup inside EventDetailsView");
     }
 
     Loader {
@@ -61,11 +70,6 @@ ContextMenu {
         MultipleEventsPopup {
             onClose: multipleEventsPopupLoader.sourceComponent = undefined
         }
-    }
-
-
-    CalendarController {
-        id:controller
     }
 
     content: Item {
@@ -107,14 +111,22 @@ ContextMenu {
                         Item {
                             id:timeBox
                             width:titleTimeArea.width
-                            height:30
+                            height:60
                             anchors.top: summaryBox.bottom
                             anchors.topMargin: 5
                             anchors.leftMargin:10
                             Text {
                                 id:eventTimeTxt
                                 text:eventTime
-                                anchors.fill: parent
+                                font.pixelSize: theme_fontPixelSizeMedium
+                                color:theme_fontColorNormal
+                                width: timeBox.width
+                                elide: Text.ElideRight
+                            }
+                            Text {
+                                id:repeatValText
+                                text: qsTr("%1 %2","Repeats frequency").arg(qsTr("Repeats")).arg(repeatText)
+                                anchors.top: eventTimeTxt.bottom
                                 font.pixelSize: theme_fontPixelSizeMedium
                                 color:theme_fontColorNormal
                                 width: timeBox.width
@@ -135,7 +147,6 @@ ContextMenu {
                     id: locRemSpacer
                     width:eventDetailsBox.width
                     height:locRemBox.height
-                    //color:"blue"
                     Item {
                         id: locRemBox
                         width:eventDetailsBox.width-20
@@ -235,10 +246,10 @@ ContextMenu {
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                console.log("Inside Show in Calendar View mouseArea,startDate="+startDate.toString("dd mmm yyyy"));
                                 window.dateFromOutside = startDate;
                                 window.gotoDate=true;
-                                viewEventDetails.closeSearch();
+                                //viewEventDetails.closeSearch();
+                                window.showToolBarSearch = false;
                                 viewEventDetails.visible = false;
                             }
                         }
@@ -276,7 +287,6 @@ ContextMenu {
                             Button {
                                 id: backButton
                                 visible:(viewEventDetails.showBack)?true:false
-                                //height:(viewEventDetails.showBack)?30:0
                                 bgSourceUp: "image://theme/btn_grey_up"
                                 bgSourceDn: "image://theme/btn_grey_dn"
                                 text: qsTr("Back")
@@ -289,7 +299,6 @@ ContextMenu {
 
                             Button {
                                 id: editButton
-                                //height:30
                                 bgSourceUp: "image://theme/btn_blue_up"
                                 bgSourceDn: "image://theme/btn_blue_dn"
                                 text: qsTr("Edit")
@@ -303,7 +312,6 @@ ContextMenu {
 
                             Button {
                                 id: closeButton
-                                //height:30
                                 bgSourceUp: "image://theme/btn_grey_up"
                                 bgSourceDn: "image://theme/btn_grey_dn"
                                 text: qsTr("Close")

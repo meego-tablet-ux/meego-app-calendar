@@ -50,8 +50,7 @@ ContextMenu {
     content:Item {
         id: container
         height:400
-        width: //outer.paintedTextMaxWidth
-               {
+        width: {
                     if (outerPainterTextWidth == 500)
                         return paintedTextMaxWidth
                     else
@@ -636,7 +635,6 @@ ContextMenu {
                                       id:startTimeBlock
                                       width: {
                                           if(dateTimeBlock.width/3<startTxt.paintedWidth) {
-                                              //(outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+startTxt.paintedWidth+75)
                                               (outer.outerPainterTextWidth=2*(outer.paintedTextMaxWidth/3)+startTxt.paintedWidth+75)
                                           }
                                           return dateTimeBlock.width/3;
@@ -707,7 +705,6 @@ ContextMenu {
                                       id:finishTimeBlock
                                       width:{
                                           if(dateTimeBlock.width/3<finishTxt.paintedWidth){
-                                              //(outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+finishTxt.paintedWidth+75)
                                               (outer.outerPainterTextWidth=2*(outer.paintedTextMaxWidth/3)+finishTxt.paintedWidth+75)
                                           }
                                           return dateTimeBlock.width/3;
@@ -860,7 +857,6 @@ ContextMenu {
                                       id:tzText
                                       width: {
                                           if(dateTimeBlock.width/3<tzTxt.paintedWidth){
-                                              //(outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+tzTxt.paintedWidth+75)
                                               (outer.outerPainterTextWidth=2*(outer.paintedTextMaxWidth/3)+tzTxt.paintedWidth+75)
                                           }
                                           return dateTimeBlock.width/3;
@@ -1413,7 +1409,8 @@ ContextMenu {
             states: [
                 State {
                     name: "windowExpanded"
-                    PropertyChanges {
+                    //Commenting this window expansion now as a work around for BMC 16558
+                    /*PropertyChanges {
                         target: container;
                         height:{
                             topItem.calcTopParent();
@@ -1421,7 +1418,7 @@ ContextMenu {
                                 return ((topItem.topHeight)-200);
                             else return(2*(topItem.topWidth/3));
                         }
-                    }
+                    }*/
                     PropertyChanges { target: scrollableSection; height:800;}
                     PropertyChanges { target: scrollableEditArea; height:editList.height;}
                     when: (editList.windowExpanded==true)

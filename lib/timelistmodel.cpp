@@ -191,18 +191,12 @@ int TimeListModel::columnCount(const QModelIndex &parent) const
 
 void TimeListModel::clearData()
 {
-    if(!itemsList.isEmpty())
-    {
-        for(int i = 0; i < itemsList.count(); i++)
-            delete itemsList[i];
-        itemsList.clear();
-    }
-    if(!eventsList.isEmpty())
-    {
-        for(int i = 0; i < eventsList.count(); i++)
-            delete eventsList[i];
-        eventsList.clear();
-    }
+    while (!itemsList.isEmpty())
+        delete itemsList.takeFirst();
+
+    while (!eventsList.isEmpty())
+        delete eventsList.takeFirst();
+
     if(!indexHash.empty()) {
         indexHash.clear();
     }
@@ -264,7 +258,6 @@ void TimeListModel::assignDisplayValues()
         }
         htVal = round(htVal);
         ((CalendarDataItem*)(eventsList.at(i)))->heightUnits = htVal;
-        qDebug()<<"xUnits="<<calItem->xUnits<<",yUnits="<<calItem->yUnits<<",widthUnits="<<calItem->widthUnits<<", heightUnits="<<calItem->heightUnits<<",startIndex="<<calItem->startIndex;
 
         for(int j=0;j<calItem->heightUnits;j++) {
             if(hashmap.count(index+j) == 0) {

@@ -138,7 +138,6 @@ void CalendarMonthModel::loadCurrentMonthValues()
     }
 
    endResetModel();
-
 }
 
 void CalendarMonthModel::loadGivenMonthValuesFromOffset(QDate dateInFocus)
@@ -208,12 +207,8 @@ int CalendarMonthModel::columnCount(const QModelIndex &parent) const
 
 void CalendarMonthModel::clearData()
 {
-    if(!itemsList.isEmpty())
-    {
-        for(int i = 0; i < itemsList.count(); i++)
-            delete itemsList[i];
-        itemsList.clear();
-    }
+    while (!itemsList.isEmpty())
+        delete itemsList.takeFirst();
 }
 
 QML_DECLARE_TYPE(CalendarMonthModel);

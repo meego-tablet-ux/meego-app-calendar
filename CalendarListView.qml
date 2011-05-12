@@ -27,23 +27,6 @@ Item {
     property int searchCount:window.searchResultCount
     signal close();
 
-    function openView (xVal,yVal,popUpParent,eventId,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay)
-    {
-        viewEventDetails.initEventDetails(true,false);
-        viewEventDetails.eventId = eventId;
-        viewEventDetails.description = description;
-        viewEventDetails.summary = summary;
-        viewEventDetails.location = location;
-        viewEventDetails.alarmType = alarmType;
-        if(allDay) {
-            viewEventDetails.eventTime = qsTr("%1, %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(qsTr("All day"));
-        } else  {
-            viewEventDetails.eventTime = qsTr("%1, %2 - %3").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
-        }
-        viewEventDetails.displayDetails(xVal,yVal);
-        viewEventDetails.show();
-    }
-
     Connections {
         target:window
         onSearchResultCountChanged: {
@@ -51,23 +34,6 @@ Item {
             results.text = qsTr("%1 results found","Search result count").arg(searchCount)
         }
     }
-
-    Loader {
-        id:eventDetailsLoader
-    }
-
-    EventDetailsView {
-        id:viewEventDetails
-        eventId:eventId
-        onClose: {
-            eventDetailsLoader.sourceComponent = undefined
-        }
-        onCloseSearch: {
-            centerPane.close();
-            eventDetailsLoader.sourceComponent = undefined
-        }
-    }
-
 
     CalendarListModel {
         id:eventsListModel
@@ -188,20 +154,9 @@ Item {
                     anchors.fill: parent
                     onClicked: {
                         calendarEventsList.currentIndex = index;
-                        calendarEventsList.highlight = highlighter;
-                       /* viewEventDetails.eventId = uid;
-                        viewEventDetails.startDate = startDate;
-                        viewEventDetails.description = description;
-                        viewEventDetails.summary = summary;
-                        viewEventDetails.location = location;
-                        viewEventDetails.alarmType = alarmType;
-                        if(allDay) {
-                            viewEventDetails.eventTime = qsTr("%1, %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(qsTr("All day"));
-                        } else  {
-                            viewEventDetails.eventTime = qsTr("%1, %2 - %3").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
-                        }*/
+                        calendarEventsList.highlight = highlighter;                       
                         var map = mapToItem (window, mouseX, mouseY);
-                        openView (map.x,map.y,window,uid,description,summary,location,alarmType,startDate,startTime,endTime,zoneOffset,allDay);
+                        window.openView (map.x,map.y,uid,description,summary,location,alarmType,utilities.getRepeatTypeString(repeatType),startDate,startTime,endTime,zoneOffset,allDay,true,false);
                     }
                 }
             }//end delegate rectangle

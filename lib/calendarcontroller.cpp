@@ -11,6 +11,7 @@
 #include <exception>
 #include <alarm.h>
 #include <icalformat.h>
+#include <QDebug>
 
 using namespace std;
 
@@ -22,7 +23,6 @@ CalendarController::CalendarController(QObject *parent) : QObject(parent)
 //Destructor
 CalendarController::~CalendarController()
 {
-
 }
 
 bool CalendarController::setUpCalendars()
@@ -83,9 +83,6 @@ bool CalendarController :: addModifyEvent(int actionType,QObject*  eventIOObj)
         //handle repeat
         handleRepeat(coreEvent,eventIO);
 
-        //handle timezone
-
-
         //handle alarm processing
         if(eventIO.getAlarmType()!= ENoAlarm) {
             coreEvent->clearAlarms();
@@ -94,15 +91,11 @@ bool CalendarController :: addModifyEvent(int actionType,QObject*  eventIOObj)
         }
 
         if(actionType == EAddEvent) {
-            qDebug()<<"Before adding event to notebook\n";
             calendar->addEvent(coreEvent,notebook->uid());
-            qDebug()<<"After adding event to notebook\n";
         } else if(actionType == EModifyEvent) {
             coreEvent->setRevision(coreEvent->revision()+1);
         }
-        qDebug()<<"Before saving to storage\n";
         storage->save();
-        qDebug()<<"After saving to storage\n";
     } catch (exception &e) {
         success = false;
         qDebug()<< e.what();
@@ -121,18 +114,12 @@ bool CalendarController::deleteEvent(QString eventUid)
     bool deleted = true;
     try {
         storage->loadNotebookIncidences(nUid);
-
-        qDebug()<<"Deleting event inside CalendarController::deleteEvent(), eventUid="<<eventUid;
-        qDebug()<<"calendar ptr="<<calendar<<"calendar ptr calendar.isNull()="<<calendar.isNull();
         KCalCore::Event::Ptr coreEvent = KCalCore::Event::Ptr(calendar->event(eventUid));
-        qDebug()<<"coreEvent.isNull()="<<coreEvent.isNull()<<"Obtained the pointer,coreEvent="<<coreEvent;
         if(!coreEvent.isNull()) {
             deleted = calendar->deleteEvent(coreEvent);
-            qDebug()<<"Deleted event inside CalendarController::deleteEvent()";
         }
         storage->save();
 
-        qDebug()<<"Storing to storage inside CalendarController::deleteEvent()";
     }catch(exception &e){
         deleted = false;
         qDebug()<< e.what();
@@ -148,7 +135,6 @@ bool CalendarController::deleteEvent(QString eventUid)
 void CalendarController::handleRepeat(KCalCore::Event::Ptr coreEventPtr,const IncidenceIO&  eventIO)
 {
    try {
-        qDebug()<<"Entered handleRepeat\n";
         if(eventIO.getRepeatType()==ENoRepeat){
             /*eventRecurrence->setDaily(1);
             eventRecurrence->setDuration(1);
@@ -194,15 +180,12 @@ void CalendarController::handleRepeat(KCalCore::Event::Ptr coreEventPtr,const In
             }//end of switch
 
             if(eventIO.getRepeatEndType() == UtilMethods::EForNTimes) {
-                qDebug()<<"Setting repeat for count\n";
                 eventRecurrence->setDuration(eventIO.getRepeatCount());
             } else if(eventIO.getRepeatEndType() == UtilMethods::EAfterDate) {
-                qDebug()<<"Setting repeat \n";
                 eventRecurrence->setEndDateTime(eventIO.getRepeatEndDateTime());
             }
 
         }//end of else
-        qDebug()<<"Exiting handleRepeat\n";
     } catch (exception &e) {
         qDebug()<<e.what();
     }
@@ -217,22 +200,14 @@ void CalendarController::handleRepeat(KCalCore::Event::Ptr coreEventPtr,const In
 void CalendarController::handleEventTime(KCalCore::Event::Ptr coreEventPtr,const IncidenceIO&  eventIO)
 {
     try{
-        qDebug()<<"******************";
-        qDebug()<<eventIO.isAllDay();
-        qDebug()<<"******************";
-        //KDateTime::Spec tzSpec(KDateTime::OffsetFromUTC,eventIO.getTimeZoneOffset());
         coreEventPtr->setDtStart(eventIO.getStartDateTime());
         if(eventIO.isAllDay()) {
-            qDebug()<<"Inside if\n";
             coreEventPtr->setAllDay(true);
-            qDebug()<<coreEventPtr->allDay();
             if(coreEventPtr->hasEndDate()) { coreEventPtr->setDtEnd(eventIO.getStartDateTime());}
         } else {
-            qDebug()<<"Inside else\n";
             coreEventPtr->setAllDay(false);
             coreEventPtr->setDtEnd(eventIO.getEndDateTime());
         }
-        qDebug()<<"Exiting handleEventTime\n";
     } catch(exception &e) {
         qDebug()<<e.what();
     }
@@ -248,10 +223,8 @@ void CalendarController::handleEventTime(KCalCore::Event::Ptr coreEventPtr,const
 void CalendarController::handleAlarm(const IncidenceIO&  eventIO,KCalCore::Alarm::Ptr eventAlarm)
 {
     try{
-        qDebug()<<"Entered handleAlarm\n";
         eventAlarm->setText(eventIO.getSummary());
         eventAlarm->setDisplayAlarm(eventIO.getSummary());
-        //eventAlarm->setAudioFile(<path to Alarm beep file>);
         eventAlarm->setEnabled(true);
 
         switch(eventIO.getAlarmType()) {
@@ -413,10 +386,7 @@ QList<IncidenceIO> CalendarController::getEventsFromDB(int listType,KDateTime st
             }
             eventIO.setTimeZoneOffset(event->dtStart().utcOffset());
             eventIO.setTimeZoneName(event->dtStart().timeZone().name());
-            qDebug()<<"*********Inside geteventsFromDB(),event->dtStart().timeZone().name()="<<event->dtStart().timeZone().name().toStdString().c_str();
             eventIOList.append(eventIO);
-            //eventIO.printIncidence();
-            qDebug()<<"End of incidence "<<i<<"\n";
         }
     } catch(exception &e) {
         qDebug()<<e.what();

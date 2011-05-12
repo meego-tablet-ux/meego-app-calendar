@@ -40,7 +40,6 @@ CalendarDataItem::CalendarDataItem(int index,const IncidenceIO& fromObj, QObject
 
 CalendarDataItem::CalendarDataItem(const CalendarDataItem& fromObj) : QObject(0)
 {
-    //qDebug()<<"****Inside copy constructor\n";
     this->index = fromObj.index;
     this->type = fromObj.type;
     this->uid = fromObj.uid;

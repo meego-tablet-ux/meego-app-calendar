@@ -10,12 +10,10 @@
 
 IncidenceIO::IncidenceIO(QObject *parent) : QObject(parent)
 {
-    qDebug()<<"*****Inside main constructor\n";
 }
 
 IncidenceIO::IncidenceIO(const IncidenceIO& fromObj) : QObject(0)
 {
-    //qDebug()<<"****Inside copy constructor\n";
     this->type = fromObj.type;
     this->uid = fromObj.uid;
     this->description = fromObj.description;
@@ -32,7 +30,6 @@ IncidenceIO::IncidenceIO(const IncidenceIO& fromObj) : QObject(0)
     this->alarmDateTime = fromObj.alarmDateTime;
     this->zoneOffset = fromObj.zoneOffset;
     this->zoneName = fromObj.zoneName;
-    //printIncidence();
 }
 
 IncidenceIO::~IncidenceIO()
@@ -57,7 +54,6 @@ QString IncidenceIO::getDescription() const
 
 QString IncidenceIO::getSummary() const
 {
-    qDebug()<<"Inside getSummary"<<summary<<"\n";
     return summary;
 }
 
@@ -213,23 +209,14 @@ void IncidenceIO::setStartDateTime(const KDateTime startDateTime)
 
 void IncidenceIO::setStartDateTime(const QDate startDateVal, const QTime startTimeVal, QString tzName)
 {
-    qDebug()<<"Inside IncidenceIO::setStartDateTime, startDateVal="<<startDateVal.toString("dd MMM yyyy");
-
-    qDebug()<<"Inside IncidenceIO::setStartDateTime, startTimeVal="<<startTimeVal.toString("hh:mm");
 
     if(tzName.isNull()||tzName.isEmpty()) {
-        //KDateTime::Spec tzSpec(KDateTime::LocalZone);
-        //this->setStartDateTime(KDateTime(startDateVal,startTimeVal,tzSpec));
         KDateTime::Spec tzSpec(KSystemTimeZones::local());
         this->setStartDateTime(KDateTime(startDateVal,startTimeVal,tzSpec));
     } else {
-        //KDateTime::Spec tzSpec(KDateTime::LocalZone,gmtOffset);
-        //this->setStartDateTime(KDateTime(startDateVal,startTimeVal,tzSpec));
         KDateTime::Spec tzSpec(KSystemTimeZones::zone(tzName));
         this->setStartDateTime(KDateTime(startDateVal,startTimeVal,tzSpec));
     }
-
-    qDebug()<<"*****************Inside overloaded setStartDateTime startDateTime="<<startDateTime.toString()<<"\n";
 }
 
 
@@ -241,18 +228,12 @@ void IncidenceIO::setStartDateTime(const QDate startDateVal, const QTime startTi
     void IncidenceIO::setEndDateTime(const QDate endDateVal, const QTime endTimeVal,QString tzName)
     {
         if(tzName.isNull()||tzName.isEmpty()) {
-            //KDateTime::Spec tzSpec(KDateTime::LocalZone);
-            //this->setEndDateTime(KDateTime(endDateVal,endTimeVal,tzSpec));
             KDateTime::Spec tzSpec(KSystemTimeZones::local());
             this->setEndDateTime(KDateTime(endDateVal,endTimeVal,tzSpec));
         } else {
-            //KDateTime::Spec tzSpec(KDateTime::OffsetFromUTC,gmtOffset);
-            //this->setEndDateTime(KDateTime(endDateVal,endTimeVal,tzSpec));
             KDateTime::Spec tzSpec(KSystemTimeZones::zone(tzName));
             this->setEndDateTime(KDateTime(endDateVal,endTimeVal,tzSpec));
         }
-
-        qDebug()<<"Inside overloaded setEndDateTime\n";
     }
 
 
@@ -264,18 +245,12 @@ void IncidenceIO::setStartDateTime(const QDate startDateVal, const QTime startTi
     void IncidenceIO::setRepeatEndDateTime(const QDate repeatEndDateVal, const QTime repeatEndTimeVal, QString tzName)
     {
         if(tzName.isNull()||tzName.isEmpty()) {
-            //KDateTime::Spec tzSpec(KDateTime::LocalZone);
-            //this->setRepeatEndDateTime(KDateTime(repeatEndDateVal,repeatEndTimeVal,tzSpec));
             KDateTime::Spec tzSpec(KSystemTimeZones::local());
             this->setRepeatEndDateTime(KDateTime(repeatEndDateVal,repeatEndTimeVal,tzSpec));
         } else {
-            //KDateTime::Spec tzSpec(KDateTime::OffsetFromUTC,gmtOffset);
-            //this->setRepeatEndDateTime(KDateTime(repeatEndDateVal,repeatEndTimeVal,tzSpec));
             KDateTime::Spec tzSpec(KSystemTimeZones::zone(tzName));
             this->setRepeatEndDateTime(KDateTime(repeatEndDateVal,repeatEndTimeVal,tzSpec));
         }
-
-        qDebug()<<"Inside overloaded setRepeatEndDateTime\n";
     }
 
 

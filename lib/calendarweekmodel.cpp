@@ -36,13 +36,11 @@ CalendarWeekModel::~CalendarWeekModel()
 
 void CalendarWeekModel::loadCurrentWeekValues()
 {
-    qDebug()<<"entered loadCurrentWeekValues()\n";
     UtilMethods utilities;
     QDate currentDate = QDate::currentDate();
     int dayOfWeek = currentDate.dayOfWeek();
     QDate startDate = currentDate.addDays(-(dayOfWeek-1));
     clearData();
-    //emit reset();
     emit beginInsertRows(QModelIndex(),0,6);
     itemsList << new DateItem(0,utilities.getShortDate(startDate),startDate);
     itemsList << new DateItem(1,utilities.getShortDate(startDate.addDays(1)),startDate.addDays(1));
@@ -51,14 +49,12 @@ void CalendarWeekModel::loadCurrentWeekValues()
     itemsList << new DateItem(4,utilities.getShortDate(startDate.addDays(4)),startDate.addDays(4));
     itemsList << new DateItem(5,utilities.getShortDate(startDate.addDays(5)),startDate.addDays(5));
     itemsList << new DateItem(6,utilities.getShortDate(startDate.addDays(6)),startDate.addDays(6));
-    qDebug()<<"Inside loadCurrentWeekValues\n";
     emit endInsertRows();
 
 }
 
 void CalendarWeekModel::loadGivenWeekValuesFromOffset(QDate currDateInFocus,int offSetFromCurrentWeek)
 {
-    qDebug()<<"entered loadGivenWeekValuesFromOffset()\n";
     UtilMethods utilities;
     bool changeModel=false;
     QDate startDate;
@@ -84,7 +80,6 @@ void CalendarWeekModel::loadGivenWeekValuesFromOffset(QDate currDateInFocus,int 
         itemsList << new DateItem(4,utilities.getShortDate(startDate.addDays(4)),startDate.addDays(4));
         itemsList << new DateItem(5,utilities.getShortDate(startDate.addDays(5)),startDate.addDays(5));
         itemsList << new DateItem(6,utilities.getShortDate(startDate.addDays(6)),startDate.addDays(6));
-        qDebug()<<"Inside loadGivenWeekValues1, offSetFromCurrentWeek="<<offSetFromCurrentWeek;
         endResetModel();
     }
 }
@@ -92,7 +87,6 @@ void CalendarWeekModel::loadGivenWeekValuesFromOffset(QDate currDateInFocus,int 
 
 void CalendarWeekModel::loadGivenWeekValuesFromDate(QDate fromDate)
 {
-    qDebug()<<"entered overloaded loadGivenWeekValuesFromDate\n";
     UtilMethods utilities;
     int dayOfWeek = fromDate.dayOfWeek();
     QDate startDate = fromDate.addDays(-(dayOfWeek-1));
@@ -105,7 +99,6 @@ void CalendarWeekModel::loadGivenWeekValuesFromDate(QDate fromDate)
     itemsList << new DateItem(4,utilities.getShortDate(startDate.addDays(4)),startDate.addDays(4));
     itemsList << new DateItem(5,utilities.getShortDate(startDate.addDays(5)),startDate.addDays(5));
     itemsList << new DateItem(6,utilities.getShortDate(startDate.addDays(6)),startDate.addDays(6));
-    qDebug()<<"Inside loadGivenWeekValuesFromDate,startDate="<<startDate.toString("dd MMM yyyy");
     endResetModel();
 }
 
@@ -153,12 +146,8 @@ int CalendarWeekModel::columnCount(const QModelIndex &parent) const
 
 void CalendarWeekModel::clearData()
 {
-    if(!itemsList.isEmpty())
-    {
-        for(int i = 0; i < itemsList.count(); i++)
-            delete itemsList[i];
-        itemsList.clear();
-    }
+    while (!itemsList.isEmpty())
+        delete itemsList.takeFirst();
 }
 
 QML_DECLARE_TYPE(CalendarWeekModel);

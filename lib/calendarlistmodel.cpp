@@ -59,7 +59,6 @@ CalendarListModel::~CalendarListModel()
 
 void CalendarListModel::refresh()
 {
-    qDebug()<<"entered refresh()\n";
     CalendarController controller;
     QList<IncidenceIO> list = controller.getEventsFromDB(EAll);
 
@@ -80,7 +79,6 @@ void CalendarListModel::refresh()
             eventsCount++;
         }
     }
-    qDebug()<<"refresh Added total events = "<<itemsList.count();
 
     if(!itemsDisplay.isEmpty())
     {
@@ -89,12 +87,10 @@ void CalendarListModel::refresh()
     for(int i = 0; i < itemsList.count(); i++)
         itemsDisplay << itemsList[i];
     endResetModel();
-    qDebug()<<"exiting refresh";
 }
 
 void CalendarListModel::loadAllEventsSorted()
 {
-    qDebug()<<"entered loadAllEventsSorted()\n";
     CalendarController controller;
     QList<IncidenceIO> list = controller.getEventsFromDB(EAll);
 
@@ -104,7 +100,6 @@ void CalendarListModel::loadAllEventsSorted()
     for(int i=0;i<list.count();i++) {
         IncidenceIO ioObject = list.at(i);
         if(ioObject.isAllDay()) {
-            qDebug()<<"Inside adding alldayevents, eventsCount="<<eventsCount;
             itemsList << new CalendarDataItem(eventsCount,ioObject);
             eventsCount++;
         }
@@ -112,15 +107,12 @@ void CalendarListModel::loadAllEventsSorted()
     for(int i=0;i<list.count();i++) {
         IncidenceIO ioObject = list.at(i);
         if(!ioObject.isAllDay()) {
-            qDebug()<<"Inside adding not alldayevents, eventsCount="<<eventsCount;
             itemsList << new CalendarDataItem(eventsCount,ioObject);
             eventsCount++;
         }
     }
-    qDebug()<<"Added total events = "<<itemsList.count();
 
     endResetModel();
-    qDebug()<<"exiting loadAllEventsSorted";
 }
 
 
@@ -135,10 +127,8 @@ void CalendarListModel::filterOut(QString filter, FilterTerminate *terminateObje
                 itemsList[i]->xUnits = itemsList[i]->summary.indexOf(filter,0,Qt::CaseInsensitive);
                 itemsList[i]->widthUnits = filter.length();
                 displaylist << itemsList[i];
-                qDebug()<<"xUnits="<<itemsList[i]->xUnits<<",widthUnits="<<itemsList[i]->widthUnits;
             }
         }
-    //qDebug()<<"Total events in displaylist ="<<displaylist.count();
     if(!itemsDisplay.isEmpty())
     {
         beginRemoveRows(QModelIndex(), 0, itemsDisplay.count()-1);
@@ -148,10 +138,7 @@ void CalendarListModel::filterOut(QString filter, FilterTerminate *terminateObje
     if(!displaylist.isEmpty())
     {
         beginInsertRows(QModelIndex(), 0, displaylist.count()-1);
-
         itemsDisplay = displaylist;
-
-        qDebug()<<"itemsDisplay has "<<itemsDisplay.count()<<" items";
         endInsertRows();
     }
 }
@@ -241,12 +228,8 @@ int CalendarListModel::columnCount(const QModelIndex &parent) const
 
 void CalendarListModel::clearData()
 {
-    if(!itemsList.isEmpty())
-    {
-        for(int i = 0; i < itemsList.count(); i++)
-            delete itemsList[i];
-        itemsList.clear();
-    }
+    while (!itemsList.isEmpty())
+        delete itemsList.takeFirst();
 }
 
 QML_DECLARE_TYPE(CalendarListModel);
