@@ -43,7 +43,7 @@ HEADERS += $$INSTALL_HEADERS \
     eventsdatamodel.h \
     filterterminate.h
 
-target.path = $$[QT_INSTALL_LIBS]
+target.path = $$INSTALL_ROOT/usr/lib
 INSTALLS += target
 
 headers.files += $$INSTALL_HEADERS
@@ -51,5 +51,5 @@ headers.path += $$INSTALL_ROOT/usr/include/meegocalendar
 INSTALLS += headers
 
 pkgconfig.files += meegocalendar.pc
-pkgconfig.path += $$[QT_INSTALL_LIBS]/pkgconfig
+pkgconfig.path += $$INSTALL_ROOT/usr/lib/pkgconfig
 INSTALLS += pkgconfig

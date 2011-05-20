@@ -26,13 +26,13 @@ Window {
             onSearch: {
                 if(!searchList.visible) {
                     searchList.listModel.refresh();
+                    window.searchResultCount = searchList.listModel.count;
                     searchList.visible = true;
 
                 } else {
                     searchList.listModel.filterOut(needle);
                     searchList.listIndex = 0;
                     window.searchResultCount = searchList.listModel.count;
-
                 }
             }
             onSearchExpanded: {
@@ -143,33 +143,25 @@ Window {
     property date appDateInFocus
 
 
-    /*Connections {
+    Connections {
         target: mainWindow
         onCall: {
-            applicationData = parameters;
-        }
-    }
+            var cmd = parameters[0];
+            var cdata = parameters[1];
 
-    onApplicationDataChanged: {
-        if(applicationData != undefined)
-        {
-            var cmd = applicationData[0];
-            var cdata = applicationData[1];
-
-            window.applicationData = undefined;
-
-            if (cmd == "openCalendar")
-            {
-                window.applicationPage=dayViewComponent;
+            if (cmd == "openCalendar") {
                 var calData = cdata;
                 var calDataList = calData.split(',');
                 var uid = calDataList[0];
                 var dateVal = new Date(utilities.getLongDate(utilities.getDateFromVal(calDataList[1])));
                 dateFromOutside = dateVal;
                 triggeredExternally = true;
+                switchBook(dayViewComponent);
+
             }
         }
-    }*/
+    }
+
 
     UtilMethods {
         id: utilities

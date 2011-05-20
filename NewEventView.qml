@@ -51,11 +51,11 @@ ContextMenu {
         id: container
         height:400
         width: {
-                    if (outerPainterTextWidth == 500)
-                        return paintedTextMaxWidth
-                    else
-                        return outerPainterTextWidth
-               }
+            if (outerPainterTextWidth == 500)
+                return paintedTextMaxWidth
+            else
+                return outerPainterTextWidth
+        }
 
         property bool initView:outer.initView
         property bool editView:outer.editView
@@ -396,6 +396,8 @@ ContextMenu {
             id:datePicker
             property date dateVal
             property int fromIndex:0
+            startYear: 1980
+            endYear: 2019
 
             onDateSelected: {
                 dateVal=datePicker.selectedDate;
@@ -1409,16 +1411,18 @@ ContextMenu {
             states: [
                 State {
                     name: "windowExpanded"
-                    //Commenting this window expansion now as a work around for BMC 16558
-                    /*PropertyChanges {
+                    PropertyChanges {
                         target: container;
                         height:{
                             topItem.calcTopParent();
-                            if(window.inLandscape || window.inInvertedLandscape)
-                                return ((topItem.topHeight)-200);
-                            else return(2*(topItem.topWidth/3));
+                            if(window.inLandscape || window.inInvertedLandscape) {
+                                return (outer.sizeHintMaxHeight);
+                            }
+                            else {
+                                return 2*(outer.sizeHintMaxHeight)/3;
+                            }
                         }
-                    }*/
+                    }
                     PropertyChanges { target: scrollableSection; height:800;}
                     PropertyChanges { target: scrollableEditArea; height:editList.height;}
                     when: (editList.windowExpanded==true)

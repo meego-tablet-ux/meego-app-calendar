@@ -43,6 +43,7 @@ ContextMenu {
         } else  {
             eventTime = qsTr("%1, %2 - %3","Event StartDate, StartTime - EndTime ").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
         }
+        viewEventDetails.title = summary;
         visible = true;
     }
 
@@ -85,34 +86,15 @@ ContextMenu {
                     Item {
                         id:titleTimeArea
                         width:parent.width-20
-                        height:(summaryBox.height+timeBox.height+10)
+                        height:(timeBox.height+10)
                         anchors.left: parent.left
                         anchors.leftMargin: 10
-                        Item {
-                            id:summaryBox
-                            width:titleTimeArea.width
-                            height:30
-                            anchors.top: parent.top
-                            anchors.topMargin: 5
-                            Text {
-                                id:eventDescTxt
-                                text:summary
-                                anchors.fill: parent
-                                font.pixelSize: theme_fontPixelSizeLarger
-                                color:theme_fontColorNormal
-                                font.bold: true
-                                wrapMode: Text.Wrap
-                                width: summaryBox.width
-                                elide: Text.ElideRight
-
-                            }
-                        }//summaryBox
 
                         Item {
                             id:timeBox
                             width:titleTimeArea.width
                             height:60
-                            anchors.top: summaryBox.bottom
+                            anchors.top: parent.top
                             anchors.topMargin: 5
                             anchors.leftMargin:10
                             Text {
@@ -137,11 +119,6 @@ ContextMenu {
                     }//end titleTimeArea
                 }//titleTimeSpacer
 
-                Image {
-                    id: seperatorImage1
-                    source: "image://theme/menu_item_separator"
-                    width: eventDetailsBox.width
-                }
 
                 Item {
                     id: locRemSpacer
@@ -185,31 +162,25 @@ ContextMenu {
                                 }
                             }//summary
 
-                            Item {
+                            Row {
                                 id:reminderBox
-                                width:locRemBox.width
-                                height:40
                                 Text {
                                     id:reminderLabel
                                     text: qsTr("Reminder: ")
                                     font.bold: true
                                     font.pixelSize: theme_fontPixelSizeMedium
                                     color:theme_fontColorNormal
-                                    anchors.left: parent.left
-                                    width: reminderBox.width
-                                    elide: Text.ElideRight
+                                    //width: reminderBox.width/3
+                                    //elide: Text.ElideRight
                                 }
 
                                 Text {
                                     id:reminderTxt
                                     text:utilities.getAlarmString(alarmType)
-                                    anchors.left:parent.left
-                                    anchors.top: reminderLabel.bottom
-                                    anchors.topMargin: 3
                                     font.pixelSize: theme_fontPixelSizeMedium
                                     color:theme_fontColorNormal
-                                    width: reminderBox.width
-                                    elide: Text.ElideRight
+                                    //width: 2*reminderBox.width/3
+                                    //elide: Text.ElideRight
                                 }
                             }//reminder
                         }//end of column
@@ -230,10 +201,9 @@ ContextMenu {
                     }
                     Item {
                         id:showViewButton
-                        width:buttonBox.width-20
-                        anchors.left: parent.left
-                        anchors.leftMargin:10
+                        width:parent.width-20
                         anchors.verticalCenter: parent.verticalCenter
+                        anchors.horizontalCenter: parent.horizontalCenter
                         height: 30
                         Text {
                             id:showViewTxt
@@ -248,7 +218,6 @@ ContextMenu {
                             onClicked: {
                                 window.dateFromOutside = startDate;
                                 window.gotoDate=true;
-                                //viewEventDetails.closeSearch();
                                 window.showToolBarSearch = false;
                                 viewEventDetails.visible = false;
                             }
@@ -265,67 +234,23 @@ ContextMenu {
 
                 Item {
                     id:buttonAreaSpacer
-                    width: {
-                        if((backButton.width+editButton.width+closeButton.width+50) > eventDetailsBox.width) {
-                            windowWidth = (backButton.width+editButton.width+closeButton.width+50)
+                    width:eventDetailsBox.width;
+                    height:50
+
+                    Button {
+                        id: editButton
+                        height:40
+                        anchors.bottom: parent.bottom
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        bgSourceUp: "image://theme/btn_blue_up"
+                        bgSourceDn: "image://theme/btn_blue_dn"
+                        text: qsTr("Edit")
+                        hasBackground: true
+                        onClicked: {
+                            viewEventDetails.hide();
+                            window.editEvent(xVal,yVal,eventId);
                         }
-                        return eventDetailsBox.width;
-                    }
-                    height:70
-                    Item {
-                        id:buttonBox
-                        width:eventDetailsBox.width -20
-                        height: 50
-                        anchors.left: parent.left
-                        anchors.leftMargin: 10
-                        anchors.verticalCenter: parent.verticalCenter
-                        property real buttonWidth: (showBack)?(buttonBox.width/(3.5)):(buttonBox.width/(2.5))
-
-                        Row {
-                            spacing:5
-                            anchors.centerIn: parent
-                            Button {
-                                id: backButton
-                                visible:(viewEventDetails.showBack)?true:false
-                                bgSourceUp: "image://theme/btn_grey_up"
-                                bgSourceDn: "image://theme/btn_grey_dn"
-                                text: qsTr("Back")
-                                hasBackground: true
-                                onClicked: {
-                                        viewEventDetails.hide();
-                                }
-                            }//backButton
-
-
-                            Button {
-                                id: editButton
-                                bgSourceUp: "image://theme/btn_blue_up"
-                                bgSourceDn: "image://theme/btn_blue_dn"
-                                text: qsTr("Edit")
-                                hasBackground: true
-                                onClicked: {
-                                    viewEventDetails.hide();
-                                    window.editEvent(xVal,yVal,eventId);
-                                }
-                            }//editbutton
-
-
-                            Button {
-                                id: closeButton
-                                bgSourceUp: "image://theme/btn_grey_up"
-                                bgSourceDn: "image://theme/btn_grey_dn"
-                                text: qsTr("Close")
-                                hasBackground: true
-                                onClicked: {
-                                    viewEventDetails.hide();
-                                }
-                            }//closebutton
-
-                        }//end row
-
-
-                    }//buttonBox
-
+                    }//editbutton
 
                 }//buttonAreaSpacer
 
