@@ -47,21 +47,19 @@ AppPage {
 
     function initDate()
     {
-        var tmpDate = utilities.getCurrentDateVal();
-        dateInFocus = tmpDate;
-        window.appDateInFocus = dateInFocus;
-        window.eventDay=tmpDate.getDate();
-        window.eventMonth=(tmpDate.getMonth()+1);
-        window.eventYear=tmpDate.getFullYear();
+        dateInFocus = window.appDateInFocus;
+        window.eventDay=dateInFocus.getDate();
+        window.eventMonth=(dateInFocus.getMonth()+1);
+        window.eventYear=dateInFocus.getFullYear();
         var startDate = utilities.getStartDateOfWeek(dateInFocus);
         var endDate = utilities.getEndDateOfWeek(startDate);
         dateInFocusVal = qsTr("%1 - %2","Week's StartDate - Week's EndDate").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
-        dayInFocusIndex = tmpDate.getDay();
+        dayInFocusIndex = dateInFocus.getDay();
         if(dayInFocusIndex==0) {//i.e if day is sunday
             dayInFocusIndex = 7;
         }
         dayInFocusIndex--;
-
+        resetCalendarDayModels(dateInFocus);
     }
 
 
@@ -87,6 +85,7 @@ AppPage {
 
         onGotoTodayChanged: {
             if(window.gotoToday) {
+                window.appDateInFocus = utilities.getCurrentDateVal();
                 initDate();
                 daysModel.loadGivenWeekValuesFromDate(dateInFocus)
                 eventsListView.contentY = (UtilMethods.EDayTimeStart*50);

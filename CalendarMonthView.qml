@@ -47,14 +47,14 @@ AppPage {
     }
 
     function initDate()
-    {
-        var tmpDate = utilities.getCurrentDateVal();
-        dateInFocus = tmpDate;
-        window.eventDay=tmpDate.getDate();
-        window.eventMonth=(tmpDate.getMonth()+1);
-        window.eventYear=tmpDate.getFullYear();
+    {        
+        dateInFocus = window.appDateInFocus;
+        window.eventDay=dateInFocus.getDate();
+        window.eventMonth=(dateInFocus.getMonth()+1);
+        window.eventYear=dateInFocus.getFullYear();
         dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
-        monthInFocusVal = i18nHelper.localDate(tmpDate, Labs.LocaleHelper.DateMonthYear);
+        monthInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateMonthYear);
+        resetCalendarModels(dateInFocus);
     }
 
     function resetFocus(nextVal)
@@ -128,6 +128,7 @@ AppPage {
 
         onGotoTodayChanged: {
             if(window.gotoToday) {
+                window.appDateInFocus = utilities.getCurrentDateVal();
                 initDate();
                 allEventsViewModel.loadGivenDayModel(dateInFocus);
                 monthModel.loadGivenMonthValuesFromOffset(dateInFocus);

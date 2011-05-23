@@ -123,6 +123,7 @@ Window {
 
 
     Component.onCompleted: {
+        appDateInFocus = utilities.getCurrentDateVal();
         switchBook(dayViewComponent)
     }
 
@@ -155,6 +156,7 @@ Window {
                 var uid = calDataList[0];
                 var dateVal = new Date(utilities.getLongDate(utilities.getDateFromVal(calDataList[1])));
                 dateFromOutside = dateVal;
+                appDateInFocus = dateVal;
                 triggeredExternally = true;
                 switchBook(dayViewComponent);
 
