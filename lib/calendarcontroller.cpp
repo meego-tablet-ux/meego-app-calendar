@@ -403,4 +403,12 @@ QObject* CalendarController::getEventForEdit(const QString uid)
     return objIO;
 }
 
+QDateTime CalendarController::getEventPositonInView(const QString uid)
+{
+    QList<IncidenceIO> listIO = getEventsFromDB(EByUid,KDateTime::currentDateTime(KDateTime::OffsetFromUTC), KDateTime::currentDateTime(KDateTime::OffsetFromUTC),uid);
+    IncidenceIO objIO = listIO.at(0);
+
+    return objIO.getStartDateTime().dateTime();
+}
+
 QML_DECLARE_TYPE(CalendarController);

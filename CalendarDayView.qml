@@ -67,7 +67,7 @@ AppPage {
                 allDayEventsCount = allDayViewModel.count;
                 timeListModel.loadGivenDayModel(dateInFocus);
                 dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
-                timeListView.positionViewAtIndex(UtilMethods.EDayTimeStart,ListView.Beginning);
+                timeListView.positionViewAtIndex(window.positionOfView,ListView.Beginning);
                 window.gotoDate=false;
             }
         }
@@ -80,7 +80,7 @@ AppPage {
                 allDayViewModel.loadGivenDayModel(dateInFocus);
                 allDayEventsCount = allDayViewModel.count;
                 timeListModel.loadGivenDayModel(dateInFocus);
-                timeListView.positionViewAtIndex(UtilMethods.EDayTimeStart,ListView.Beginning);
+                timeListView.positionViewAtIndex(window.positionOfView,ListView.Beginning);
                 window.gotoToday=false;
             }
         }
@@ -90,7 +90,7 @@ AppPage {
                 allDayViewModel.loadGivenDayModel(dateInFocus);
                 allDayEventsCount = allDayViewModel.count;
                 timeListModel.loadGivenDayModel(dateInFocus);
-                timeListView.positionViewAtIndex(UtilMethods.EDayTimeStart,ListView.Beginning);
+                timeListView.positionViewAtIndex(window.positionOfView,ListView.Beginning);
                 window.addedEvent = false;
             }
         }
@@ -100,7 +100,7 @@ AppPage {
                 allDayViewModel.loadGivenDayModel(dateInFocus);
                 allDayEventsCount = allDayViewModel.count;
                 timeListModel.loadGivenDayModel(dateInFocus);
-                timeListView.positionViewAtIndex(UtilMethods.EDayTimeStart,ListView.Beginning);
+                timeListView.positionViewAtIndex(window.positionOfView,ListView.Beginning);
                 window.deletedEvent = false;
             }
         }
@@ -114,7 +114,7 @@ AppPage {
                 allDayViewModel.loadGivenDayModel(dateInFocus);
                 allDayEventsCount = allDayViewModel.count;
                 timeListModel.loadGivenDayModel(dateInFocus);
-                timeListView.positionViewAtIndex(UtilMethods.EDayTimeStart,ListView.Beginning);
+                timeListView.positionViewAtIndex(window.positionOfView,ListView.Beginning);
                 window.triggeredExternally = false;
             }
         }
@@ -133,7 +133,7 @@ AppPage {
         dateInFocus = tmpDate;
         window.appDateInFocus = dateInFocus;
         dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
-        timeListView.positionViewAtIndex(UtilMethods.EDayTimeStart,ListView.Beginning);
+        timeListView.positionViewAtIndex(window.positionOfView,ListView.Beginning);
     }
 
     function resetFocus(offset)
@@ -614,7 +614,8 @@ AppPage {
                                      }//end calTimeValBox
 
                              Component.onCompleted: {
-                                 timeListView.positionViewAtIndex(UtilMethods.EDayTimeStart,ListView.Beginning);
+                                 timeListView.positionViewAtIndex(window.positionOfView,ListView.Beginning);
+                                 window.positionOfView = UtilMethods.EDayTimeStart;
                              }
 
                          }

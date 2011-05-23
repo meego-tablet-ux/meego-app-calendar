@@ -39,7 +39,7 @@ public:
     Q_INVOKABLE bool deleteEvent(QString eventUId);
     Q_INVOKABLE QList<IncidenceIO> getEventsFromDB(int listType,KDateTime startDate=KDateTime::currentLocalDateTime(), KDateTime endDate=KDateTime::currentLocalDateTime(),const QString uid="");
     Q_INVOKABLE QObject* getEventForEdit(const QString uid);
-
+    Q_INVOKABLE QDateTime getEventPositonInView(const QString uid);
 private:
     bool setUpCalendars();
     void handleRepeat(KCalCore::Event::Ptr coreEventPtr,const IncidenceIO& eventIO);

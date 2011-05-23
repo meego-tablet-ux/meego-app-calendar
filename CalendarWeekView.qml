@@ -569,7 +569,8 @@ AppPage {
                             }//end Row
 
                             Component.onCompleted: {
-                                eventsListView.contentY = (UtilMethods.EDayTimeStart*50);
+                                eventsListView.contentY = (window.positionOfView*50);
+                                window.positionOfView = UtilMethods.EDayTimeStart;
                             }
 
                          }//end flickable

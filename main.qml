@@ -142,6 +142,7 @@ Window {
     property date dateFromOutside
     property int searchResultCount:0
     property date appDateInFocus
+    property int positionOfView:UtilMethods.EDayTimeStart
 
 
     Connections {
@@ -151,15 +152,12 @@ Window {
             var cdata = parameters[1];
 
             if (cmd == "openCalendar") {
-                var calData = cdata;
-                var calDataList = calData.split(',');
-                var uid = calDataList[0];
-                var dateVal = new Date(utilities.getLongDate(utilities.getDateFromVal(calDataList[1])));
+                var uid = cdata;
+                var dateVal = controller.getEventPositonInView(uid);
                 dateFromOutside = dateVal;
                 appDateInFocus = dateVal;
+                positionOfView = dateFromOutside.getHours()*2;
                 triggeredExternally = true;
-                switchBook(dayViewComponent);
-
             }
         }
     }
