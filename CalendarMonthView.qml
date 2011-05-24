@@ -24,6 +24,7 @@ AppPage {
     property int yVal:0
     actionMenuModel:  [ qsTr("Create new event"), qsTr("Go to today"), qsTr("Go to date")]
     actionMenuPayload: [0,1,2]
+    allowActionMenuSignal: true
     onActionMenuIconClicked: {
         xVal = mouseX;
         yVal = mouseY;
