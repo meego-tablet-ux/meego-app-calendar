@@ -10,6 +10,7 @@ import Qt 4.7
 import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.App.Calendar 0.1
 import MeeGo.Components 0.1
+import Qt.labs.gestures 2.0
 
 AppPage {
     id: centerPane
@@ -63,6 +64,7 @@ AppPage {
         dateInFocus = utilities.addDMYToGivenDate(dateInFocus,0,nextVal*1,0);
         dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
         monthInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateMonthYear);
+        window.appDateInFocus = dateInFocus;
         offset = offset+nextVal;
         resetCalendarModels(dateInFocus);
     }
@@ -419,6 +421,23 @@ AppPage {
                                                         }
                                                     }
                                                 }
+
+                                                GestureArea {
+                                                    anchors.fill: parent
+
+                                                   Swipe {
+                                                        onFinished: {
+                                                            console.log("Swipe Angle="+gesture.swipeAngle);
+                                                             if(gesture.horizontalDirection == 1)  { //QSwipeGesture::Right
+                                                                 resetFocus(1);
+                                                             } else if(gesture.horizontalDirection == 2)  { //QSwipeGesture::Left
+                                                                 resetFocus(-1);
+                                                             }
+                                                        }
+                                                    }
+
+                                                }//end GestureArea
+
                                                 MouseArea {
                                                     anchors.fill: parent
                                                     onClicked: {
@@ -534,6 +553,23 @@ AppPage {
                                                              }
                                                         }
                                                     }
+
+                                                    GestureArea {
+                                                        anchors.fill: parent
+
+                                                       Swipe {
+                                                            onFinished: {
+                                                                console.log("Swipe Angle="+gesture.swipeAngle);
+                                                                 if(gesture.horizontalDirection == 1)  { //QSwipeGesture::Right
+                                                                     resetFocus(1);
+                                                                 } else if(gesture.horizontalDirection == 2)  { //QSwipeGesture::Left
+                                                                     resetFocus(-1);
+                                                                 }
+                                                            }
+                                                        }
+
+                                                    }//end GestureArea
+
                                                     ExtendedMouseArea {
                                                         anchors.fill: parent
                                                         onClicked: {

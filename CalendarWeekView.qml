@@ -10,6 +10,7 @@ import Qt 4.7
 import MeeGo.App.Calendar 0.1
 import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.Components 0.1
+import Qt.labs.gestures 2.0
 
 AppPage {
     id: centerPane
@@ -542,6 +543,23 @@ AppPage {
                                                         z:200
                                                     }
                                                 }//end Repeater
+
+                                                GestureArea {
+                                                   anchors.fill: parent
+                                                   Swipe {
+                                                        onFinished: {
+                                                            console.log("Swipe Angle="+gesture.swipeAngle);
+                                                             if(gesture.horizontalDirection == 1)  { //QSwipeGesture::Right
+                                                                  daysModel.loadGivenWeekValuesFromOffset(dateInFocus,1);
+                                                                 resetFocus(1);
+                                                             } else if(gesture.horizontalDirection == 2)  { //QSwipeGesture::Left
+                                                                  daysModel.loadGivenWeekValuesFromOffset(dateInFocus,-1);
+                                                                 resetFocus(-1);
+                                                             }
+                                                        }
+                                                    }
+                                                }//end GestureArea
+
 
                                                 ExtendedMouseArea {
                                                     anchors.fill: parent

@@ -10,6 +10,7 @@ import Qt 4.7
 import MeeGo.App.Calendar 0.1
 import MeeGo.Components 0.1
 import MeeGo.Labs.Components 0.1 as Labs
+import Qt.labs.gestures 2.0
 
 AppPage {
     id: centerPane
@@ -594,6 +595,53 @@ AppPage {
 
                                          }//Inner rectangle with delegate to view the cal events
 
+
+                                         GestureArea {
+                                             anchors.fill: parent
+
+                                            Swipe {
+                                                 onFinished: {
+                                                     console.log("Swipe Angle="+gesture.swipeAngle);
+                                                      if(gesture.horizontalDirection == 1)  { //QSwipeGesture::Right
+                                                          daysModel.loadGivenWeekValuesFromOffset(dateInFocus,1);
+                                                          resetFocus(1);
+                                                      } else if(gesture.horizontalDirection == 2)  { //QSwipeGesture::Left
+                                                          daysModel.loadGivenWeekValuesFromOffset(dateInFocus,-1);
+                                                          resetFocus(-1);
+                                                      }
+                                                 }
+                                             }
+
+                                            //Uncomment this when Gestures work for Tap and TapANdHold
+                                            /*Tap {
+                                                onFinished: {
+                                                    window.eventStartHr=startHr;
+                                                    window.eventEndHr=endHr;
+                                                    dayViewTopItem.calcTopParent();
+                                                    console.log("gesture.position.x="+gesture.position.x+", gesture.position.y="+gesture.position.y);
+                                                    var map = window.mapToItem(calTimeValBox, gesture.position.x, gesture.position.y);
+                                                    console.log("1st map.x="+map.x+", map.y="+map.y);
+                                                    map = mapToItem(dayViewTopItem.topItem, map.x, map.y);
+                                                    console.log("2nd map.x="+map.x+", map.y="+map.y);
+                                                    window.openNewEventView(map.x, map.y,false);
+                                                }
+                                            }
+
+                                            TapAndHold {
+                                                onFinished: {
+                                                    window.eventStartHr=startHr;
+                                                    window.eventEndHr=endHr;
+                                                    dayViewTopItem.calcTopParent();
+                                                    console.log("gesture.position.x="+gesture.position.x+", gesture.position.y="+gesture.position.y);
+                                                    var map = window.mapToItem(calTimeValBox, gesture.position.x, gesture.position.y);
+                                                    map = mapToItem(dayViewTopItem.topItem, map.x, map.y);
+                                                    console.log("map.x="+map.x+", map.y="+map.y);
+                                                    window.openNewEventView(map.x, map.y,false);
+                                                }
+                                            }*/
+                                         }//end GestureArea
+
+
                                          ExtendedMouseArea {
                                              anchors.fill: parent
                                              onClicked: {
@@ -619,6 +667,7 @@ AppPage {
                                  window.positionOfView = UtilMethods.EDayTimeStart;
                              }
 
+
                          }
 
                      }//end centerContent
@@ -629,6 +678,5 @@ AppPage {
             }//end of calData
 
         }//end of spacerImage
-    }//end of top column
-
+    }//end of top column   
 }
