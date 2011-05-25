@@ -31,8 +31,8 @@ bool CalendarController::setUpCalendars()
     bool setUpStatus=true;
     try {
         CalendarDBSingleton::instance();
-        calendar = CalendarDBSingleton::calendarP();
-        storage = CalendarDBSingleton::StoragePTR();
+        calendar = CalendarDBSingleton::calendarPtr();
+        storage = CalendarDBSingleton::storagePtr();
 
         //This part of code is to support multiple calendars
         notebook = storage->defaultNotebook().data();
