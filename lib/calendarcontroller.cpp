@@ -7,6 +7,7 @@
  */
 
 #include "calendarcontroller.h"
+#include "calendardbsingleton.h"
 #include <stdlib.h>
 #include <exception>
 #include <alarm.h>
@@ -29,9 +30,9 @@ bool CalendarController::setUpCalendars()
 {
     bool setUpStatus=true;
     try {
-        calendar = ExtendedCalendar::Ptr ( new ExtendedCalendar(KDateTime::Spec::LocalZone()));
-        storage = calendar->defaultStorage(calendar );
-        storage->open();
+        CalendarDBSingleton::instance();
+        calendar = CalendarDBSingleton::calendarP();
+        storage = CalendarDBSingleton::StoragePTR();
 
         //This part of code is to support multiple calendars
         notebook = storage->defaultNotebook().data();
