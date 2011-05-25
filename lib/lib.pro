@@ -22,7 +22,8 @@ SOURCES += \
     utilmethods.cpp \
     viewcalendarmodel.cpp \
     weekviewmodel.cpp \
-    eventsdatamodel.cpp
+    eventsdatamodel.cpp \
+    calendardbsingleton.cpp
 
 INSTALL_HEADERS += \
     alarmlistmodel.h \
@@ -41,7 +42,8 @@ INSTALL_HEADERS += \
 
 HEADERS += $$INSTALL_HEADERS \
     eventsdatamodel.h \
-    filterterminate.h
+    filterterminate.h \
+    calendardbsingleton.h
 
 target.path = $$INSTALL_ROOT/usr/lib
 INSTALLS += target
