@@ -247,7 +247,7 @@ Window {
 
 
 
-    function openView (xVal,yVal,eventId,description,summary,location,alarmType,repeatString,startDate,startTime,endTime,zoneOffset,allDay,viewVisible,backVisible)
+    function openView (xVal,yVal,eventId,description,summary,location,alarmType,repeatString,startDate,startTime,endTime,zoneOffset,zoneName,allDay,viewVisible,backVisible)
     {
         viewEventDetails.initEventDetails(viewVisible,backVisible);
         viewEventDetails.eventId = eventId;
@@ -261,11 +261,12 @@ Window {
         viewEventDetails.endTime = endTime;
         viewEventDetails.allDay = allDay;
         viewEventDetails.zoneOffset = zoneOffset;
+        viewEventDetails.zoneName = zoneName;
         viewEventDetails.displayDetails(xVal,yVal);
         viewEventDetails.show();
     }
 
-    function  openViewFromMonthMultiEvents(xVal,yVal,popUpParent,eventId,description,summary,location,alarmType,repeatString,timeVal,coreDateVal)
+    function  openViewFromMonthMultiEvents(xVal,yVal,popUpParent,eventId,description,summary,location,alarmType,repeatString,timeVal,coreDateVal,zoneOffset,zoneName)
     {
         viewEventDetails.initEventDetails(false,true);
         viewEventDetails.eventId = eventId;

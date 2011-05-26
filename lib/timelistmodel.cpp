@@ -37,7 +37,7 @@ void TimeListModel::loadValues()
     UtilMethods utilities;
     QTime startTime;
     startTime.setHMS(0,0,0);
-    itemsList << new TimeListItem(0,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),0,030,getDataModelAtIndex(0));
+    itemsList << new TimeListItem(0,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),0,0,getDataModelAtIndex(0));
     itemsList << new TimeListItem(1,tr(""),0,100,getDataModelAtIndex(1));
 
     startTime.setHMS(1,0,0);

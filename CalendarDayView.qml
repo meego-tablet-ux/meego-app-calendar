@@ -162,7 +162,7 @@ AppPage {
         }
     }
 
-    function displayContextMenu(xVal,yVal,uid,component,loader,popUpParent,description,summary,location,alarmType,repeatString,startDate,startTime,endTime,zoneOffset,allDay)
+    function displayContextMenu(xVal,yVal,uid,component,loader,popUpParent,description,summary,location,alarmType,repeatString,startDate,startTime,endTime,zoneOffset,zoneName,allDay)
     {
         loader.sourceComponent = component
         loader.item.parent = popUpParent
@@ -175,6 +175,7 @@ AppPage {
         loader.item.alarmType = alarmType;
         loader.item.repeatText = repeatString;
         loader.item.zoneOffset = zoneOffset;
+        loader.item.zoneName = zoneName;
         loader.item.startDate = startDate;
         loader.item.startTime = startTime;
         loader.item.endTime = endTime;
@@ -438,12 +439,12 @@ AppPage {
                                                                   allDayDescText.text = summary;
                                                               }
                                                               var map = mapToItem (dayViewTopItem.topItem, mouseX, mouseY);
-                                                              window.openView (map.x,map.y,uid,description,summary,location,alarmType,utilities.getRepeatTypeString(repeatType),startDate,startTime,endTime,zoneOffset,allDay,false,false);
+                                                              window.openView (map.x,map.y,uid,description,summary,location,alarmType,utilities.getRepeatTypeString(repeatType),startDate,startTime,endTime,zoneOffset,zoneName,allDay,false,false);
 
                                                           }
                                                           onLongPressAndHold: {
                                                               var map = mapToItem (dayViewTopItem.topItem, mouseX, mouseY);
-                                                              displayContextMenu (map.x, map.y,uid,eventActionsPopup,popUpLoader,allDayImage,description,summary,location,alarmType,utilities.getRepeatTypeString(repeatType),startDate,startTime,endTime,zoneOffset,allDay);
+                                                              displayContextMenu (map.x, map.y,uid,eventActionsPopup,popUpLoader,allDayImage,description,summary,location,alarmType,utilities.getRepeatTypeString(repeatType),startDate,startTime,endTime,zoneOffset,zoneName,allDay);
                                                           }
 
                                                   }//ExtendedMouseArea
@@ -479,7 +480,7 @@ AppPage {
 
                     Rectangle {
                          id: centerContent
-                         height: calData.height-dayBox.height-50
+                         height: calData.height-dayBox.height-80
                          width: calData.width
                          border.width:2
                          border.color: "gray"
@@ -490,12 +491,13 @@ AppPage {
                              anchors.fill: parent
                              clip: true
                              model:timeListModel
-                             contentHeight:(timeListModel.count)*(50)
+                             contentHeight:(timeListModel.count+2)*(50)
                              contentWidth: timeListView.width
-                             cacheBuffer: (timeListModel.count)*50-timeListView.height // Set cacheBuffer to remain the scroll area content.
+                             cacheBuffer: (timeListModel.coun+2)*50-timeListView.height // Set cacheBuffer to remain the scroll area content.
                              z:1
                              focus: true
                              boundsBehavior: Flickable.StopAtBounds
+
                              delegate: Item {
                                          id: calTimeValBox
                                          height: 50
@@ -582,11 +584,11 @@ AppPage {
                                                              anchors.fill: parent
                                                              onClicked: {
                                                                  var map = mapToItem (dayViewTopItem.topItem, mouseX, mouseY);
-                                                                 window.openView (map.x,map.y,uid,description,summary,location,alarmType,utilities.getRepeatTypeString(repeatType),startDate,startTime,endTime,zoneOffset,allDay,false,false)
+                                                                 window.openView (map.x,map.y,uid,description,summary,location,alarmType,utilities.getRepeatTypeString(repeatType),startDate,startTime,endTime,zoneOffset,zoneName,allDay,false,false)
                                                              }
                                                              onLongPressAndHold: {
                                                                  var map = mapToItem (dayViewTopItem.topItem, mouseX, mouseY);
-                                                                 displayContextMenu (map.x, map.y,uid,eventActionsPopup,popUpLoader,regEventImage,description,summary,location,alarmType,utilities.getRepeatTypeString(repeatType),startDate,startTime,endTime,zoneOffset,allDay);
+                                                                 displayContextMenu (map.x, map.y,uid,eventActionsPopup,popUpLoader,regEventImage,description,summary,location,alarmType,utilities.getRepeatTypeString(repeatType),startDate,startTime,endTime,zoneOffset,zoneName,allDay);
                                                              }
                                                          }
                                                      }

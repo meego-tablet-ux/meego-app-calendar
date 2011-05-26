@@ -156,7 +156,7 @@ Item {
                         calendarEventsList.currentIndex = index;
                         calendarEventsList.highlight = highlighter;                       
                         var map = mapToItem (window, mouseX, mouseY);
-                        window.openView (map.x,map.y,uid,description,summary,location,alarmType,utilities.getRepeatTypeString(repeatType),startDate,startTime,endTime,zoneOffset,allDay,true,false);
+                        window.openView (map.x,map.y,uid,description,summary,location,alarmType,utilities.getRepeatTypeString(repeatType),startDate,startTime,endTime,zoneOffset,zoneName,allDay,true,false);
                     }
                 }
             }//end delegate rectangle

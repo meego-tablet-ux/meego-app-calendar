@@ -221,16 +221,16 @@ QString UtilMethods::getYear(QDate fromDate)
 
 
 
-QString UtilMethods::getHour(QTime fromTime)
+int UtilMethods::getHour(QTime fromTime)
 {
-    return fromTime.toString("hh");
+    return fromTime.hour();
 }
 
 
 
-QString UtilMethods::getMin(QTime fromTime)
+int UtilMethods::getMin(QTime fromTime)
 {
-    return fromTime.toString("mm");
+    return fromTime.minute();
 }
 
 bool UtilMethods::datesEqual(QDate date1, QDate date2)

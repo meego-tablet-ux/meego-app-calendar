@@ -31,6 +31,7 @@ CalendarDataItem::CalendarDataItem(int index,const IncidenceIO& fromObj, QObject
     this->alarmDate = fromObj.getAlarmDateTime().date();
     this->alarmTime = fromObj.getAlarmDateTime().time();
     this->zoneOffset = fromObj.getTimeZoneOffset();
+    this->zoneName = fromObj.getTimeZoneName();
     this->xUnits = 0;
     this->yUnits = 0;
     this->widthUnits=0;
@@ -60,6 +61,7 @@ CalendarDataItem::CalendarDataItem(const CalendarDataItem& fromObj) : QObject(0)
     this->alarmDate = fromObj.alarmDate;
     this->alarmTime = fromObj.alarmTime;
     this->zoneOffset = fromObj.zoneOffset;
+    this->zoneName = fromObj.zoneName;
     this->xUnits = 0;
     this->yUnits = 0;
     this->widthUnits=0;

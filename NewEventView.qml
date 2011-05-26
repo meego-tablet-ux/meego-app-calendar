@@ -79,7 +79,7 @@ ContextMenu {
         property int alarmType
         property string zoneName
 
-        function resetValues(date1,time1,date2,time2)
+        /*function resetValues(date1,time1,date2,time2)
         {
             startDate = date1;
             endDate = date2;
@@ -89,7 +89,7 @@ ContextMenu {
             finishDateTxt.text = i18nHelper.localDate(date2, Labs.LocaleHelper.DateFullShort);
             startTimeTxt.text = i18nHelper.localTime(time1, Labs.LocaleHelper.TimeFullShort);
             finishTimeTxt.text = i18nHelper.localTime(time2, Labs.LocaleHelper.TimeFullShort);
-        }
+        }*/
 
         function setEndRepeatDateValues() {
             endRepeatDayText.text = finishDateTxt.text;
@@ -330,6 +330,14 @@ ContextMenu {
         function openTimePicker(index,parentVal)
         {
             timePicker.fromIndex = index;
+            if(index ==1) {
+                console.log("startTime: "+startTime.toString());
+                timePicker.hours = utilities.getHour(startTime);
+                timePicker.minutes = utilities.getMin(startTime);
+            } else if(index ==2) {
+                timePicker.hours = utilities.getHour(endTime);
+                timePicker.minutes = utilities.getMin(endTime);
+            }
             timePicker.show();
         }
 

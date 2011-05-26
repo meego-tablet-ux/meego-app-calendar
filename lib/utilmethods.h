@@ -235,8 +235,8 @@ public:
     Q_INVOKABLE QString getMonth(QDate fromDate);
     Q_INVOKABLE QString getDay(QDate fromDate);
     Q_INVOKABLE QString getYear(QDate fromDate);
-    Q_INVOKABLE QString getHour(QTime fromTime);
-    Q_INVOKABLE QString getMin(QTime fromTime);
+    Q_INVOKABLE int getHour(QTime fromTime);
+    Q_INVOKABLE int getMin(QTime fromTime);
     Q_INVOKABLE bool datesEqual(QDate date1, QDate date2);
     Q_INVOKABLE int compareDates(QDate date1,QDate date2);
     Q_INVOKABLE int compareTimes(QTime time1,QTime time2);

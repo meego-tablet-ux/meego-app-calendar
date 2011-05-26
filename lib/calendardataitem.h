@@ -47,7 +47,8 @@ public:
         HeightUnits = Qt::UserRole+23,
         WidthUnits = Qt::UserRole+24,
         StartIndex = Qt::UserRole+25,
-        DayIndex = Qt::UserRole+26
+        DayIndex = Qt::UserRole+26,
+        ZoneName = Qt::UserRole+27
     };
 
     int index;
@@ -70,6 +71,7 @@ public:
     QDate alarmDate;
     QTime alarmTime;
     int zoneOffset;
+    QString zoneName;
 
     int xUnits;
     int yUnits;

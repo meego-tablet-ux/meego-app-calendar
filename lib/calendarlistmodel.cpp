@@ -38,6 +38,7 @@ CalendarListModel::CalendarListModel(QObject *parent) : QAbstractListModel(paren
     roles.insert(CalendarDataItem::AlarmDate,"alarmDate");
     roles.insert(CalendarDataItem::AlarmTime,"alarmTime");
     roles.insert(CalendarDataItem::ZoneOffset,"zoneOffset");
+    roles.insert(CalendarDataItem::ZoneName,"zoneName");
     roles.insert(CalendarDataItem::XUnits,"xUnits");
     roles.insert(CalendarDataItem::YUnits,"yUnits");
     roles.insert(CalendarDataItem::HeightUnits,"heightUnits");
@@ -191,6 +192,8 @@ QVariant CalendarListModel::data(const QModelIndex &index, int role) const
         return item->alarmTime;
     if (role == CalendarDataItem::ZoneOffset)
         return item->zoneOffset;
+    if (role == CalendarDataItem::ZoneName)
+        return item->zoneName;
     if (role == CalendarDataItem::XUnits)
         return item->xUnits;
     if (role == CalendarDataItem::YUnits)

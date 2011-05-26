@@ -25,6 +25,7 @@ Item {
     property variant startTime
     property variant endTime
     property int zoneOffset
+    property string zoneName
     property bool allDay
     property string eventTime
     property string timeVal
@@ -50,7 +51,7 @@ Item {
             onTriggered: {
                 if (index == 0)
                 {
-                    window.openView(mapX,mapY,eventId,description,summary,location,alarmType,repeatText,startDate,startTime,endTime,zoneOffset,allDay,false,false)
+                    window.openView(mapX,mapY,eventId,description,summary,location,alarmType,repeatText,startDate,startTime,endTime,zoneOffset,zoneName,allDay,false,false)
                     //Deviating from conventional hide() and using my own signal close() because of the way the PopUp is handled from the calling components
                     eventActionsPopup.close();
                 }

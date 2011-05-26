@@ -24,6 +24,7 @@ ContextMenu {
     property variant startTime
     property variant endTime
     property int zoneOffset
+    property string zoneName
     property bool allDay
     property int xVal:0
     property int yVal:0
@@ -99,12 +100,13 @@ ContextMenu {
                             anchors.leftMargin:10
                             Text {
                                 id:eventTimeTxt
-                                text:eventTime
+                                text:qsTr("%1 (GMT %2)","1:event time and 2:GMT offset").arg(eventTime).arg(zoneOffset/(60*60))
                                 font.pixelSize: theme_fontPixelSizeMedium
                                 color:theme_fontColorNormal
                                 width: timeBox.width
                                 elide: Text.ElideRight
                             }
+
                             Text {
                                 id:repeatValText
                                 text: qsTr("%1 %2","Repeats frequency").arg(qsTr("Repeats")).arg(repeatText)

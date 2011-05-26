@@ -157,7 +157,7 @@ AppPage {
     }
 
 
-    function displayContextMenu(xVal,yVal,uid,component,loader,popUpParent,description,summary,location,alarmType,repeatString,startDate,startTime,endTime,zoneOffset,allDay)
+    function displayContextMenu(xVal,yVal,uid,component,loader,popUpParent,description,summary,location,alarmType,repeatString,startDate,startTime,endTime,zoneOffset,zoneName,allDay)
     {
         loader.sourceComponent = component
         loader.item.parent = popUpParent
@@ -170,6 +170,7 @@ AppPage {
         loader.item.alarmType = alarmType;
         loader.item.repeatText = repeatString;
         loader.item.zoneOffset = zoneOffset;
+        loader.item.zoneName = zoneName;
         loader.item.startDate = startDate;
         loader.item.startTime = startTime;
         loader.item.endTime = endTime;
@@ -578,7 +579,7 @@ AppPage {
                                                             var map = mapToItem (monthViewTopItem.topItem,mouseX,mouseY);
                                                             //console.log("allDayEventsCount="+allDayEventsCount);
                                                             //if(allDayEventsCount>0) {
-                                                                window.openView (map.x,map.y,uid,description,summary,location,alarmType,utilities.getRepeatTypeString(repeatType),startDate,startTime,endTime,zoneOffset,allDay,false,false);
+                                                                window.openView (map.x,map.y,uid,description,summary,location,alarmType,utilities.getRepeatTypeString(repeatType),startDate,startTime,endTime,zoneOffset,zoneName,allDay,false,false);
                                                             /*} else  {
                                                                 window.openNewEventView(map.x,map.y,false);
                                                             }*/
@@ -586,7 +587,7 @@ AppPage {
                                                         onLongPressAndHold: {
                                                             monthViewTopItem.calcTopParent();
                                                             var map = mapToItem (monthViewTopItem.topItem,mouseX,mouseY);
-                                                            displayContextMenu (map.x, map.y,uid,eventActionsPopup,popUpLoader,eventBox,description,summary,location,alarmType,utilities.getRepeatTypeString(repeatType),startDate,startTime,endTime,zoneOffset,allDay);
+                                                            displayContextMenu (map.x, map.y,uid,eventActionsPopup,popUpLoader,eventBox,description,summary,location,alarmType,utilities.getRepeatTypeString(repeatType),startDate,startTime,endTime,zoneOffset,zoneName,allDay);
                                                         }                                                       
                                                     }
 
