@@ -3,7 +3,7 @@ TARGET = meegocalendar
 TEMPLATE = lib
 
 CONFIG += link_pkgconfig
-PKGCONFIG += libkcalcoren libmkcal meegotouch
+PKGCONFIG += libkcalcoren libmkcal
 
 OBJECTS_DIR = .obj
 MOC_DIR = .moc
