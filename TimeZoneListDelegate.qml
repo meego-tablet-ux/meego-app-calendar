@@ -10,95 +10,60 @@ import Qt 4.7
 import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.Components 0.1
 
-Item {
-    id: tzCmbData
-    height:100
-    signal close()
+DropDown {
+      id: tzCmb
+      anchors.left: parent.left
+      anchors.leftMargin: 25
+      width: parent.width
+      height:30
+      anchors.verticalCenter: parent.verticalCenter
+      model: modelArr
+      payload: payloadArr
+      replaceDropDownTitle:true
+      titleColor: "black"
+      property int gmtOffset:0
+      property string gmtName
+      property variant modelArr
+      property variant payloadArr
+      property variant offsetArr
+      property variant gmtNameArr
 
-    Labs.TimezoneListModel {
-        id: timezonelist
-    }
+      Labs.TimezoneListModel {
+          id: timezonelist
+      }
+      onTriggered: {
+          gmtOffset = offsetArr[index]*3600;
+          gmtName = gmtNameArr[index];
+          selectedIndex = index;
+      }
 
-    Rectangle {
-        id:dataListRect
-        anchors.top: parent.top
-        color: "white"
-        width: parent.width
-        height:300
-        radius: 5
-        border.width: 2
-        border.color: "darkGray"
-        z:30
-        visible:true
-        opacity:1
-        clip: true
+      function reInit() {
+          var modelArr1 = new Array();
+          var payloadArr1 = new Array();
+          var offsetArr1 = new Array();
+          var gmtNameArr1 = new Array();
+          for(var i=0;i<timezonelist.count;i++) {
+              modelArr1[i] = ((timezonelist.getData(i, Labs.TimezoneListModel.EGMTOffset) < 0)? ((qsTr("%1 (GMT %2%3)").arg(timezonelist.getData(i, Labs.TimezoneListModel.ETitle)).arg(timezonelist.getData(i, Labs.TimezoneListModel.EGMTOffset)).arg(":00"))):(qsTr(("%1 (GMT +%2%3)").arg(timezonelist.getData(i, Labs.TimezoneListModel.ETitle)).arg(timezonelist.getData(i, Labs.TimezoneListModel.EGMTOffset)).arg(":00"))));
+              payloadArr1[i] = i;
+              offsetArr1[i] = timezonelist.getData(i, Labs.TimezoneListModel.EGMTOffset);
+              gmtNameArr1[i] = timezonelist.getData(i, Labs.TimezoneListModel.ETitle);
+          }
+
+          tzCmb.modelArr = modelArr1;
+          tzCmb.payloadArr = payloadArr1;
+          tzCmb.offsetArr = offsetArr1;
+          tzCmb.gmtNameArr = gmtNameArr1;
+
+          for (var i=0; i < tzCmb.gmtNameArr.length; i++) {
+              if (tzCmb.gmtNameArr[i] == tzCmb.gmtName) {
+                  tzCmb.selectedIndex = i;
+              }
+          }
+          tzCmb.title = gmtName;
+          tzCmb.selectedTitle = gmtName;
+      }
 
 
-        ListView {
-            id: listmodel
-            anchors.fill: parent
-            clip: true
-            model: timezonelist
-            highlight: highlighter
-            highlightMoveDuration: 5
-            focus: true
-            z:5000
-            opacity: 1
-
-            delegate: Rectangle {
-                id: timerect
-                property int gmt: gmtoffset
-                property string clockname: city
-                color: "transparent"
-                height: 30
-                width: parent.width
-
-                Text {
-                    id:name
-                    text: title
-                    anchors.left: parent.left
-                    anchors.leftMargin:10
-                    anchors.verticalCenter: parent.verticalCenter
-                    color:theme_fontColorNormal
-                    font.pixelSize:theme_fontPixelSizeMedium
-                    font.bold: false
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-                    wrapMode: Text.WordWrap
-                }
-                Text {
-                    id:value
-                    text:(gmtoffset < 0)? (qsTr(("(GMT %1%2)").arg(gmtoffset).arg(":00"))):(qsTr(("(GMT +%1%2)").arg(gmtoffset).arg(":00")))
-                    anchors.left: name.right
-                    anchors.leftMargin: 10
-                    anchors.verticalCenter: parent.verticalCenter
-                    color:theme_fontColorNormal
-                    font.pixelSize: theme_fontPixelSizeMedium
-                    font.bold: false
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-                    wrapMode: Text.WordWrap
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        modelVal = gmtoffset*3600
-                        selectedVal = name.text;
-                        selectedIndex = index;
-                        listmodel.currentIndex = index;
-                        listmodel.highlight = highlighter;
-                        tzCmbData.close();
-                    }
-                }
-            }
-
-        }
-        MouseArea {
-            onClicked: {}
-        }
-    }
-
-}
-
+}//end DropDown
 
 

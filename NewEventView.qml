@@ -79,19 +79,7 @@ ContextMenu {
         property int alarmType
         property string zoneName
 
-        /*function resetValues(date1,time1,date2,time2)
-        {
-            startDate = date1;
-            endDate = date2;
-            startTime = time1;
-            endTime = time2;
-            startDateTxt.text = i18nHelper.localDate(date1, Labs.LocaleHelper.DateFullShort);
-            finishDateTxt.text = i18nHelper.localDate(date2, Labs.LocaleHelper.DateFullShort);
-            startTimeTxt.text = i18nHelper.localTime(time1, Labs.LocaleHelper.TimeFullShort);
-            finishTimeTxt.text = i18nHelper.localTime(time2, Labs.LocaleHelper.TimeFullShort);
-        }*/
-
-        function setEndRepeatDateValues() {
+       function setEndRepeatDateValues() {
             endRepeatDayText.text = finishDateTxt.text;
         }
 
@@ -181,12 +169,12 @@ ContextMenu {
             eventIO.allDay = isAllDay;
 
             if(eventIO.allDay ) {
-                eventIO.setStartDateTime(startDate,"",tzCmb.selectedVal);
+                eventIO.setStartDateTime(startDate,"",tzCmb.gmtName);
             } else if(!eventIO.allDay ) {
-                eventIO.setStartDateTime(startDate,startTime,tzCmb.selectedVal);
-                eventIO.setEndDateTime(endDate,endTime,tzCmb.selectedVal);
+                eventIO.setStartDateTime(startDate,startTime,tzCmb.gmtName);
+                eventIO.setEndDateTime(endDate,endTime,tzCmb.gmtName);
             }
-            eventIO.zoneOffset = tzCmb.modelVal;
+            eventIO.zoneOffset = tzCmb.gmtOffset;
 
             eventIO.repeatType = repeatCmbBlock.repeatType;
             eventIO.repeatEndType = repeatEndComboBox.repeatEndType;
@@ -199,7 +187,7 @@ ContextMenu {
                     }
                 } else if(eventIO.repeatEndType == UtilMethods.EAfterDate) {
                     if(endRepeatDayText.text!="") {
-                        eventIO.setRepeatEndDateTime(repeatEndDate, endTime,tzCmb.selectedVal);
+                        eventIO.setRepeatEndDateTime(repeatEndDate, endTime,tzCmb.gmtName);
                     }
                 } else if(eventIO.repeatEndType == UtilMethods.EForever) {
 
@@ -271,7 +259,7 @@ ContextMenu {
             finishTimeTxt.text = endTimeStr;
             alarmCmb.selectedIndex=0;
             repeatCmb.selectedIndex=0;
-            tzCmb.selectedIndex=0;
+            tzCmb.reInit();
         }
 
         function initializeModifyView(eventId)
@@ -304,8 +292,8 @@ ContextMenu {
             startTimeStr = startTimeTxt.text;
             endTimeStr = finishTimeTxt.text;
 
-            tzCmb.modelVal = editEvent.zoneOffset;
-            tzCmb.selectedVal = editEvent.zoneName;
+            tzCmb.gmtOffset = editEvent.zoneOffset;
+            tzCmb.gmtName = editEvent.zoneName;
             container.repeatType = editEvent.repeatType;
             container.alarmType = editEvent.alarmType;
             container.zoneName = editEvent.zoneName;
@@ -315,6 +303,7 @@ ContextMenu {
             repeatCmb.selectedIndex = editEvent.repeatType;
             repeatCmb.selectedTitle = utilities.getRepeatTypeString(editEvent.repeatType);
             repeatEndCmb.selectedIndex = editEvent.repeatEndType;
+            tzCmb.reInit();
 
             if(editEvent.repeatType != UtilMethods.ENoRepeat) {
                 if(editEvent.repeatEndType == UtilMethods.EForNTimes) {
@@ -324,7 +313,6 @@ ContextMenu {
                     endRepeatDayText.text = editEvent.getRepeatEndDateFromKDT(UtilMethods.EDefault);
                 }
             }
-
         }
 
         function openTimePicker(index,parentVal)
@@ -439,12 +427,6 @@ ContextMenu {
         Labs.LocaleHelper {
             id:i18nHelper
         }
-
-
-        Labs.TimezoneListModel {
-            id: timezonelist
-        }
-
 
         Item {
             id: editList
@@ -590,7 +572,6 @@ ContextMenu {
                                       anchors.left:parent.left
                                       width: {
                                           if(parent.width/3<allDayTxt.paintedWidth){
-                                              //(outer.paintedTextMaxWidth=2*(outer.paintedTextMaxWidth/3)+allDayTxt.paintedWidth+75)
                                               (outer.outerPainterTextWidth=2*(outer.paintedTextMaxWidth/3)+allDayTxt.paintedWidth+75)
                                           }
                                           return parent.width/3;
@@ -888,17 +869,11 @@ ContextMenu {
                                       id:tzCmbBlock
                                       width: 2*(dateTimeBlock.width/3)
                                       height:50
-                                      z:500
-                                      DataLoaderCombo {
-                                            id: tzCmb
-                                            anchors.left: parent.left
-                                            anchors.leftMargin: 25
-                                            width: parent.width
-                                            height:30
-                                            type: 1
-                                            anchors.verticalCenter: parent.verticalCenter
-                                            selectedVal:(windowType==UtilMethods.EAddEvent)?utilities.getLocalTimeZoneName():container.zoneName
-                                        }
+                                      TimeZoneListDelegate {
+                                          id: tzCmb
+                                          gmtName: (container.windowType==UtilMethods.EAddEvent)?utilities.getLocalTimeZoneName():container.zoneName
+                                          title: (container.windowType==UtilMethods.EAddEvent)?utilities.getLocalTimeZoneName():container.zoneName
+                                      }
 
                                   }//end of tzcmb block
 
@@ -910,7 +885,6 @@ ContextMenu {
                                   width: editList.width
                                   height: 30
                                   color: "Gray"
-                                  z:-5
                                   Text {
                                       id:repeatTxt
                                       text: qsTr("Repeat")
@@ -932,7 +906,6 @@ ContextMenu {
                                   anchors.leftMargin: 25
                                   height:30
                                   property int repeatType:repeatCmb.selectedIndex
-                                  z:-5
                                   DropDown {
                                       id: repeatCmb
 
@@ -977,7 +950,6 @@ ContextMenu {
                                   width: editList.innerBoxWidth
                                   height:0
                                   opacity: 0
-                                  z:-5
                                   Row {
                                       spacing: 10
                                       move: Transition {
@@ -1047,6 +1019,7 @@ ContextMenu {
                                               defaultText:"0"
                                               inputMethodHints:Qt.ImhDigitsOnly
                                               font.pixelSize:theme_fontPixelSizeMedium
+                                              validator: IntValidator{bottom: 0;}
                                           }                                          
                                       }
                                   }//end row
@@ -1061,7 +1034,6 @@ ContextMenu {
                                   anchors.leftMargin: 25
                                   height:0
                                   opacity: 0
-                                  z:-5
                                   Row {
                                       spacing: 5
                                       Item {
@@ -1104,7 +1076,6 @@ ContextMenu {
                                   width: editList.width
                                   height: 30
                                   color: "Gray"
-                                  z:-5
                                   Text {
                                       id:alarmTxt
                                       text: qsTr("Reminders")
@@ -1126,7 +1097,6 @@ ContextMenu {
                                   anchors.left: parent.left
                                   anchors.leftMargin: 25
                                   height:30
-                                  z:-5
                                   DropDown {
                                       id: alarmCmb
                                       anchors.top: parent.top
@@ -1179,7 +1149,6 @@ ContextMenu {
                                   height: 30
                                   anchors.left: parent.left
                                   color: "Gray"
-                                  z:-10
                                   Text {
                                       id:locTxt
                                       text: qsTr("Location")
@@ -1200,7 +1169,6 @@ ContextMenu {
                                   anchors.left: parent.left
                                   anchors.leftMargin: 25
                                   height:100
-                                  z:-50
                                   Item {
                                       id: locInnerArea
                                       width:parent.width
@@ -1230,7 +1198,6 @@ ContextMenu {
                                   height: 30
                                   anchors.left: parent.left
                                   color: "Gray"
-                                  z:-2
                                   Text {
                                       id:notesTxt
                                       text: qsTr("Notes")
@@ -1251,7 +1218,6 @@ ContextMenu {
                                   anchors.leftMargin: 25
                                   width: editList.innerBoxWidth
                                   height:150
-                                  z:-2
                                   Item{
                                       id:notesArea
                                       height: 150
