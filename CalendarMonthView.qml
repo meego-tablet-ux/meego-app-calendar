@@ -265,7 +265,7 @@ AppPage {
                             width: calDataBox.width
                             contentHeight: (window.inLandscape)?calDataBox.height:(monthViewBox.height + eventViewBox.height)
                             contentWidth: calDataBox.width
-                            property real cellHeight: (monthViewBox.height-weekBox.height)/(6.5)
+                            property real cellHeight: (monthViewBox.height-weekBox.height)/(6)
                             property real cellWidth: monthViewBox.width/7.0
                             anchors.top: parent.top
 
@@ -302,7 +302,6 @@ AppPage {
                                                     Text {
                                                           id: weekValTxt
                                                           text: i18nHelper.localDate(coreDateVal, Labs.LocaleHelper.DateWeekdayShort) //utilities.getDateInFormatString(coreDateVal,"ddd")
-                                                          font.bold: true
                                                           color:theme_fontColorNormal
                                                           font.pixelSize:theme_fontPixelSizeLarge
                                                           anchors.centerIn: parent

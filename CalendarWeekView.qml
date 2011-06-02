@@ -277,7 +277,6 @@ AppPage {
                                         Text {
                                               id: dateValTxt
                                               text:i18nHelper.localDate(coreDateVal,Labs.LocaleHelper.DateWeekdayDayShort)
-                                              font.bold: true
                                               color:isCurrentDate(coreDateVal,index)?theme_buttonFontColorActive:theme_fontColorNormal
                                               font.pixelSize: (window.inLandscape)?theme_fontPixelSizeLarge:theme_fontPixelSizeMedium
                                               anchors.centerIn: parent
