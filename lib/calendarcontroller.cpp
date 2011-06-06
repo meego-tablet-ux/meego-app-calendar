@@ -135,17 +135,18 @@ bool CalendarController::deleteEvent(QString eventUid)
   */
 void CalendarController::handleRepeat(KCalCore::Event::Ptr coreEventPtr,const IncidenceIO&  eventIO)
 {
+   KCalCore::Recurrence *eventRecurrence = coreEventPtr->recurrence();
    try {
         if(eventIO.getRepeatType()==ENoRepeat){
-            /*eventRecurrence->setDaily(1);
+            eventRecurrence->setDaily(1);
             eventRecurrence->setDuration(1);
             if(eventIO.isAllDay()) {
                 eventRecurrence->setEndDateTime(eventIO.getStartDateTime());
             } else {
                 eventRecurrence->setEndDateTime(eventIO.getEndDateTime());
-            }*/
+            }
         } else {
-            KCalCore::Recurrence *eventRecurrence = coreEventPtr->recurrence();
+
 
             switch(eventIO.getRepeatType()) {
 

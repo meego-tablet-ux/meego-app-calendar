@@ -243,7 +243,7 @@ public:
     Q_INVOKABLE QString getAlarmString(int alarmType);
     Q_INVOKABLE QString getLocalTimeZoneName();
     Q_INVOKABLE QString getRepeatTypeString(int repeatType);
-
+    Q_INVOKABLE QString getRepeatEndTypeString(int repeatEndType);
 
     ~UtilMethods();
 };

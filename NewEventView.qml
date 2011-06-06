@@ -303,6 +303,7 @@ ContextMenu {
             repeatCmb.selectedIndex = editEvent.repeatType;
             repeatCmb.selectedTitle = utilities.getRepeatTypeString(editEvent.repeatType);
             repeatEndCmb.selectedIndex = editEvent.repeatEndType;
+            repeatEndCmb.selectedTitle = utilities.getRepeatEndTypeString(editEvent.repeatEndType);
             tzCmb.reInit();
 
             if(editEvent.repeatType != UtilMethods.ENoRepeat) {

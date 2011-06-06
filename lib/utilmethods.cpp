@@ -301,8 +301,18 @@ QString UtilMethods::getRepeatTypeString(int repeatType)
     return repeatText;
 }
 
+QString UtilMethods::getRepeatEndTypeString(int repeatEndType)
+{
+    QString repeatEndText="";
+    switch(repeatEndType) {
+        case EForever: {repeatEndText = tr("Repeats forever"); break;}
+        case EForNTimes: {repeatEndText = tr("Ends after number of times..."); break;}
+        case EAfterDate:  {repeatEndText = tr("Ends after date..."); break;}
+    }
+    return repeatEndText;
+}
 
- QString UtilMethods::getLocalTimeZoneName()
+QString UtilMethods::getLocalTimeZoneName()
  {
      QString zoneName="";
      zoneName = KDateTime::currentLocalDateTime().timeZone().name();
