@@ -2,6 +2,8 @@ include(../common.pri)
 TARGET = meegocalendar
 TEMPLATE = lib
 
+INCLUDEPATH += ../lib
+LIBS += -L../lib -lekcal
 CONFIG += link_pkgconfig
 PKGCONFIG += libkcalcoren libmkcal
 

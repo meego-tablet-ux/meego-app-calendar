@@ -11,7 +11,7 @@
 CalendarDBSingleton* CalendarDBSingleton::pinstance = 0;// pointer initialized
 eKCal::EStorage::Ptr CalendarDBSingleton::storage = eKCal::EStorage::defaultStorage(KCalCore::IncidenceBase::TypeEvent);
 KCalCore::Calendar::Ptr CalendarDBSingleton::calendar = storage->calendar();
-MeeGoCalendarObserver *observer = new MeeGoCalendarObserver(CalendarDBSingleton::calendarPtr());
+MeeGoCalendarObserver CalendarDBSingleton::myObserver(CalendarDBSingleton::calendarPtr());
 
 CalendarDBSingleton* CalendarDBSingleton::instance()
 {
@@ -24,8 +24,8 @@ CalendarDBSingleton* CalendarDBSingleton::instance()
 
 CalendarDBSingleton::CalendarDBSingleton()
 {
-    calendar->registerObserver(observer);
-    storage->registerObserver(observer);
+    calendar->registerObserver(&myObserver);
+    storage->registerObserver(&myObserver);
     storage->startLoading();
 }
 

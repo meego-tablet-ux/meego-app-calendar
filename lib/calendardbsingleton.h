@@ -36,10 +36,10 @@ protected:
 
 private:
 
+    static MeeGoCalendarObserver myObserver;
     static CalendarDBSingleton* pinstance;
     static KCalCore::Calendar::Ptr calendar;
     static eKCal::EStorage::Ptr storage;
-    static MeeGoCalendarObserver *observer;
 } ;
 
 #endif //CALENDARDBSINGLETON_H
