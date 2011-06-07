@@ -19,7 +19,8 @@ SOURCES += \
     timelistmodel.cpp \
     utilmethods.cpp \
     eventsdatamodel.cpp \
-    calendardbsingleton.cpp
+    calendardbsingleton.cpp \
+    meegocalendarobserver.cpp
 
 INSTALL_HEADERS += \
     calendarcontroller.h \
@@ -31,12 +32,12 @@ INSTALL_HEADERS += \
     incidenceio.h \
     timelistmodel.h \
     utilmethods.h \
-    viewcalendarmodel.h \
-
-HEADERS += $$INSTALL_HEADERS \
     eventsdatamodel.h \
     filterterminate.h \
     calendardbsingleton.h
+
+HEADERS += $$INSTALL_HEADERS \
+    meegocalendarobserver.h
 
 target.path = $$INSTALL_ROOT/usr/lib
 INSTALLS += target

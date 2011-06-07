@@ -9,8 +9,9 @@
 #include "calendardbsingleton.h"
 
 CalendarDBSingleton* CalendarDBSingleton::pinstance = 0;// pointer initialized
-ExtendedCalendar::Ptr CalendarDBSingleton::calendar = ExtendedCalendar::Ptr ( new ExtendedCalendar(KDateTime::Spec::LocalZone()));
-ExtendedStorage::Ptr CalendarDBSingleton::storage = calendar->defaultStorage(calendar );
+eKCal::EStorage::Ptr CalendarDBSingleton::storage = eKCal::EStorage::defaultStorage(KCalCore::IncidenceBase::TypeEvent);
+KCalCore::Calendar::Ptr CalendarDBSingleton::calendar = storage->calendar();
+MeeGoCalendarObserver *observer = new MeeGoCalendarObserver(CalendarDBSingleton::calendarPtr());
 
 CalendarDBSingleton* CalendarDBSingleton::instance()
 {
@@ -23,15 +24,17 @@ CalendarDBSingleton* CalendarDBSingleton::instance()
 
 CalendarDBSingleton::CalendarDBSingleton()
 {
-    storage->open();
+    calendar->registerObserver(observer);
+    storage->registerObserver(observer);
+    storage->startLoading();
 }
 
-ExtendedCalendar::Ptr& CalendarDBSingleton::calendarPtr()
+KCalCore::Calendar::Ptr& CalendarDBSingleton::calendarPtr()
 {
     return calendar;
 }
 
-ExtendedStorage::Ptr& CalendarDBSingleton::storagePtr()
+eKCal::EStorage::Ptr& CalendarDBSingleton::storagePtr()
 {
     return storage;
 }

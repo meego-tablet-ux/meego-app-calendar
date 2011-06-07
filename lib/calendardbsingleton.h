@@ -11,15 +11,22 @@
 
 #include <extendedcalendar.h>
 #include <extendedstorage.h>
+#include <meegocalendarobserver.h>
+
+#include "ekcal/ekcal-storage.h"
+#include <qdebug.h>
 
 using namespace mKCal;
+using namespace eKCal;
 
-class CalendarDBSingleton
+
+class CalendarDBSingleton : public QObject
 {
+      Q_OBJECT
 public:
     static CalendarDBSingleton* instance();
-    static ExtendedCalendar::Ptr& calendarPtr();
-    static ExtendedStorage::Ptr& storagePtr();
+    static KCalCore::Calendar::Ptr& calendarPtr();
+    static eKCal::EStorage::Ptr& storagePtr();
 
 protected:
 
@@ -30,8 +37,10 @@ protected:
 private:
 
     static CalendarDBSingleton* pinstance;
-    static ExtendedCalendar::Ptr calendar;
-    static ExtendedStorage::Ptr storage;
-};
+    static KCalCore::Calendar::Ptr calendar;
+    static eKCal::EStorage::Ptr storage;
+    static MeeGoCalendarObserver *observer;
+} ;
 
 #endif //CALENDARDBSINGLETON_H
+

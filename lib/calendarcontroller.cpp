@@ -34,7 +34,7 @@ bool CalendarController::setUpCalendars()
         calendar = CalendarDBSingleton::calendarPtr();
         storage = CalendarDBSingleton::storagePtr();
 
-        //This part of code is to support multiple calendars
+        /*//This part of code is to support multiple calendars
         notebook = storage->defaultNotebook().data();
         if(notebook->color().isEmpty()) {
             notebook->setColor("Blue");
@@ -42,8 +42,8 @@ bool CalendarController::setUpCalendars()
         if(notebook->description().isEmpty()){
             notebook->setDescription("Default Calendar");
         }
-        nUid = notebook->uid();
-        storage->loadNotebookIncidences(notebook->uid());
+        nUid = notebook->uid();*/
+        //storage->loadNotebookIncidences(notebook->uid());
 
     } catch (exception &e) {
         setUpStatus=false;
@@ -92,7 +92,7 @@ bool CalendarController :: addModifyEvent(int actionType,QObject*  eventIOObj)
         }
 
         if(actionType == EAddEvent) {
-            calendar->addEvent(coreEvent,notebook->uid());
+            calendar->addEvent(coreEvent); //,notebook->uid()
         } else if(actionType == EModifyEvent) {
             coreEvent->setRevision(coreEvent->revision()+1);
         }
@@ -114,7 +114,7 @@ bool CalendarController::deleteEvent(QString eventUid)
 {
     bool deleted = true;
     try {
-        storage->loadNotebookIncidences(nUid);
+        //storage->loadNotebookIncidences(nUid);
         KCalCore::Event::Ptr coreEvent = KCalCore::Event::Ptr(calendar->event(eventUid));
         if(!coreEvent.isNull()) {
             deleted = calendar->deleteEvent(coreEvent);

@@ -19,6 +19,7 @@
 #include <QDebug>
 #include <QtDeclarative/qdeclarative.h>
 #include <QObject>
+#include "ekcal/ekcal-storage.h"
 
 
 #include <incidenceio.h>
@@ -48,8 +49,8 @@ private:
 
 
 private:    
-    ExtendedCalendar::Ptr calendar;
-    ExtendedStorage::Ptr storage;
+    KCalCore::Calendar::Ptr calendar;
+    eKCal::EStorage::Ptr storage;
 
     Notebook *notebook;
     QString nUid;
