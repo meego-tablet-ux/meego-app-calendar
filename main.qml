@@ -57,6 +57,9 @@ Window {
             }
         }
 
+        Labs.TimezoneListModel {
+            id: timezonelist
+        }
 
         Loader {
             id: addNewEventLoader
@@ -143,6 +146,7 @@ Window {
     property int searchResultCount:0
     property date appDateInFocus
     property int positionOfView:UtilMethods.EDayTimeStart
+    property variant addEditTimeZoneList : timezonelist
 
 
     Connections {

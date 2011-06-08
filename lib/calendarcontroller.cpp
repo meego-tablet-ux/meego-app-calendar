@@ -138,16 +138,11 @@ void CalendarController::handleRepeat(KCalCore::Event::Ptr coreEventPtr,const In
    KCalCore::Recurrence *eventRecurrence = coreEventPtr->recurrence();
    try {
         if(eventIO.getRepeatType()==ENoRepeat){
-            eventRecurrence->setDaily(1);
-            eventRecurrence->setDuration(1);
-            if(eventIO.isAllDay()) {
-                eventRecurrence->setEndDateTime(eventIO.getStartDateTime());
-            } else {
-                eventRecurrence->setEndDateTime(eventIO.getEndDateTime());
+            KCalCore :: RecurrenceRule::List rList = eventRecurrence->rRules();
+            for(int i=0;i<rList.count();i++) {
+               eventRecurrence->deleteRRule(rList.at(i));
             }
         } else {
-
-
             switch(eventIO.getRepeatType()) {
 
                 case EEveryDay: {

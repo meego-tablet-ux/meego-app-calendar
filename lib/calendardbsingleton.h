@@ -31,12 +31,13 @@ public:
 protected:
 
     CalendarDBSingleton();
+    ~CalendarDBSingleton();
     CalendarDBSingleton(const CalendarDBSingleton&);
     CalendarDBSingleton& operator= (const CalendarDBSingleton&);
 
 private:
 
-    static MeeGoCalendarObserver myObserver;
+    static MeeGoCalendarObserver *myObserver;
     static CalendarDBSingleton* pinstance;
     static KCalCore::Calendar::Ptr calendar;
     static eKCal::EStorage::Ptr storage;

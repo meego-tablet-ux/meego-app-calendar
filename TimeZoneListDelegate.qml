@@ -28,9 +28,6 @@ DropDown {
       property variant offsetArr
       property variant gmtNameArr
 
-      Labs.TimezoneListModel {
-          id: timezonelist
-      }
       onTriggered: {
           gmtOffset = offsetArr[index]*3600;
           gmtName = gmtNameArr[index];
@@ -42,11 +39,11 @@ DropDown {
           var payloadArr1 = new Array();
           var offsetArr1 = new Array();
           var gmtNameArr1 = new Array();
-          for(var i=0;i<timezonelist.count;i++) {
-              modelArr1[i] = ((timezonelist.getData(i, Labs.TimezoneListModel.EGMTOffset) < 0)? ((qsTr("%1 (GMT %2%3)").arg(timezonelist.getData(i, Labs.TimezoneListModel.ETitle)).arg(timezonelist.getData(i, Labs.TimezoneListModel.EGMTOffset)).arg(":00"))):(qsTr(("%1 (GMT +%2%3)").arg(timezonelist.getData(i, Labs.TimezoneListModel.ETitle)).arg(timezonelist.getData(i, Labs.TimezoneListModel.EGMTOffset)).arg(":00"))));
+          for(var i=0;i<window.addEditTimeZoneList.count;i++) {
+              modelArr1[i] = ((window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.EGMTOffset) < 0)? ((qsTr("%1 (GMT %2%3)").arg(window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.ETitle)).arg(window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.EGMTOffset)).arg(":00"))):(qsTr(("%1 (GMT +%2%3)").arg(window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.ETitle)).arg(window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.EGMTOffset)).arg(":00"))));
               payloadArr1[i] = i;
-              offsetArr1[i] = timezonelist.getData(i, Labs.TimezoneListModel.EGMTOffset);
-              gmtNameArr1[i] = timezonelist.getData(i, Labs.TimezoneListModel.ETitle);
+              offsetArr1[i] = window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.EGMTOffset);
+              gmtNameArr1[i] = window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.ETitle);
           }
 
           tzCmb.modelArr = modelArr1;

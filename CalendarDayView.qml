@@ -678,5 +678,5 @@ AppPage {
             }//end of calData
 
         }//end of spacerImage
-    }//end of top column   
+    }//end of top column
 }
