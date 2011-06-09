@@ -16,6 +16,8 @@
 
 using namespace std;
 
+static CalendarDBSingleton *instance = NULL;
+
 CalendarController::CalendarController(QObject *parent) : QObject(parent)
 {
     setUpCalendars();
@@ -26,13 +28,19 @@ CalendarController::~CalendarController()
 {
 }
 
+void CalendarController :: emitDbLoaded() {
+    qDebug()<<"Inside CalendarController, emitDbLoaded()";
+    emit dbLoaded();
+}
+
 bool CalendarController::setUpCalendars()
 {
     bool setUpStatus=true;
     try {
-        CalendarDBSingleton::instance();
+        instance = CalendarDBSingleton::instance();
         calendar = CalendarDBSingleton::calendarPtr();
         storage = CalendarDBSingleton::storagePtr();
+        connect(instance,SIGNAL(dbLoaded()),this, SLOT(emitDbLoaded()));
 
         /*//This part of code is to support multiple calendars
         notebook = storage->defaultNotebook().data();

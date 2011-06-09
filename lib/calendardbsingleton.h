@@ -28,6 +28,12 @@ public:
     static KCalCore::Calendar::Ptr& calendarPtr();
     static eKCal::EStorage::Ptr& storagePtr();
 
+signals:
+    void dbLoaded();
+
+ public slots:
+    void emitDbLoaded();
+
 protected:
 
     CalendarDBSingleton();

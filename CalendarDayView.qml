@@ -47,6 +47,19 @@ AppPage {
         }
     }
 
+    CalendarController {
+        id:controller
+    }
+
+    Connections {
+        target:controller
+        onDbLoaded: {
+            console.log("Inside onDbReady....#$#$######$#$#$#$#$#$#$#$#$#$#$")
+            initDate();
+        }
+    }
+
+
     function initDate()
     {
         dateInFocus = window.appDateInFocus;

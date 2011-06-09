@@ -123,8 +123,6 @@ Window {
 
     }
 
-
-
     Component.onCompleted: {
         appDateInFocus = utilities.getCurrentDateVal();
         switchBook(dayViewComponent)

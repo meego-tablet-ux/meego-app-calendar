@@ -24,6 +24,8 @@ class MeeGoCalendarObserver :  public QObject, public eKCal::StorageObserver, pu
         {
             m_dbg() << m_prefix << "loading completed" <<
                 (success ? "successfully" : "with error:") << error;
+            qDebug()<<"Inside MeeGoCalendarObserver, loadingComplete before dbReady()";
+            emit dbReady();
         }
 
         virtual void savingComplete(bool success, const QString &error)
@@ -111,6 +113,7 @@ class MeeGoCalendarObserver :  public QObject, public eKCal::StorageObserver, pu
 
     signals:
         void idle();
+        void dbReady();
 
     public slots:
         void dumpCalendar()
