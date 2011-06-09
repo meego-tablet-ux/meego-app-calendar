@@ -232,6 +232,21 @@ void TimeListModel::loadGivenDayModel(QDate nextDate)
     return;
 }
 
+void TimeListModel::sortEventList()
+{
+    int i , j;
+    for(i=0;i < eventsList.count();i++)
+    {
+        for(j=0; j < i; j++)
+        {
+            if(((CalendarDataItem*)(eventsList.at(i)))->heightUnits > ((CalendarDataItem*)(eventsList.at(j)))->heightUnits)
+            {
+                eventsList.swap( i, j );
+            }
+        }
+    }
+}
+
 void TimeListModel::assignDisplayValues()
 {
     int count = eventsList.count();
@@ -270,7 +285,8 @@ void TimeListModel::assignDisplayValues()
         }
 
     }
-
+    sortEventList();
+    
     //Assign width values based on number of items at an index and their height
     for(int i=0;i<count;i++)
     {

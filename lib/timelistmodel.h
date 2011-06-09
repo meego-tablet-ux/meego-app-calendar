@@ -68,6 +68,7 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
     void clearData();
     Q_INVOKABLE void loadGivenDayModel(QDate nextDate);
+    void sortEventList();
 
 protected:
     QList<TimeListItem*> itemsList;
