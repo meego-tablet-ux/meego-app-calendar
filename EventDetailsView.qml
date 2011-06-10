@@ -42,7 +42,7 @@ ContextMenu {
         if(allDay) {
             eventTime = qsTr("All day");
         } else  {
-            eventTime = qsTr("%1, %2 - %3","Event StartDate, StartTime - EndTime ").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
+            eventTime = qsTr("%1, %2 - %3","Event StartDate, StartTime - EndTime ").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull));
         }
         viewEventDetails.title = summary;
         visible = true;

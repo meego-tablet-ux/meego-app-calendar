@@ -219,6 +219,7 @@ AppPage {
 
     CalendarWeekModel {
         id:weekDaysModel
+        //weekStartIndex:1
     }
 
     TopItem {
@@ -542,7 +543,7 @@ AppPage {
 
                                                             Text {
                                                                   id: eventTime
-                                                                  text: allDay?qsTr("All day"):qsTr("%1 - %2","StartTime - EndTime").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
+                                                                  text: allDay?qsTr("All day"):qsTr("%1 - %2","StartTime - EndTime").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull));
                                                                   color:theme_fontColorNormal
                                                                   font.pixelSize: theme_fontPixelSizeMedium
                                                                   width: eventBox.width

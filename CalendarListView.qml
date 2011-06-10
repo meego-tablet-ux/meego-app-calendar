@@ -141,7 +141,7 @@ Item {
                         width:displayBox.width
                         Text {
                             id:timeText
-                            text: allDay?qsTr("All day"):qsTr("%1 - %2","StartTime - EndTime").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
+                            text: allDay?qsTr("All day"):qsTr("%1 - %2","StartTime - EndTime").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull));
                             font.bold: true
                             font.pixelSize: theme_fontPixelSizeMedium
                             color:theme_fontColorInactive

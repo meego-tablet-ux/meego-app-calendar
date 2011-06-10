@@ -10,7 +10,7 @@
 #include <inttypes.h>
 #include <utilmethods.h>
 
-TimeListItem::TimeListItem(int index, QString timeVal, int startHr, int endHr,EventsDataModel *dataModel,QObject *parent) : QObject(parent)
+TimeListItem::TimeListItem(int index, QTime timeVal, int startHr, int endHr,EventsDataModel *dataModel,QObject *parent) : QObject(parent)
 {
     this->index = index;
     this->timeVal = timeVal;
@@ -34,103 +34,102 @@ TimeListModel::TimeListModel(QObject *parent) : QAbstractListModel(parent)
 void TimeListModel::loadValues()
 {
 
-    UtilMethods utilities;
     QTime startTime;
     startTime.setHMS(0,0,0);
-    itemsList << new TimeListItem(0,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),0,0,getDataModelAtIndex(0));
-    itemsList << new TimeListItem(1,tr(""),0,100,getDataModelAtIndex(1));
+    itemsList << new TimeListItem(0,startTime,0,0,getDataModelAtIndex(0));
+    itemsList << new TimeListItem(1,startTime,0,100,getDataModelAtIndex(1));
 
     startTime.setHMS(1,0,0);
-    itemsList << new TimeListItem(2,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),1,130,getDataModelAtIndex(2));
-    itemsList << new TimeListItem(3,tr(""),1,200,getDataModelAtIndex(3));
+    itemsList << new TimeListItem(2,startTime,1,130,getDataModelAtIndex(2));
+    itemsList << new TimeListItem(3,startTime,1,200,getDataModelAtIndex(3));
 
     startTime.setHMS(2,0,0);
-    itemsList << new TimeListItem(4,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),2,230,getDataModelAtIndex(4));
-    itemsList << new TimeListItem(5,tr(""),2,300,getDataModelAtIndex(5));
+    itemsList << new TimeListItem(4,startTime,2,230,getDataModelAtIndex(4));
+    itemsList << new TimeListItem(5,startTime,2,300,getDataModelAtIndex(5));
 
     startTime.setHMS(3,0,0);
-    itemsList << new TimeListItem(6,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),3,330,getDataModelAtIndex(6));
-    itemsList << new TimeListItem(7,tr(""),3,400,getDataModelAtIndex(7));
+    itemsList << new TimeListItem(6,startTime,3,330,getDataModelAtIndex(6));
+    itemsList << new TimeListItem(7,startTime,3,400,getDataModelAtIndex(7));
 
     startTime.setHMS(4,0,0);
-    itemsList << new TimeListItem(8,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),4,430,getDataModelAtIndex(8));
-    itemsList << new TimeListItem(9,tr(""),4,500,getDataModelAtIndex(9));
+    itemsList << new TimeListItem(8,startTime,4,430,getDataModelAtIndex(8));
+    itemsList << new TimeListItem(9,startTime,4,500,getDataModelAtIndex(9));
 
     startTime.setHMS(5,0,0);
-    itemsList << new TimeListItem(10,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),5,530,getDataModelAtIndex(10));
-    itemsList << new TimeListItem(11,tr(""),5,600,getDataModelAtIndex(11));
+    itemsList << new TimeListItem(10,startTime,5,530,getDataModelAtIndex(10));
+    itemsList << new TimeListItem(11,startTime,5,600,getDataModelAtIndex(11));
 
     startTime.setHMS(6,0,0);
-    itemsList << new TimeListItem(12,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),6,630,getDataModelAtIndex(12));
-    itemsList << new TimeListItem(13,tr(""),6,700,getDataModelAtIndex(13));
+    itemsList << new TimeListItem(12,startTime,6,630,getDataModelAtIndex(12));
+    itemsList << new TimeListItem(13,startTime,6,700,getDataModelAtIndex(13));
 
     startTime.setHMS(7,0,0);
-    itemsList << new TimeListItem(14,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),7,730,getDataModelAtIndex(14));
-    itemsList << new TimeListItem(15,tr(""),7,800,getDataModelAtIndex(15));
+    itemsList << new TimeListItem(14,startTime,7,730,getDataModelAtIndex(14));
+    itemsList << new TimeListItem(15,startTime,7,800,getDataModelAtIndex(15));
 
     startTime.setHMS(8,0,0);
-    itemsList << new TimeListItem(16,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),8,830,getDataModelAtIndex(16));
-    itemsList << new TimeListItem(17,tr(""),8,900,getDataModelAtIndex(17));
+    itemsList << new TimeListItem(16,startTime,8,830,getDataModelAtIndex(16));
+    itemsList << new TimeListItem(17,startTime,8,900,getDataModelAtIndex(17));
 
     startTime.setHMS(9,0,0);
-    itemsList << new TimeListItem(18,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),9,930,getDataModelAtIndex(18));
-    itemsList << new TimeListItem(19,tr(""),9,1000,getDataModelAtIndex(19));
+    itemsList << new TimeListItem(18,startTime,9,930,getDataModelAtIndex(18));
+    itemsList << new TimeListItem(19,startTime,9,1000,getDataModelAtIndex(19));
 
     startTime.setHMS(10,0,0);
-    itemsList << new TimeListItem(20,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),10,1030,getDataModelAtIndex(20));
-    itemsList << new TimeListItem(21,tr(""),10,1100,getDataModelAtIndex(21));
+    itemsList << new TimeListItem(20,startTime,10,1030,getDataModelAtIndex(20));
+    itemsList << new TimeListItem(21,startTime,10,1100,getDataModelAtIndex(21));
 
     startTime.setHMS(11,0,0);
-    itemsList << new TimeListItem(22,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),11,1130,getDataModelAtIndex(22));
-    itemsList << new TimeListItem(23,tr(""),11,1200,getDataModelAtIndex(23));
+    itemsList << new TimeListItem(22,startTime,11,1130,getDataModelAtIndex(22));
+    itemsList << new TimeListItem(23,startTime,11,1200,getDataModelAtIndex(23));
 
     startTime.setHMS(12,0,0);
-    itemsList << new TimeListItem(24,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),12,1230,getDataModelAtIndex(24));
-    itemsList << new TimeListItem(25,tr(""),12,1300,getDataModelAtIndex(25));
+    itemsList << new TimeListItem(24,startTime,12,1230,getDataModelAtIndex(24));
+    itemsList << new TimeListItem(25,startTime,12,1300,getDataModelAtIndex(25));
 
     startTime.setHMS(13,0,0);
-    itemsList << new TimeListItem(26,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),13,1330,getDataModelAtIndex(26));
-    itemsList << new TimeListItem(27,tr(""),13,1400,getDataModelAtIndex(27));
+    itemsList << new TimeListItem(26,startTime,13,1330,getDataModelAtIndex(26));
+    itemsList << new TimeListItem(27,startTime,13,1400,getDataModelAtIndex(27));
 
     startTime.setHMS(14,0,0);
-    itemsList << new TimeListItem(28,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),14,1430,getDataModelAtIndex(28));
-    itemsList << new TimeListItem(29,tr(""),14,1500,getDataModelAtIndex(29));
+    itemsList << new TimeListItem(28,startTime,14,1430,getDataModelAtIndex(28));
+    itemsList << new TimeListItem(29,startTime,14,1500,getDataModelAtIndex(29));
 
     startTime.setHMS(15,0,0);
-    itemsList << new TimeListItem(30,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),15,1530,getDataModelAtIndex(30));
-    itemsList << new TimeListItem(31,tr(""),15,1600,getDataModelAtIndex(31));
+    itemsList << new TimeListItem(30,startTime,15,1530,getDataModelAtIndex(30));
+    itemsList << new TimeListItem(31,startTime,15,1600,getDataModelAtIndex(31));
 
     startTime.setHMS(16,0,0);
-    itemsList << new TimeListItem(32,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),16,1630,getDataModelAtIndex(32));
-    itemsList << new TimeListItem(33,tr(""),16,1700,getDataModelAtIndex(33));
+    itemsList << new TimeListItem(32,startTime,16,1630,getDataModelAtIndex(32));
+    itemsList << new TimeListItem(33,startTime,16,1700,getDataModelAtIndex(33));
 
     startTime.setHMS(17,0,0);
-    itemsList << new TimeListItem(34,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),17,1730,getDataModelAtIndex(34));
-    itemsList << new TimeListItem(35,tr(""),17,1800,getDataModelAtIndex(35));
+    itemsList << new TimeListItem(34,startTime,17,1730,getDataModelAtIndex(34));
+    itemsList << new TimeListItem(35,startTime,17,1800,getDataModelAtIndex(35));
 
     startTime.setHMS(18,0,0);
-    itemsList << new TimeListItem(36,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),18,1830,getDataModelAtIndex(36));
-    itemsList << new TimeListItem(37,tr(""),18,1900,getDataModelAtIndex(37));
+    itemsList << new TimeListItem(36,startTime,18,1830,getDataModelAtIndex(36));
+    itemsList << new TimeListItem(37,startTime,18,1900,getDataModelAtIndex(37));
 
     startTime.setHMS(19,0,0);
-    itemsList << new TimeListItem(38,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),19,1930,getDataModelAtIndex(38));
-    itemsList << new TimeListItem(39,tr(""),19,2000,getDataModelAtIndex(39));
+    itemsList << new TimeListItem(38,startTime,19,1930,getDataModelAtIndex(38));
+    itemsList << new TimeListItem(39,startTime,19,2000,getDataModelAtIndex(39));
 
     startTime.setHMS(20,0,0);
-    itemsList << new TimeListItem(40,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),20,2030,getDataModelAtIndex(40));
-    itemsList << new TimeListItem(41,tr(""),20,2100,getDataModelAtIndex(41));
+    itemsList << new TimeListItem(40,startTime,20,2030,getDataModelAtIndex(40));
+    itemsList << new TimeListItem(41,startTime,20,2100,getDataModelAtIndex(41));
 
     startTime.setHMS(21,0,0);
-    itemsList << new TimeListItem(42,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),21,2130,getDataModelAtIndex(42));
-    itemsList << new TimeListItem(43,tr(""),21,2200,getDataModelAtIndex(43));
+    itemsList << new TimeListItem(42,startTime,21,2130,getDataModelAtIndex(42));
+    itemsList << new TimeListItem(43,startTime,21,2200,getDataModelAtIndex(43));
 
     startTime.setHMS(22,0,0);
-    itemsList << new TimeListItem(44,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),22,2230,getDataModelAtIndex(44));
-    itemsList << new TimeListItem(45,tr(""),22,2300,getDataModelAtIndex(45));
+    itemsList << new TimeListItem(44,startTime,22,2230,getDataModelAtIndex(44));
+    itemsList << new TimeListItem(45,startTime,22,2300,getDataModelAtIndex(45));
 
     startTime.setHMS(23,0,0);
-    itemsList << new TimeListItem(46,utilities.getTimeInFormat(startTime,UtilMethods::ETimeSystemLocale),23,2330,getDataModelAtIndex(46));
-    itemsList << new TimeListItem(47,tr(""),23,2300,getDataModelAtIndex(47));
+    itemsList << new TimeListItem(46,startTime,23,2330,getDataModelAtIndex(46));
+    itemsList << new TimeListItem(47,startTime,23,2300,getDataModelAtIndex(47));
 }
 
 

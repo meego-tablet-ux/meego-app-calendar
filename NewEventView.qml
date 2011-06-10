@@ -236,13 +236,13 @@ ContextMenu {
             if(eventStartHr==-1 || eventEndHr==-1) {
                 startTime = utilities.getCurrentTimeVal();
                 startTime = utilities.roundTime(startTime);
-                startTimeStr = i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort);
+                startTimeStr = i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull);
                 endTime = utilities.addHMToCurrentTime(1,0);
                 endTime = utilities.roundTime(endTime);
-                endTimeStr = i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort);
+                endTimeStr = i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull);
             } else {
                 startTime = utilities.createTimeFromVals(eventStartHr,0);
-                startTimeStr = i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort);
+                startTimeStr = i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull);
 
                 var eventEndTimeStr = eventEndHr.toString();
                 if(eventEndTimeStr.length > 3) {
@@ -250,7 +250,7 @@ ContextMenu {
                 } else {
                     endTime = utilities.createTimeFromVals(parseInt(eventEndTimeStr.substr(0,1)),parseInt(eventEndTimeStr.substr(1,2)));
                 }
-                endTimeStr = i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort);
+                endTimeStr = i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull);
             }
 
             startDateTxt.text = startDateStr;
@@ -283,8 +283,8 @@ ContextMenu {
 
             startDateTxt.text = i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFullShort);
             finishDateTxt.text = i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFullShort);
-            startTimeTxt.text = i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort);
-            finishTimeTxt.text = i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort);
+            startTimeTxt.text = i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull);
+            finishTimeTxt.text = i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull);
 
             container.allDaySet = allDayCheck.on;
             startDateStr= startDateTxt.text;
@@ -344,13 +344,13 @@ ContextMenu {
         {
             if(fromIndex==1) {
                 startTime = timeVal;
-                startTimeTxt.text = i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort);
+                startTimeTxt.text = i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull);
                 //Temporary Fix to bug BMC:17374
                 startTimeTxt.visible=false;
                 startTimeTxt.visible=true;
             } else if(fromIndex==2) {
                 endTime = timeVal;
-                finishTimeTxt.text = i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort);
+                finishTimeTxt.text = i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull);
                 //Temporary Fix to bug BMC:17374
                 finishTimeTxt.visible=false;
                 finishTimeTxt.visible=true;

@@ -35,13 +35,25 @@ class CalendarWeekModel:public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(int count READ getCount);
+    Q_PROPERTY(int weekStartIndex READ getWeekStartDay WRITE setWeekStartDay);
 
 public:
     CalendarWeekModel(QObject *parent = 0);
     ~CalendarWeekModel();
 
     int getCount() const
-        { return itemsList.count(); }
+    { return itemsList.count(); }
+
+    void setWeekStartDay(const int startDay)
+    {
+        weekStartDay = startDay;
+        //loadCurrentWeekValues();
+    }
+
+    int getWeekStartDay()
+    {
+        return weekStartDay;
+    }
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -57,6 +69,7 @@ signals:
 
 protected:
     QList<DateItem *> itemsList;
+    int weekStartDay;
 
 };
 

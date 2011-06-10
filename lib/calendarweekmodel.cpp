@@ -25,7 +25,6 @@ CalendarWeekModel::CalendarWeekModel(QObject *parent) : QAbstractListModel(paren
     roles.insert(DateItem::DateValString, "dateValString");
     roles.insert(DateItem::CoreDateVal, "coreDateVal");
     setRoleNames(roles);
-
     loadCurrentWeekValues();
 }
 

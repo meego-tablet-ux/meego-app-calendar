@@ -218,6 +218,7 @@ AppPage {
 
     CalendarWeekModel {
         id:daysModel
+        //weekStartIndex:1
     }
 
     TimeListModel {
@@ -525,7 +526,7 @@ AppPage {
 
                                              Text {
                                                  id: timeValText
-                                                 text: timeVal
+                                                 text:(index%2==0)?i18nHelper.localTime(timeVal, Labs.LocaleHelper.TimeFull):""
                                                  anchors.top:parent.top
                                                  anchors.horizontalCenter:parent.horizontalCenter
                                                  font.bold: true
@@ -582,7 +583,7 @@ AppPage {
 
                                                                  Text {
                                                                        id: eventTime
-                                                                       text: qsTr("%1 - %2","StartTime - EndTime").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFullShort)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFullShort));
+                                                                       text: qsTr("%1 - %2","StartTime - EndTime").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull));
                                                                        color:theme_fontColorNormal
                                                                        width: descriptionBox.width
                                                                        font.pixelSize:theme_fontPixelSizeMedium

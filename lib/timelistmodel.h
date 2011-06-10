@@ -21,7 +21,7 @@
 class TimeListItem : QObject{
     Q_OBJECT
 public:
-    TimeListItem(int index, QString timeVal, int startHr, int endHr, EventsDataModel *modelData, QObject *parent = 0);
+    TimeListItem(int index, QTime timeVal, int startHr, int endHr, EventsDataModel *modelData, QObject *parent = 0);
 
     enum TimeListItemRoles {
         Index = Qt::UserRole+1,
@@ -34,7 +34,7 @@ public:
     int index;
     int startHr;
     int endHr;
-    QString timeVal;
+    QTime timeVal;
     EventsDataModel *dataModel;
 
 };
