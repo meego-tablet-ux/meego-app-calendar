@@ -112,6 +112,7 @@ AppPage {
         onGotoDateChanged: {
             if(window.gotoDate) {
                 dateInFocus = window.dateFromOutside;
+                window.appDateInFocus = dateInFocus;
                 resetDataModel(dateInFocus);
                 window.gotoDate = false;
             }
@@ -534,7 +535,7 @@ AppPage {
 
                                                             Text {
                                                                   id: eventTime
-                                                                  //:This is time range ("StartTime - EndTime") %1 is StartTime and %2 is EndTime
+                                                                  //: This is time range ("StartTime - EndTime") %1 is StartTime and %2 is EndTime
                                                                   text: allDay?qsTr("All day"):qsTr("%1 - %2","StartTime - EndTime").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull));
                                                                   color:theme_fontColorNormal
                                                                   font.pixelSize: theme_fontPixelSizeMedium

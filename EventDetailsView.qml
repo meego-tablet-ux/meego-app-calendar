@@ -101,7 +101,7 @@ ContextMenu {
                             anchors.leftMargin:10
                             Text {
                                 id:eventTimeTxt
-                                //: This is EventTime followed by GMT offset ("1:event time and 2:GMT offset")
+                                //: This is EventTime followed by GMT offset ("%1 is event time and %2 is GMT offset")
                                 text:qsTr("%1 (GMT %2)").arg(eventTime).arg(zoneOffset/(60*60))
                                 font.pixelSize: theme_fontPixelSizeMedium
                                 color:theme_fontColorNormal
@@ -111,8 +111,8 @@ ContextMenu {
 
                             Text {
                                 id:repeatValText
-                                //: This corresponds to Repeats frequency text. %1 is Repeats frequency and %2 is the translated text for Repeats
-                                text: qsTr("%1 %2","Repeats frequency").arg(qsTr("Repeats")).arg(repeatText)
+                                //: This corresponds to Repeats frequency text. %1 is frequency of the event and %2 is the translated text for "Repeats"
+                                text: qsTr("%1 %2").arg(qsTr("Repeats")).arg(repeatText)
                                 anchors.top: eventTimeTxt.bottom
                                 font.pixelSize: theme_fontPixelSizeMedium
                                 color:theme_fontColorNormal

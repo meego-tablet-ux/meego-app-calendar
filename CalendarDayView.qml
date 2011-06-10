@@ -422,7 +422,7 @@ AppPage {
                                                          anchors.top: parent.top
                                                          Text {
                                                              id: allDayDescText
-                                                             //:%1 corersponds to Events count
+                                                             //: %1 corresponds to Events count
                                                              text: (index==2 && (allDayViewModel.count>3))?qsTr("%1 more events exist").arg(allDayViewModel.count-2):summary
                                                              anchors.left: parent.left
                                                              anchors.leftMargin: 20
@@ -578,7 +578,7 @@ AppPage {
 
                                                                  Text {
                                                                        id: eventTime
-                                                                       //:This is time range ("StartTime - EndTime")
+                                                                       //:This is time range ("StartTime - EndTime") %1 is StartTime and %2 is EndTime
                                                                        text: qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull));
                                                                        color:theme_fontColorNormal
                                                                        width: descriptionBox.width

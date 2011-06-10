@@ -169,7 +169,7 @@ QString UtilMethods::getWeekHeaderTitle(int day,int mon,int year)
 
     startDateVal = inFocusDateVal.addDays(1-dayOfWeek);
     endDateVal = startDateVal.addDays(6);
-    //: %1 is StartDate and %2 is EndDate (will be deleted soon)
+    //: %1 is StartDate and %2 is EndDate (will be deleted from code soon)
     QString toTxt = tr("%1 - %2").arg(getDateInFormat(startDateVal,UtilMethods::EDefault)).arg(getDateInFormat(endDateVal,UtilMethods::EDefault));
     return toTxt;
 }

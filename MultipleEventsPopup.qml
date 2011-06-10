@@ -101,7 +101,7 @@ ContextMenu {
                     width:parent.width
                     radius: 5
                     //:This is Events Time range ("StartTime - EndTime ") %1 is StartTime and %2 is EndTime
-                    property string timeVal:(allDay)?qsTr("All day"):qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull))
+                    property string timeVal:(allDay)?qsTr("All day"):qsTr("%1 - %2","StartTime - EndTime" ).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull))
                     Column {
                         spacing: 5
                         anchors.top: parent.top

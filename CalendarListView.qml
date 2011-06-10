@@ -72,7 +72,7 @@ Item {
             Text {
                 id:results
                 //: %1 corresponds to Search result count
-                text: qsTr("%1 results found","Search result count").arg(searchCount)
+                text: qsTr("%1 results found").arg(searchCount)
                 anchors.left: parent.left
                 anchors.leftMargin: 10
                 font.bold: true
@@ -143,7 +143,7 @@ Item {
                         width:displayBox.width
                         Text {
                             id:timeText
-                            //:This is time range ("StartTime - EndTime") %1 is StartTime and %2 is EndTime
+                            //: This is time range ("StartTime - EndTime") %1 is StartTime and %2 is EndTime
                             text: allDay?qsTr("All day"):qsTr("%1 - %2","StartTime - EndTime").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull));
                             font.bold: true
                             font.pixelSize: theme_fontPixelSizeMedium
