@@ -169,6 +169,7 @@ QString UtilMethods::getWeekHeaderTitle(int day,int mon,int year)
 
     startDateVal = inFocusDateVal.addDays(1-dayOfWeek);
     endDateVal = startDateVal.addDays(6);
+    //: %1 is StartDate and %2 is EndDate (will be deleted soon)
     QString toTxt = tr("%1 - %2").arg(getDateInFormat(startDateVal,UtilMethods::EDefault)).arg(getDateInFormat(endDateVal,UtilMethods::EDefault));
     return toTxt;
 }
@@ -281,7 +282,7 @@ QString UtilMethods::getAlarmString(int alarmType)
         case E1DayB4: { alarmText = tr("1 day before"); break; }
         case E2DaysB4: { alarmText = tr("2 days before"); break; }
         case E1WeekB4: { alarmText = tr("1 week before"); break; }
-        case EOtherAlarm: { alarmText = tr("Other..."); break; }
+        case EOtherAlarm: { alarmText = tr("Other"); break; }
     }
     return alarmText;
 }
@@ -296,7 +297,7 @@ QString UtilMethods::getRepeatTypeString(int repeatType)
         case EEvery2Weeks: {repeatText = tr("Every 2 weeks"); break;}
         case EEveryMonth: {repeatText = tr("Every month"); break;}
         case EEveryYear: {repeatText = tr("Every year"); break;}
-        case EOtherRepeat: {repeatText = tr("Other..."); break;}
+        case EOtherRepeat: {repeatText = tr("Other"); break;}
     }
     return repeatText;
 }
@@ -306,8 +307,8 @@ QString UtilMethods::getRepeatEndTypeString(int repeatEndType)
     QString repeatEndText="";
     switch(repeatEndType) {
         case EForever: {repeatEndText = tr("Repeats forever"); break;}
-        case EForNTimes: {repeatEndText = tr("Ends after number of times..."); break;}
-        case EAfterDate:  {repeatEndText = tr("Ends after date..."); break;}
+        case EForNTimes: {repeatEndText = tr("Ends after number of times"); break;}
+        case EAfterDate:  {repeatEndText = tr("Ends after date"); break;}
     }
     return repeatEndText;
 }

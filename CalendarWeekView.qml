@@ -52,6 +52,7 @@ AppPage {
         dateInFocus = window.appDateInFocus;
         var startDate = utilities.getStartDateOfWeek(dateInFocus);
         var endDate = utilities.getEndDateOfWeek(startDate);
+        //:This is week date range %1 is Week's Start Date and %2 is Week's EndDate
         dateInFocusVal = qsTr("%1 - %2","Week's StartDate - Week's EndDate").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
         dayInFocusIndex = dateInFocus.getDay();
         if(dayInFocusIndex==0) {//i.e if day is sunday
@@ -72,6 +73,7 @@ AppPage {
                 daysModel.loadGivenWeekValuesFromDate(dateInFocus)
                 var startDate = utilities.getStartDateOfWeek(dateInFocus);
                 var endDate = utilities.getEndDateOfWeek(startDate);
+                //:This is week date range %1 is Week's Start Date and %2 is Week's EndDate
                 dateInFocusVal = qsTr("%1 - %2","Week's StartDate - Week's EndDate").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
                 dayInFocusIndex = dateInFocus.getDay();
                 if(dayInFocusIndex==0) {//i.e if day is sunday
@@ -115,6 +117,7 @@ AppPage {
         window.appDateInFocus = dateInFocus;
         var startDate = utilities.getStartDateOfWeek(dateInFocus);
         var endDate = utilities.getEndDateOfWeek(startDate);
+        //:This is week date range %1 is Week's Start Date and %2 is Week's EndDate
         dateInFocusVal = qsTr("%1 - %2","Week's StartDate - Week's EndDate").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
         daysModel.loadGivenWeekValuesFromDate(dateInFocus);
         eventsListView.contentY = (UtilMethods.EDayTimeStart*50);
@@ -341,7 +344,8 @@ AppPage {
                                                             anchors.top: parent.top
                                                             Text {
                                                                 id: allDayDescText
-                                                                text: (index==2 && (allDayViewModel.count>3))?qsTr("%1 more events exist","Events count").arg(allDayViewModel.count-2):summary
+                                                                //: %1 corresponds to events count
+                                                                text: (index==2 && (allDayViewModel.count>3))?qsTr("%1 more events exist").arg(allDayViewModel.count-2):summary
                                                                 anchors.left: parent.left
                                                                 anchors.leftMargin: 2
                                                                 anchors.verticalCenter: parent.verticalCenter
@@ -506,7 +510,8 @@ AppPage {
 
                                                                     Text {
                                                                           id: eventTime
-                                                                          text: qsTr("%1 - %2","StartTime - EndTime").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull));
+                                                                          //:This is time range ("StartTime - EndTime") %1 is StartTime and %2 is EndTime
+                                                                          text: qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull));
                                                                           color:theme_fontColorNormal
                                                                           font.pixelSize:theme_fontPixelSizeSmall
                                                                           width:descriptionBox.width

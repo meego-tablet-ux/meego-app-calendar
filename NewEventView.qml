@@ -916,7 +916,7 @@ ContextMenu {
                                       title: (windowType==UtilMethods.EAddEvent)?qsTr("Never"):utilities.getRepeatTypeString(container.repeatType)
                                       replaceDropDownTitle:true
                                       titleColor: "black"
-                                      model: [  qsTr("Never"), qsTr("Every day"), qsTr("Every week") , qsTr("Every 2 weeks"),qsTr("Every month"),qsTr("Every year"),qsTr("Other...")]
+                                      model: [  qsTr("Never"), qsTr("Every day"), qsTr("Every week") , qsTr("Every 2 weeks"),qsTr("Every month"),qsTr("Every year"),qsTr("Other")]
                                       payload: [ UtilMethods.ENoRepeat,UtilMethods.EEveryDay,UtilMethods.EEveryWeek,UtilMethods.EEvery2Weeks,UtilMethods.EEveryMonth,UtilMethods.EEveryYear,UtilMethods.EOtherRepeat ]
                                       onTriggered: {
                                           repeatCmbBlock.repeatType = payload[index];
@@ -971,7 +971,7 @@ ContextMenu {
                                               height:30
                                               replaceDropDownTitle:true
                                               titleColor: "black"
-                                              model: [  qsTr("Repeats forever"), qsTr("Ends after number of times..."), qsTr("Ends after date...")]
+                                              model: [  qsTr("Repeats forever"), qsTr("Ends after number of times"), qsTr("Ends after date")]
                                               payload: [UtilMethods.EForever,UtilMethods.EForNTimes,UtilMethods.EAfterDate]
                                               onTriggered: {
                                                   repeatEndComboBox.repeatEndType = payload[index];
@@ -1108,7 +1108,7 @@ ContextMenu {
                                       replaceDropDownTitle:true
                                       titleColor: "black"
 
-                                      model: [  qsTr("No reminder"), qsTr("10 minutes before"), qsTr("15 minutes before"),qsTr("30 minutes before"),qsTr("1 hour before"),qsTr("2 hours before"),qsTr("1 day before"),qsTr("2 days before"),qsTr("1 week before"),qsTr("Other...")]
+                                      model: [  qsTr("No reminder"), qsTr("10 minutes before"), qsTr("15 minutes before"),qsTr("30 minutes before"),qsTr("1 hour before"),qsTr("2 hours before"),qsTr("1 day before"),qsTr("2 days before"),qsTr("1 week before"),qsTr("Other")]
                                       payload: [UtilMethods.ENoAlarm,UtilMethods.E10MinB4,UtilMethods.E15MinB4,UtilMethods.E30MinB4,UtilMethods.E1HrB4,UtilMethods.E2HrsB4,UtilMethods.E1DayB4,UtilMethods.E2DaysB4,UtilMethods.E1WeekB4,UtilMethods.EOtherAlarm]
                                       onTriggered: {
                                           selectedIndex = payload[index];

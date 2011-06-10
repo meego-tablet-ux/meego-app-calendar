@@ -42,7 +42,8 @@ ContextMenu {
         if(allDay) {
             eventTime = qsTr("All day");
         } else  {
-            eventTime = qsTr("%1, %2 - %3","Event StartDate, StartTime - EndTime ").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull));
+            //:This is Date, Time range ("Event StartDate, StartTime - EndTime ") %1 is Event StartDate, %2 is StartTime and %3 is EndTime
+            eventTime = qsTr("%1, %2 - %3").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull));
         }
         viewEventDetails.title = summary;
         visible = true;
@@ -100,7 +101,8 @@ ContextMenu {
                             anchors.leftMargin:10
                             Text {
                                 id:eventTimeTxt
-                                text:qsTr("%1 (GMT %2)","1:event time and 2:GMT offset").arg(eventTime).arg(zoneOffset/(60*60))
+                                //: This is EventTime followed by GMT offset ("1:event time and 2:GMT offset")
+                                text:qsTr("%1 (GMT %2)").arg(eventTime).arg(zoneOffset/(60*60))
                                 font.pixelSize: theme_fontPixelSizeMedium
                                 color:theme_fontColorNormal
                                 width: timeBox.width
@@ -109,6 +111,7 @@ ContextMenu {
 
                             Text {
                                 id:repeatValText
+                                //: This corresponds to Repeats frequency text. %1 is Repeats frequency and %2 is the translated text for Repeats
                                 text: qsTr("%1 %2","Repeats frequency").arg(qsTr("Repeats")).arg(repeatText)
                                 anchors.top: eventTimeTxt.bottom
                                 font.pixelSize: theme_fontPixelSizeMedium

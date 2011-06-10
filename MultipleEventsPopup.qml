@@ -100,7 +100,8 @@ ContextMenu {
                     height: 50
                     width:parent.width
                     radius: 5
-                    property string timeVal:(allDay)?qsTr("All day"):qsTr("%1 - %2","StartTime - EndTime").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull))
+                    //:This is Events Time range ("StartTime - EndTime ") %1 is StartTime and %2 is EndTime
+                    property string timeVal:(allDay)?qsTr("All day"):qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull))
                     Column {
                         spacing: 5
                         anchors.top: parent.top
@@ -129,7 +130,8 @@ ContextMenu {
                     ExtendedMouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            var dateTimeStr = qsTr("%1, %2","Event StartDate, Start and End Time String").arg(i18nHelper.localDate(coreDateVal, Labs.LocaleHelper.DateFull)).arg(timeVal)
+                            //:This is Date, Time range ("Event StartDate, StartTime and EndTime String ") %1 is Event StartDate, %2 is StartTime and EndTime string (already translated and passed as argument)
+                            var dateTimeStr = qsTr("%1, %2").arg(i18nHelper.localDate(coreDateVal, Labs.LocaleHelper.DateFull)).arg(timeVal)
                             window.openViewFromMonthMultiEvents( eventListPopup.xVal,eventListPopup.yVal,window,uid,description,summary,location,alarmType,utilities.getRepeatTypeString(repeatType),dateTimeStr,coreDateVal,zoneName,zoneOffset);
                             eventListPopup.close();
                             eventListPopup.visible = false;

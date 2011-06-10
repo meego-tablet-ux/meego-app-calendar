@@ -422,7 +422,8 @@ AppPage {
                                                          anchors.top: parent.top
                                                          Text {
                                                              id: allDayDescText
-                                                             text: (index==2 && (allDayViewModel.count>3))?qsTr("%1 more events exist","Events count").arg(allDayViewModel.count-2):summary
+                                                             //:%1 corersponds to Events count
+                                                             text: (index==2 && (allDayViewModel.count>3))?qsTr("%1 more events exist").arg(allDayViewModel.count-2):summary
                                                              anchors.left: parent.left
                                                              anchors.leftMargin: 20
                                                              anchors.verticalCenter: parent.verticalCenter
@@ -577,7 +578,8 @@ AppPage {
 
                                                                  Text {
                                                                        id: eventTime
-                                                                       text: qsTr("%1 - %2","StartTime - EndTime").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull));
+                                                                       //:This is time range ("StartTime - EndTime")
+                                                                       text: qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull));
                                                                        color:theme_fontColorNormal
                                                                        width: descriptionBox.width
                                                                        font.pixelSize:theme_fontPixelSizeMedium
