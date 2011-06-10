@@ -63,9 +63,6 @@ AppPage {
     function initDate()
     {
         dateInFocus = window.appDateInFocus;
-        window.eventDay=dateInFocus.getDate();
-        window.eventMonth=(dateInFocus.getMonth()+1);
-        window.eventYear=dateInFocus.getFullYear();
         dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
         resetCalendarDayModels(dateInFocus);
     }
@@ -141,9 +138,6 @@ AppPage {
         daysModel.loadGivenWeekValuesFromDate(coreDateVal);
         allDayEventsCount = allDayViewModel.count;
         timeListModel.loadGivenDayModel(coreDateVal);
-        window.eventDay=coreDateVal.day();
-        window.eventMonth=coreDateVal.month()+1;
-        window.eventYear=coreDateVal.year();
         dateInFocus = coreDateVal;
         window.appDateInFocus = dateInFocus;
         dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);

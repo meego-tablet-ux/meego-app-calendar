@@ -114,6 +114,7 @@ class MeeGoCalendarObserver :  public QObject, public eKCal::StorageObserver, pu
     signals:
         void idle();
         void dbReady();
+        void dbChanged();
 
     public slots:
         void dumpCalendar()
