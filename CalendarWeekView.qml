@@ -114,11 +114,10 @@ AppPage {
     }
 
     function resetCalendarDayModels(coreDateVal) {
-        var tmpDate = new Date(utilities.getLongDate(coreDateVal));
-        window.eventDay=tmpDate.getDate();
-        window.eventMonth=(tmpDate.getMonth()+1);
-        window.eventYear=tmpDate.getFullYear();
-        dateInFocus = tmpDate;
+        window.eventDay=coreDateVal.day();
+        window.eventMonth=coreDateVal.month()+1;
+        window.eventYear=coreDateVal.year();
+        dateInFocus = coreDateVal;
         window.appDateInFocus = dateInFocus;
         var startDate = utilities.getStartDateOfWeek(dateInFocus);
         var endDate = utilities.getEndDateOfWeek(startDate);
@@ -129,11 +128,10 @@ AppPage {
 
     function setDateInFocus(coreDateVal)
     {
-        var tmpDate = new Date(utilities.getLongDate(coreDateVal));
-        window.eventDay=tmpDate.getDate();
-        window.eventMonth=(tmpDate.getMonth()+1);
-        window.eventYear=tmpDate.getFullYear();
-        dateInFocus = tmpDate;
+        window.eventDay=coreDateVal.day();
+        window.eventMonth=coreDateVal.month()+1;
+        window.eventYear=coreDateVal.year();
+        dateInFocus = coreDateVal;
         window.appDateInFocus = dateInFocus;
     }
 

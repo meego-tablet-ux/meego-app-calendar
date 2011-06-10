@@ -124,15 +124,14 @@ AppPage {
 
 
     function resetCalendarDayModels(coreDateVal) {
-        var tmpDate = new Date(utilities.getLongDate(coreDateVal));
         allDayViewModel.loadGivenDayModel(coreDateVal);
         daysModel.loadGivenWeekValuesFromDate(coreDateVal);
         allDayEventsCount = allDayViewModel.count;
         timeListModel.loadGivenDayModel(coreDateVal);
-        window.eventDay=tmpDate.getDate();
-        window.eventMonth=(tmpDate.getMonth()+1);
-        window.eventYear=tmpDate.getFullYear();
-        dateInFocus = tmpDate;
+        window.eventDay=coreDateVal.day();
+        window.eventMonth=coreDateVal.month()+1;
+        window.eventYear=coreDateVal.year();
+        dateInFocus = coreDateVal;
         window.appDateInFocus = dateInFocus;
         dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
         timeListView.positionViewAtIndex(window.positionOfView,ListView.Beginning);
@@ -288,7 +287,7 @@ AppPage {
 
                                     Text {
                                           id: dateValTxt
-                                          text:i18nHelper.localDate(coreDateVal,Labs.LocaleHelper.DateWeekdayDayShort) //dateValString
+                                          text:i18nHelper.localDate(coreDateVal,Labs.LocaleHelper.DateWeekdayDayShort)
                                           color:isCurrentDate(coreDateVal,index)?theme_buttonFontColorActive:theme_fontColorNormal
                                           font.pixelSize: (window.inLandscape)?theme_fontPixelSizeLarge:theme_fontPixelSizeMedium
                                           anchors.verticalCenter: parent.verticalCenter

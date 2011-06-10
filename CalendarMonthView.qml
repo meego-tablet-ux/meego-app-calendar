@@ -70,26 +70,23 @@ AppPage {
     }
 
     function resetCalendarModels(coreDateVal) {
-        var tmpDate = new Date(utilities.getLongDate(coreDateVal));
         monthModel.loadGivenMonthValuesFromOffset(coreDateVal);
         allEventsViewModel.loadGivenDayModel(coreDateVal);
-
-        window.eventDay=tmpDate.getDate();
-        window.eventMonth=(tmpDate.getMonth()+1);
-        window.eventYear=tmpDate.getFullYear();
-        dateInFocus = tmpDate;
+        window.eventDay=coreDateVal.day();
+        window.eventMonth=coreDateVal.month()+1;
+        window.eventYear=coreDateVal.year();
+        dateInFocus = coreDateVal;
         dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
         monthInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateMonthYear);
     }
 
     function resetDataModel(coreDateVal) {
-        var tmpDate = new Date(utilities.getLongDate(coreDateVal));
         allEventsViewModel.loadGivenDayModel(coreDateVal);
         monthModel.loadGivenMonthValuesFromOffset(coreDateVal);
-        window.eventDay=tmpDate.getDate();
-        window.eventMonth=(tmpDate.getMonth()+1);
-        window.eventYear=tmpDate.getFullYear();
-        dateInFocus = tmpDate;
+        window.eventDay=coreDateVal.day();
+        window.eventMonth=coreDateVal.month()+1;
+        window.eventYear=coreDateVal.year();
+        dateInFocus = coreDateVal;
         dateInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateFull);
         monthInFocusVal = i18nHelper.localDate(dateInFocus, Labs.LocaleHelper.DateMonthYear);
     }
