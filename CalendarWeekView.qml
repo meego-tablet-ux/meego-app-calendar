@@ -52,7 +52,7 @@ AppPage {
         dateInFocus = window.appDateInFocus;
         var startDate = utilities.getStartDateOfWeek(dateInFocus);
         var endDate = utilities.getEndDateOfWeek(startDate);
-        //:This is week date range %1 is Week's Start Date and %2 is Week's EndDate
+        //: This is week date range %1 is Week's Start Date and %2 is Week's EndDate
         dateInFocusVal = qsTr("%1 - %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
         dayInFocusIndex = dateInFocus.getDay();
         if(dayInFocusIndex==0) {//i.e if day is sunday
@@ -73,7 +73,7 @@ AppPage {
                 daysModel.loadGivenWeekValuesFromDate(dateInFocus)
                 var startDate = utilities.getStartDateOfWeek(dateInFocus);
                 var endDate = utilities.getEndDateOfWeek(startDate);
-                //:This is week date range %1 is Week's Start Date and %2 is Week's EndDate
+                //: This is week date range %1 is Week's Start Date and %2 is Week's EndDate
                 dateInFocusVal = qsTr("%1 - %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
                 dayInFocusIndex = dateInFocus.getDay();
                 if(dayInFocusIndex==0) {//i.e if day is sunday
@@ -117,7 +117,7 @@ AppPage {
         window.appDateInFocus = dateInFocus;
         var startDate = utilities.getStartDateOfWeek(dateInFocus);
         var endDate = utilities.getEndDateOfWeek(startDate);
-        //:This is week date range %1 is Week's Start Date and %2 is Week's EndDate
+        //: This is week date range %1 is Week's Start Date and %2 is Week's EndDate
         dateInFocusVal = qsTr("%1 - %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
         daysModel.loadGivenWeekValuesFromDate(dateInFocus);
         eventsListView.contentY = (UtilMethods.EDayTimeStart*50);
@@ -510,7 +510,7 @@ AppPage {
 
                                                                     Text {
                                                                           id: eventTime
-                                                                          //:This is time range ("StartTime - EndTime") %1 is StartTime and %2 is EndTime
+                                                                          //: This is time range ("StartTime - EndTime") %1 is StartTime and %2 is EndTime
                                                                           text: qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull));
                                                                           color:theme_fontColorNormal
                                                                           font.pixelSize:theme_fontPixelSizeSmall

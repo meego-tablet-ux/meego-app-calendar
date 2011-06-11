@@ -578,7 +578,7 @@ AppPage {
 
                                                                  Text {
                                                                        id: eventTime
-                                                                       //:This is time range ("StartTime - EndTime") %1 is StartTime and %2 is EndTime
+                                                                       //: This is time range ("StartTime - EndTime") %1 is StartTime and %2 is EndTime
                                                                        text: qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull));
                                                                        color:theme_fontColorNormal
                                                                        width: descriptionBox.width

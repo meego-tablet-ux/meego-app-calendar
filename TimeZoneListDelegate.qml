@@ -40,6 +40,7 @@ DropDown {
           var offsetArr1 = new Array();
           var gmtNameArr1 = new Array();
           for(var i=0;i<window.addEditTimeZoneList.count;i++) {
+              //: This Time zone string  %1 corresponds to cityname, %2 corresponds to offset %3 corrsponds to translated string for "00"
               modelArr1[i] = ((window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.EGMTOffset) < 0)? ((qsTr("%1 (GMT %2%3)").arg(window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.ETitle)).arg(window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.EGMTOffset)).arg(":00"))):(qsTr(("%1 (GMT +%2%3)").arg(window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.ETitle)).arg(window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.EGMTOffset)).arg(":00"))));
               payloadArr1[i] = i;
               offsetArr1[i] = window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.EGMTOffset);

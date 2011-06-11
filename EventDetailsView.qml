@@ -42,7 +42,7 @@ ContextMenu {
         if(allDay) {
             eventTime = qsTr("All day");
         } else  {
-            //:This is Date, Time range ("Event StartDate, StartTime - EndTime ") %1 is Event StartDate, %2 is StartTime and %3 is EndTime
+            //: This is Date, Time range ("Event StartDate, StartTime - EndTime ") %1 is Event StartDate, %2 is StartTime and %3 is EndTime
             eventTime = qsTr("%1, %2 - %3").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull));
         }
         viewEventDetails.title = summary;

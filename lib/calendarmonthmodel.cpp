@@ -121,6 +121,7 @@ void CalendarMonthModel::loadCurrentMonthValues()
                 IncidenceIO ioObject2 = list.at(1);
                 if(ioObject2.isAllDay()) event2 = allDayText;
                 event2 += ioObject2.getSummary();
+                //: %1 corresponds to events count
                 event3 = tr("%1 more events").arg(QString::number(eventsCount - 2));
             }
 
