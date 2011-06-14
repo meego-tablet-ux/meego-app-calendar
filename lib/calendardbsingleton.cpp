@@ -19,6 +19,7 @@ CalendarDBSingleton* CalendarDBSingleton::instance()
     {
         pinstance = new CalendarDBSingleton(); // create sole instance
         connect(myObserver,SIGNAL(dbReady()),pinstance, SLOT(emitDbLoaded()));
+        connect(myObserver,SIGNAL(dbChanged()),pinstance, SLOT(emitDbChanged()));
     }
     return pinstance; // address of sole  instance
 }
@@ -56,4 +57,9 @@ eKCal::EStorage::Ptr& CalendarDBSingleton::storagePtr()
 void CalendarDBSingleton :: emitDbLoaded() {
     qDebug()<<"Inside CalendarDBSingleton, emitDbLoaded()";
     emit dbLoaded();
+}
+
+void CalendarDBSingleton :: emitDbChanged() {
+    qDebug()<<"Inside CalendarDBSingleton, emitDbChanged()";
+    emit dbChanged();
 }

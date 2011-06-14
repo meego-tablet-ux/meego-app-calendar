@@ -51,7 +51,7 @@ Item {
             anchors.left: innerNavigation.left
             anchors.top:  innerNavigation.top
             anchors.verticalCenter: parent.verticalCenter
-            source: "image://theme/arrow-left"
+            source: "image://themedimage/images/arrow-left"
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
@@ -81,7 +81,7 @@ Item {
             anchors.left: innerNavigation.right
             anchors.top:  innerNavigation.top
             anchors.verticalCenter: parent.verticalCenter
-            source: "image://theme/arrow-right"
+            source: "image://themedimage/images/arrow-right"
             MouseArea {
                 anchors.fill: parent
                 onClicked: {

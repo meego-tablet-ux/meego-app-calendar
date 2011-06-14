@@ -201,7 +201,7 @@ ContextMenu {
                     visible:(viewEventDetails.showView)?true:false
                     Image {
                         id: seperatorImage2
-                        source: "image://theme/menu_item_separator"
+                        source: "image://themedimage/images/menu_item_separator"
                         width: eventDetailsBox.width
                     }
                     Item {
@@ -233,7 +233,7 @@ ContextMenu {
 
                 Image {
                     id: seperatorImage3
-                    source: "image://theme/menu_item_separator"
+                    source: "image://themedimage/images/menu_item_separator"
                     width: eventDetailsBox.width
                 }
 
@@ -247,8 +247,8 @@ ContextMenu {
                         height:40
                         anchors.bottom: parent.bottom
                         anchors.horizontalCenter: parent.horizontalCenter
-                        bgSourceUp: "image://theme/btn_blue_up"
-                        bgSourceDn: "image://theme/btn_blue_dn"
+                        bgSourceUp: "image://themedimage/widgets/common/button/button-default"
+                        bgSourceDn: "image://themedimage/widgets/common/button/button-default-pressed"
                         text: qsTr("Edit")
                         hasBackground: true
                         onClicked: {

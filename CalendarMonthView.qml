@@ -84,15 +84,15 @@ AppPage {
 
     function getDayImage(isCurrentDay,isMonthDay,coreDateVal,index) {
         var imageName = "";
-        imageName = isMonthDay?"image://theme/calendar/calendar_month_eventview_list_p":"image://theme/calendar/calendar_month_inactiveday_l"
+        imageName = isMonthDay?"image://themedimage/images/calendar/calendar_month_eventview_list_p":"image://themedimage/images/calendar/calendar_month_inactiveday_l"
         var now = new Date();
         if(utilities.datesEqual(coreDateVal,now)) {
-            imageName = "image://theme/calendar/calendar_month_today_l";
+            imageName = "image://themedimage/images/calendar/calendar_month_today_l";
             currDayIndex = index;
         }
         if(utilities.datesEqual(dateInFocus,coreDateVal)) {
             if(!isCurrentDay) {
-                imageName="image://theme/calendar/calendar_month_pressed_l";
+                imageName="image://themedimage/images/calendar/calendar_month_pressed_l";
             }
         }
 
@@ -241,7 +241,7 @@ AppPage {
             BorderImage {
                     id: spacerImage
                     anchors.fill: parent
-                    source: "image://theme/titlebar_l"
+                    source: "image://themedimage/images/titlebar_l"
 
                     Item {
                         id: calDataBox
@@ -285,13 +285,13 @@ AppPage {
                                                     border.color: "darkgray"
                                                     BorderImage {
                                                         id: weekImage
-                                                        source: "image://theme/calendar/calendar_month_inactiveday_l"
+                                                        source: "image://themedimage/images/calendar/calendar_month_inactiveday_l"
                                                         anchors.fill: parent
                                                     }
 
                                                     Text {
                                                           id: weekValTxt
-                                                          text: i18nHelper.localDate(coreDateVal, Labs.LocaleHelper.DateWeekdayShort) //utilities.getDateInFormatString(coreDateVal,"ddd")
+                                                          text: i18nHelper.localDate(coreDateVal, Labs.LocaleHelper.DateWeekdayShort)
                                                           color:theme_fontColorNormal
                                                           font.pixelSize:theme_fontPixelSizeLarge
                                                           anchors.centerIn: parent
@@ -346,7 +346,7 @@ AppPage {
                                                         opacity:setOpacity(1,isMonthDay,eventsCount)
                                                         BorderImage {
                                                             id:eventImage1
-                                                            source:"image://theme/calendar/calendar_event"
+                                                            source:"image://themedimage/widgets/apps/calendar/event"
                                                             width: parent.width-4
                                                             height:parent.height
                                                             anchors.centerIn: parent
@@ -370,7 +370,7 @@ AppPage {
                                                         opacity:setOpacity(2,isMonthDay,eventsCount)
                                                         BorderImage {
                                                             id:eventImage2
-                                                            source:"image://theme/calendar/calendar_event"
+                                                            source:"image://themedimage/widgets/apps/calendar/event"
                                                             width: parent.width-4
                                                             height:parent.height
                                                             anchors.centerIn: parent
@@ -394,7 +394,8 @@ AppPage {
                                                         opacity:setOpacity(3,isMonthDay,eventsCount)
                                                         BorderImage {
                                                             id:eventImage3
-                                                            source:(eventsCount>3)?"image://theme/calendar/calendar_event":"image://theme/calendar/calendar_event"
+                                                            //The image was supposed to be something else when the count was > 3. Have to revisit this.
+                                                            source:(eventsCount>3)?"image://themedimage/widgets/apps/calendar/event":"image://themedimage/widgets/apps/calendar/event"
                                                             width: parent.width-4
                                                             height:parent.height
                                                             anchors.centerIn:parent
@@ -471,7 +472,7 @@ AppPage {
                                         width: eventViewBox.width
                                         BorderImage {
                                             id: dateBoxImage
-                                            source: "image://theme/calendar/calendar_month_inactiveday_l"
+                                            source: "image://themedimage/images/calendar/calendar_month_inactiveday_l"
                                             anchors.fill: parent
                                         }
                                         Text {

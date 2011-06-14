@@ -475,7 +475,7 @@ ContextMenu {
                 anchors.top: titleBlock.bottom
                 anchors.left: parent.left
                 anchors.topMargin: 10
-                source: "image://theme/menu_item_separator"
+                source: "image://themedimage/images/menu_item_separator"
             } //end of titleDivider
 
 
@@ -783,7 +783,7 @@ ContextMenu {
                                   id:moreSpacer1
                                   width: parent.width
                                   anchors.top: parent.top
-                                  source: "image://theme/menu_item_separator"
+                                  source: "image://themedimage/images/menu_item_separator"
                               }
                               Text {
                                   id:moreTxt
@@ -811,7 +811,7 @@ ContextMenu {
                                   id:moreSpacer2
                                   width: parent.width
                                   anchors.top: parent.bottom
-                                  source: "image://theme/menu_item_separator"
+                                  source: "image://themedimage/images/menu_item_separator"
                               }
                           }
 
@@ -1057,7 +1057,7 @@ ContextMenu {
                                           Image {
                                                 id: endDatePicker
                                                 anchors.fill: parent
-                                                source: "image://theme/calendar/icn_monthcalendar_up"
+                                                source: "image://themedimage/images/calendar/icn_monthcalendar_up"
                                           }
                                           MouseArea {
                                               anchors.fill: parent
@@ -1117,7 +1117,7 @@ ContextMenu {
 
                                   Image {
                                        id: cancelAlarmIcon
-                                       source: "image://theme/icn_close_dn"
+                                       source: "image://themedimage/images/icn_close_dn"
                                        anchors.right: parent.right
                                        height: 0
                                        width:0
@@ -1128,7 +1128,7 @@ ContextMenu {
                                                when: cancelAlarmIcon.pressed
                                                PropertyChanges {
                                                    target: cancelAlarmIcon
-                                                   source: "image://theme/icn_close_up"
+                                                   source: "image://themedimage/images/icn_close_up"
                                                }
                                            }
                                        ]
@@ -1257,8 +1257,8 @@ ContextMenu {
                                       text: qsTr("Delete event")
                                       opacity: (windowType==UtilMethods.EAddEvent)?0:1
                                       hasBackground: true
-                                      bgSourceUp: "image://theme/btn_grey_up"
-                                      bgSourceDn: "image://theme/btn_grey_dn"
+                                      bgSourceUp: "image://themedimage/widgets/common/button/button"
+                                      bgSourceDn: "image://themedimage/widgets/common/button/button-pressed"
                                       onClicked: {
                                           window.deleteEvent(container.uid);
                                           outer.hide();
@@ -1331,7 +1331,7 @@ ContextMenu {
                 anchors.bottom: buttonsArea.top
                 anchors.left: parent.left
                 anchors.bottomMargin: 5
-                source:"image://theme/menu_item_separator"
+                source:"image://themedimage/images/menu_item_separator"
             }//end button div
 
             //Save and Cancel buttons
@@ -1348,8 +1348,8 @@ ContextMenu {
                     id: saveButton
                     height: parent.height
                     //width: (parent.width/3)-10
-                    bgSourceUp: "image://theme/btn_blue_up"
-                    bgSourceDn: "image://theme/btn_blue_dn"
+                    bgSourceUp: "image://themedimage/widgets/common/button/button-default"
+                    bgSourceDn: "image://themedimage/widgets/common/button/button-default-pressed"
                     text: qsTr("Save")
                     hasBackground: true
                     anchors.left: parent.left
@@ -1368,8 +1368,8 @@ ContextMenu {
                     id: cancelButton
                     height: parent.height
                     //width: (parent.width/3)-10
-                    bgSourceUp: "image://theme/btn_grey_up"
-                    bgSourceDn: "image://theme/btn_grey_dn"
+                    bgSourceUp: "image://themedimage/widgets/common/button/button"
+                    bgSourceDn: "image://themedimage/widgets/common/button/button-pressed"
                     text: qsTr("Cancel")
                     hasBackground: true
                     anchors.right: parent.right

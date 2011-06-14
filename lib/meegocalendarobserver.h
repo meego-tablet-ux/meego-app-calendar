@@ -63,6 +63,9 @@ class MeeGoCalendarObserver :  public QObject, public eKCal::StorageObserver, pu
         {
             m_dbg() << m_prefix << "calendar modified:" << (modified ? "yes" : "no");
             m_lastChange = QDateTime::currentMSecsSinceEpoch();
+            qDebug()<<"Inside MeeGoCalendarObserver, calendarModified before dbChanged()";
+            emit dbChanged();
+
         }
 
         void timerEvent(QTimerEvent *event)

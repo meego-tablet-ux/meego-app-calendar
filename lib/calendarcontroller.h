@@ -44,9 +44,11 @@ public:
 
 signals:
     void dbLoaded();
+    void dbChanged();
 
 public slots:
     void emitDbLoaded();
+    void emitDbChanged();
 
 
 private:

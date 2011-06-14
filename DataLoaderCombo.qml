@@ -65,7 +65,7 @@ Item {
                 anchors.top: parent.top
                 height: parent.height
                 width:30
-                source:"image://theme/dropdown_white_60px_1"
+                source:"image://themedimage/images/dropdown_white_60px_1"
                 property bool pressed: false
                 states: [
                     State {
@@ -73,7 +73,7 @@ Item {
                         when: leftIcon.pressed
                         PropertyChanges {
                             target: leftIcon
-                            source: "image://theme/dropdown_white_pressed_3"
+                            source: "image://themedimage/images/dropdown_white_pressed_3"
                         }
                     }
                 ]
@@ -85,7 +85,7 @@ Item {
                 anchors.right: parent.right
                 height: parent.height
                 width:30
-                source:"image://theme/dropdown_white_60px_3"
+                source:"image://themedimage/images/dropdown_white_60px_3"
                 property bool pressed: false
                 states: [
                     State {
@@ -93,7 +93,7 @@ Item {
                         when: rightIcon.pressed
                         PropertyChanges {
                             target: rightIcon
-                            source: "image://theme/dropdown_white_pressed_3"
+                            source: "image://themedimage/images/dropdown_white_pressed_3"
                         }
                     }
                 ]
@@ -112,7 +112,7 @@ Item {
             Image {
                 id: centerIcon
                 height: parent.height
-                source: "image://theme/dropdown_white_60px_2"
+                source: "image://themedimage/images/dropdown_white_60px_2"
                 anchors.top: parent.top
                 anchors.left: leftIcon.right
                 anchors.right: rightIcon.left
@@ -123,7 +123,7 @@ Item {
                         when: centerIcon.pressed
                         PropertyChanges {
                             target: centerIcon
-                            source: "image://theme/dropdown_white_pressed_3"
+                            source: "image://themedimage/images/dropdown_white_pressed_3"
                         }
                     }
                 ]

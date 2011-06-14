@@ -33,6 +33,11 @@ void CalendarController :: emitDbLoaded() {
     emit dbLoaded();
 }
 
+void CalendarController :: emitDbChanged() {
+    qDebug()<<"Inside CalendarController, emitDbChanged()";
+    emit dbChanged();
+}
+
 bool CalendarController::setUpCalendars()
 {
     bool setUpStatus=true;
@@ -41,17 +46,8 @@ bool CalendarController::setUpCalendars()
         calendar = CalendarDBSingleton::calendarPtr();
         storage = CalendarDBSingleton::storagePtr();
         connect(instance,SIGNAL(dbLoaded()),this, SLOT(emitDbLoaded()));
+        connect(instance,SIGNAL(dbChanged()),this, SLOT(emitDbChanged()));
 
-        /*//This part of code is to support multiple calendars
-        notebook = storage->defaultNotebook().data();
-        if(notebook->color().isEmpty()) {
-            notebook->setColor("Blue");
-        }
-        if(notebook->description().isEmpty()){
-            notebook->setDescription("Default Calendar");
-        }
-        nUid = notebook->uid();*/
-        //storage->loadNotebookIncidences(notebook->uid());
 
     } catch (exception &e) {
         setUpStatus=false;
@@ -303,10 +299,11 @@ QList<IncidenceIO> CalendarController::getEventsFromDB(int listType,KDateTime st
     try {
         KCalCore::Event::List eventList;
         if(listType == EAll) {
-            eventList = calendar->rawEvents(KCalCore::EventSortStartDate, KCalCore::SortDirectionAscending);
+            eventList = calendar->rawEvents(KCalCore::EventSortStartDate, KCalCore::SortDirectionAscending);            
         }
         else if(listType == EDayList) {
             eventList = calendar->rawEventsForDate(startDate.date(),KDateTime::Spec(KDateTime::LocalZone),KCalCore::EventSortStartDate,KCalCore::SortDirectionAscending);
+            qDebug()<<"$$$$$$$$$$$$$$$$$$$$$$ Inside CalendarController getEventsFromDB, obtained events = "<<eventList.count();
         } else if(listType == EMonthList) {
             eventList = calendar->rawEvents(startDate.date(),endDate.date(),KDateTime::Spec(KDateTime::LocalZone));
         } else if(listType == EByUid) {

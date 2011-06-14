@@ -54,7 +54,6 @@ AppPage {
     Connections {
         target:controller
         onDbLoaded: {
-            console.log("Inside onDbReady....#$#$######$#$#$#$#$#$#$#$#$#$#$")
             initDate();
         }
     }
@@ -257,7 +256,7 @@ AppPage {
             id: spacerImage
             height:dayViewTopItem.topHeight - (navHeader.height)
             width: dayViewTopItem.topWidth
-            source: "image://theme/titlebar_l"
+            source: "image://themedimage/images/titlebar_l"
 
             Rectangle {
                 id: calData
@@ -366,7 +365,7 @@ AppPage {
                                          z:500
                                          BorderImage {
                                              id:allDayIcon
-                                             source:"image://theme/popupbox_arrow_bottom"
+                                             source:"image://themedimage/images/popupbox_arrow_bottom"
                                              anchors.fill: parent
                                          }
 
@@ -413,7 +412,7 @@ AppPage {
                                                 width: allDayDisplayBox.width
                                                 BorderImage {
                                                      id:allDayImage
-                                                     source:"image://theme/calendar/calendar_event"
+                                                     source:"image://themedimage/widgets/apps/calendar/event-allday"
                                                      anchors.fill: parent
                                                      Item {
                                                          id: allDayDescBox
@@ -482,7 +481,7 @@ AppPage {
                     Image {
                         id:headerDivider
                         width: calData.width
-                        source: "image://theme/menu_item_separator"
+                        source: "image://themedimage/images/menu_item_separator"
                     } //end of headerDivider
 
                     Rectangle {
@@ -552,7 +551,7 @@ AppPage {
                                                      x:(xUnits+xUnits*displayRect.width)+5
                                                      BorderImage {
                                                          id:regEventImage
-                                                         source:"image://theme/calendar/calendar_event"
+                                                         source:"image://themedimage/widgets/apps/calendar/event"
                                                          anchors.fill: parent
                                                          z:1000
                                                          Item {

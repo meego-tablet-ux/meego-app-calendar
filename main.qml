@@ -145,6 +145,7 @@ Window {
     property date appDateInFocus
     property int positionOfView:UtilMethods.EDayTimeStart
     property variant addEditTimeZoneList : timezonelist
+    property string allDayText: qsTr("All day")
 
 
     Connections {

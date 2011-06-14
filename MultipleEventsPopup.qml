@@ -73,7 +73,7 @@ ContextMenu {
         }
         Image {
             id: dateSpacer
-            source: "image://theme/menu_item_separator"
+            source: "image://themedimage/images/menu_item_separator"
             width: eventViewBox.width
         }
 
@@ -145,7 +145,7 @@ ContextMenu {
 
         Image {
             id: buttonSpacer
-            source: "image://theme/menu_item_separator"
+            source: "image://themedimage/images/menu_item_separator"
             width: eventViewBox.width
         }
 
@@ -157,8 +157,8 @@ ContextMenu {
                 id: closeButton
                 height:50
                 anchors.centerIn: parent
-                bgSourceUp: "image://theme/btn_grey_up"
-                bgSourceDn: "image://theme/btn_grey_dn"
+                bgSourceUp: "image://themedimage/widgets/common/button/button"
+                bgSourceDn: "image://themedimage/widgets/common/button/button-pressed"
                 text: qsTr("Close")
                 hasBackground: true
                 onClicked: {
