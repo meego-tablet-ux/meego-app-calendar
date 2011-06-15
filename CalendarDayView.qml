@@ -421,8 +421,8 @@ AppPage {
                                                          anchors.top: parent.top
                                                          Text {
                                                              id: allDayDescText
-                                                             //: %1 corresponds to Events count
-                                                             text: (index==2 && (allDayViewModel.count>3))?qsTr("%1 more events exist").arg(allDayViewModel.count-2):summary
+                                                             //: %n corresponds to Events count
+                                                             text: (index==2 && (allDayViewModel.count>3))?qsTr("%n more event(s) exist", "", allDayViewModel.count-2):summary
                                                              anchors.left: parent.left
                                                              anchors.leftMargin: 20
                                                              anchors.verticalCenter: parent.verticalCenter

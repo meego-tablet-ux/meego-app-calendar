@@ -31,8 +31,8 @@ Item {
         target:window
         onSearchResultCountChanged: {
             searchCount = window.searchResultCount;
-            //: %1 corresponds to Search result count
-            results.text = qsTr("%1 results found").arg(searchCount)
+            //: %n corresponds to Search result count
+            results.text = qsTr("%n result(s) found", "", searchCount)
         }
     }
 
