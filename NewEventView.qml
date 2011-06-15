@@ -905,7 +905,7 @@ ContextMenu {
                                   width: editList.innerBoxWidth
                                   anchors.left: parent.left
                                   anchors.leftMargin: 25
-                                  height:30
+                                  height:40
                                   property int repeatType:repeatCmb.selectedIndex
                                   DropDown {
                                       id: repeatCmb
@@ -926,7 +926,7 @@ ContextMenu {
                                   onRepeatTypeChanged: {
                                       if(repeatType != UtilMethods.ENoRepeat) {
                                           repeatEndCmbBlock.opacity=1;
-                                          repeatEndCmbBlock.height = 30;
+                                          repeatEndCmbBlock.height = 40;
                                       } else {
                                           if(repeatType == UtilMethods.ENoRepeat) {
                                               if(repeatEndCmbBlock.opacity==1) {
@@ -968,7 +968,7 @@ ContextMenu {
                                               anchors.top: parent.top
                                               anchors.left: parent.left
                                               width: parent.width
-                                              height:30
+                                              height:40
                                               replaceDropDownTitle:true
                                               titleColor: "black"
                                               model: [  qsTr("Repeats forever"), qsTr("Ends after number of times"), qsTr("Ends after date")]
@@ -1097,13 +1097,13 @@ ContextMenu {
                                   width: editList.innerBoxWidth
                                   anchors.left: parent.left
                                   anchors.leftMargin: 25
-                                  height:30
+                                  height:40
                                   DropDown {
                                       id: alarmCmb
                                       anchors.top: parent.top
                                       anchors.left: parent.left
                                       width: (parent.width)
-                                      height:30
+                                      height:40
                                       title: (windowType==UtilMethods.EAddEvent)?qsTr("No reminder"):utilities.getAlarmString(container.alarmType)
                                       replaceDropDownTitle:true
                                       titleColor: "black"

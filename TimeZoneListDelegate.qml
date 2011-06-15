@@ -15,7 +15,7 @@ DropDown {
       anchors.left: parent.left
       anchors.leftMargin: 25
       width: parent.width
-      height:30
+      height:40
       anchors.verticalCenter: parent.verticalCenter
       model: modelArr
       payload: payloadArr
@@ -40,11 +40,11 @@ DropDown {
           var offsetArr1 = new Array();
           var gmtNameArr1 = new Array();
           for(var i=0;i<window.addEditTimeZoneList.count;i++) {
-              //: This Time zone string  %1 corresponds to cityname, %2 corresponds to offset %3 corrsponds to translated string for "00"
-              modelArr1[i] = ((window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.EGMTOffset) < 0)? ((qsTr("%1 (GMT %2%3)").arg(window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.ETitle)).arg(window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.EGMTOffset)).arg(":00"))):(qsTr(("%1 (GMT +%2%3)").arg(window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.ETitle)).arg(window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.EGMTOffset)).arg(":00"))));
+              //: This Time zone string  %1 corresponds to cityname, %2 corresponds to GMT offset. Both strings are localized. Translators don't have to do anything here.
+              modelArr1[i] = qsTr("%1 (%2)").arg(window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.Title)).arg(window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.LongGMTName));
               payloadArr1[i] = i;
-              offsetArr1[i] = window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.EGMTOffset);
-              gmtNameArr1[i] = window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.ETitle);
+              offsetArr1[i] = window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.GMTOffset);
+              gmtNameArr1[i] = window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.Title);
           }
 
           tzCmb.modelArr = modelArr1;
