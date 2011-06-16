@@ -261,12 +261,30 @@ void TimeListModel::assignDisplayValues()
         int index = 0,itemCount=0;
 
         CalendarDataItem *calItem = ((CalendarDataItem*)(eventsList.at(i)));
-        index = computeStartIndex(calItem->startTime);
+        QTime sTime = calItem->startTime;
+        QTime eTime = calItem->endTime;
+        if (dateVal == calItem->startDate && dateVal < calItem->endDate) {
+            eTime = QTime(23,59,59);
+        }
+
+        if (dateVal == calItem->endDate && dateVal > calItem->startDate) {
+            sTime = QTime(0,0,0);
+        }
+
+        if (dateVal > calItem->startDate && dateVal < calItem->endDate) {
+            sTime = QTime(0,0,0);
+            eTime = QTime(23,59,59);
+        }
+
+        index = computeStartIndex(sTime);
+
         ((CalendarDataItem*)(eventsList.at(i)))->startIndex = index;
         ((CalendarDataItem*)(eventsList.at(i)))->xUnits = 0;
         ((CalendarDataItem*)(eventsList.at(i)))->yUnits = 0;
         ((CalendarDataItem*)(eventsList.at(i)))->widthUnits = 1.0;
-        double htVal = (calItem->startTime.secsTo(calItem->endTime) / (60.0*30.0));
+
+        double htVal = (sTime.secsTo(eTime) / (60.0*30.0));
+
         if(htVal<0.5) {
             htVal = 0.5;
         }
