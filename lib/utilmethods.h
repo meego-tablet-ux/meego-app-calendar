@@ -15,10 +15,6 @@
 #include <QDebug>
 #include <QtDeclarative/qdeclarative.h>
 #include <QObject>
-#include <extendedcalendar.h>
-#include <extendedstorage.h>
-#include <notebook.h>
-#include <sqlitestorage.h>
 #include <kdatetime.h>
 #include <duration.h>
 #include <sstream>
@@ -229,7 +225,7 @@ public:
     Q_INVOKABLE QDate addDMYToGivenDate(QDate toDate,int days, int mon, int yr);
     Q_INVOKABLE QDate createDateFromVals(int day,int mon,int year);
     Q_INVOKABLE QString getWeekHeaderTitle(int day,int mon,int year);
-    Q_INVOKABLE QDate getStartDateOfWeek(QDate inFocusDate);
+    Q_INVOKABLE QDate getStartDateOfWeek(QDate inFocusDate, int weekStartDayIndex);
     Q_INVOKABLE QDate getEndDateOfWeek(QDate startDate);
     Q_INVOKABLE QTime createTimeFromVals(int ht,int min);
     Q_INVOKABLE QString getMonth(QDate fromDate);

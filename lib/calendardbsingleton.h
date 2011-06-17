@@ -9,14 +9,10 @@
 #ifndef CALENDARDBSINGLETON_H
 #define CALENDARDBSINGLETON_H
 
-#include <extendedcalendar.h>
-#include <extendedstorage.h>
 #include <meegocalendarobserver.h>
-
 #include "ekcal/ekcal-storage.h"
 #include <qdebug.h>
 
-using namespace mKCal;
 using namespace eKCal;
 
 

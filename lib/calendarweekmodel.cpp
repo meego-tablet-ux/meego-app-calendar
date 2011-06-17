@@ -25,7 +25,7 @@ CalendarWeekModel::CalendarWeekModel(QObject *parent) : QAbstractListModel(paren
     roles.insert(DateItem::DateValString, "dateValString");
     roles.insert(DateItem::CoreDateVal, "coreDateVal");
     setRoleNames(roles);
-    loadCurrentWeekValues();
+    //loadCurrentWeekValues();
 }
 
 CalendarWeekModel::~CalendarWeekModel()
@@ -38,7 +38,8 @@ void CalendarWeekModel::loadCurrentWeekValues()
     UtilMethods utilities;
     QDate currentDate = QDate::currentDate();
     int dayOfWeek = currentDate.dayOfWeek();
-    QDate startDate = currentDate.addDays(-(dayOfWeek-1));
+    int daysBeforeStartDay = (7-weekStartDay+dayOfWeek)%7; //(dayOfWeek+weekStartDay+1)%7;
+    QDate startDate = currentDate.addDays(-(daysBeforeStartDay));
     clearData();
     emit beginInsertRows(QModelIndex(),0,6);
     itemsList << new DateItem(0,utilities.getShortDate(startDate),startDate);
@@ -59,15 +60,12 @@ void CalendarWeekModel::loadGivenWeekValuesFromOffset(QDate currDateInFocus,int 
     QDate startDate;
     QDate currentDate = currDateInFocus;
     int currDayOfWeek = currentDate.dayOfWeek();
-    QDate nextDate = currentDate.addDays(offSetFromCurrentWeek);
-    int nextDayOfWeek = nextDate.dayOfWeek();
-    if(currDayOfWeek==1 && nextDayOfWeek==7) {
-        startDate = currentDate.addDays(offSetFromCurrentWeek*7);
-        changeModel = true;
-    } else if(currDayOfWeek==7 && nextDayOfWeek==1) {
-        startDate = currentDate.addDays(1);
-        changeModel = true;
-    }
+    int daysBeforeStartDay = (7-weekStartDay+currDayOfWeek)%7; //(currDayOfWeek+weekStartDay+1)%7;
+    startDate = currentDate.addDays(-(daysBeforeStartDay));
+
+    startDate = startDate.addDays(offSetFromCurrentWeek*7);
+    changeModel = true;
+
 
     if(changeModel) {
         clearData();
@@ -88,7 +86,8 @@ void CalendarWeekModel::loadGivenWeekValuesFromDate(QDate fromDate)
 {
     UtilMethods utilities;
     int dayOfWeek = fromDate.dayOfWeek();
-    QDate startDate = fromDate.addDays(-(dayOfWeek-1));
+    int daysBeforeStartDay = (7-weekStartDay+dayOfWeek)%7; //(dayOfWeek+weekStartDay+1)%7;
+    QDate startDate = fromDate.addDays(-(daysBeforeStartDay));
     clearData();
     beginResetModel();
     itemsList << new DateItem(0,utilities.getShortDate(startDate),startDate);

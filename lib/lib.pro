@@ -5,7 +5,7 @@ TEMPLATE = lib
 INCLUDEPATH += ../lib
 LIBS += -L../lib -lekcal
 CONFIG += link_pkgconfig
-PKGCONFIG += libkcalcoren libmkcal
+PKGCONFIG += libkcalcoren
 
 OBJECTS_DIR = .obj
 MOC_DIR = .moc

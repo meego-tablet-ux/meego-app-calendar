@@ -59,8 +59,9 @@ void CalendarMonthModel::loadCurrentMonthValues()
 
     int startDayOfMonth = monthStartDate.dayOfWeek();
     int endDayOfMonth = monthEndDate.dayOfWeek();
-    int daysBeforeStartDay = (startDayOfMonth-1);
-    int daysAfterEndDay = 7-endDayOfMonth;
+    int daysBeforeStartDay = (7-weekStartDay+startDayOfMonth)%7;
+    int endDateIndex = (weekStartDay-1)<1?7:(weekStartDay-1);
+    int daysAfterEndDay = endDateIndex-endDayOfMonth;
     int totalDisplayDays = monthDays+daysBeforeStartDay+daysAfterEndDay;
     daysAfterEndDay += (42-totalDisplayDays);
     totalDisplayDays = monthDays+daysBeforeStartDay+daysAfterEndDay;
@@ -208,8 +209,11 @@ int CalendarMonthModel::columnCount(const QModelIndex &parent) const
 
 void CalendarMonthModel::clearData()
 {
-    while (!itemsList.isEmpty())
-        delete itemsList.takeFirst();
+    if(!itemsList.isEmpty())
+    {
+        while (!itemsList.isEmpty())
+            delete itemsList.takeFirst();
+    }
 }
 
 QML_DECLARE_TYPE(CalendarMonthModel);

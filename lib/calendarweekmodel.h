@@ -35,7 +35,7 @@ class CalendarWeekModel:public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(int count READ getCount);
-    Q_PROPERTY(int weekStartIndex READ getWeekStartDay WRITE setWeekStartDay);
+    Q_PROPERTY(int weekStartDay READ getWeekStartDay WRITE setWeekStartDay);
 
 public:
     CalendarWeekModel(QObject *parent = 0);
@@ -47,7 +47,7 @@ public:
     void setWeekStartDay(const int startDay)
     {
         weekStartDay = startDay;
-        //loadCurrentWeekValues();
+        loadCurrentWeekValues();
     }
 
     int getWeekStartDay()

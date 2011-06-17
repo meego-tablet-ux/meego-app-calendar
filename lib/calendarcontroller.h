@@ -9,10 +9,6 @@
 #ifndef CALENDARCONTROLLER_H
 #define CALENDARCONTROLLER_H
 
-#include <extendedcalendar.h>
-#include <extendedstorage.h>
-#include <notebook.h>
-#include <sqlitestorage.h>
 #include <kdatetime.h>
 #include <duration.h>
 #include <QDir>
@@ -20,13 +16,8 @@
 #include <QtDeclarative/qdeclarative.h>
 #include <QObject>
 #include "ekcal/ekcal-storage.h"
-
-
 #include <incidenceio.h>
 #include  <utilmethods.h>
-
-
-using namespace mKCal;
 
 class CalendarController : public QObject
 {
@@ -62,7 +53,7 @@ private:
     KCalCore::Calendar::Ptr calendar;
     eKCal::EStorage::Ptr storage;
 
-    Notebook *notebook;
+    //Notebook *notebook;
     QString nUid;
 };
 

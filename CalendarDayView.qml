@@ -211,7 +211,7 @@ AppPage {
 
     CalendarWeekModel {
         id:daysModel
-        //weekStartIndex:1
+        weekStartDay:i18nHelper.defaultFirstDayOfWeek
     }
 
     TimeListModel {
@@ -304,17 +304,8 @@ AppPage {
                                     MouseArea {
                                         anchors.fill: parent
                                         onClicked: {
-                                            dayRepeater.prevIndex = dayRepeater.dayIndex;
-                                            dayRepeater.dayIndex = index;
-                                            dateValBox.color = "white"
                                             resetCalendarDayModels(coreDateVal);
                                         }
-                                    }
-                                }
-                                onDayIndexChanged: {
-                                    dayRow.children[prevIndex].color = "lightgray"
-                                    if(prevIndex != currDayIndex) {
-                                        dayRow.children[currDayIndex].color = "lightgray"
                                     }
                                 }
 
@@ -346,7 +337,6 @@ AppPage {
                                          Text {
                                              id: allDayText
                                              text: qsTr("All day")
-                                             //anchors.centerIn: parent
                                              font.bold: true
                                              color:theme_fontColorNormal
                                              font.pixelSize: (window.inLandscape)?theme_fontPixelSizeMedium:theme_fontPixelSizeSmall

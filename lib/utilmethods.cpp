@@ -174,12 +174,13 @@ QString UtilMethods::getWeekHeaderTitle(int day,int mon,int year)
     return toTxt;
 }
 
-QDate UtilMethods::getStartDateOfWeek(QDate inFocusDate)
+QDate UtilMethods::getStartDateOfWeek(QDate inFocusDate,int weekStartDayIndex)
 {
     QDate startDateVal;
 
     int dayOfWeek = inFocusDate.dayOfWeek();
-    startDateVal = inFocusDate.addDays(1-dayOfWeek);
+    int daysToStartDate = (7-weekStartDayIndex+dayOfWeek)%7;
+    startDateVal = inFocusDate.addDays(-daysToStartDate);
     return startDateVal;
 }
 

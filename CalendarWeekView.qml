@@ -50,15 +50,11 @@ AppPage {
     function initDate()
     {
         dateInFocus = window.appDateInFocus;
-        var startDate = utilities.getStartDateOfWeek(dateInFocus);
+        var startDate = utilities.getStartDateOfWeek(dateInFocus,i18nHelper.defaultFirstDayOfWeek);
         var endDate = utilities.getEndDateOfWeek(startDate);
         //: This is week date range %1 is Week's Start Date and %2 is Week's EndDate
         dateInFocusVal = qsTr("%1 - %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
-        dayInFocusIndex = dateInFocus.getDay();
-        if(dayInFocusIndex==0) {//i.e if day is sunday
-            dayInFocusIndex = 7;
-        }
-        dayInFocusIndex--;
+        dayInFocusIndex = (7-i18nHelper.defaultFirstDayOfWeek+dateInFocus.getDay())%7;
         resetCalendarDayModels(dateInFocus);
     }
 
@@ -71,15 +67,11 @@ AppPage {
                 dateInFocus =  window.dateFromOutside;
                 window.appDateInFocus = dateInFocus;
                 daysModel.loadGivenWeekValuesFromDate(dateInFocus)
-                var startDate = utilities.getStartDateOfWeek(dateInFocus);
+                var startDate = utilities.getStartDateOfWeek(dateInFocus,i18nHelper.defaultFirstDayOfWeek);
                 var endDate = utilities.getEndDateOfWeek(startDate);
                 //: This is week date range %1 is Week's Start Date and %2 is Week's EndDate
                 dateInFocusVal = qsTr("%1 - %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
-                dayInFocusIndex = dateInFocus.getDay();
-                if(dayInFocusIndex==0) {//i.e if day is sunday
-                    dayInFocusIndex = 7;
-                }
-                dayInFocusIndex--;
+                dayInFocusIndex = (7-i18nHelper.defaultFirstDayOfWeek+dateInFocus.getDay())%7;
                 eventsListView.contentY = (UtilMethods.EDayTimeStart*50);
             }
         }
@@ -115,7 +107,7 @@ AppPage {
     function resetCalendarDayModels(coreDateVal) {
         dateInFocus = coreDateVal;
         window.appDateInFocus = dateInFocus;
-        var startDate = utilities.getStartDateOfWeek(dateInFocus);
+        var startDate = utilities.getStartDateOfWeek(dateInFocus,i18nHelper.defaultFirstDayOfWeek);
         var endDate = utilities.getEndDateOfWeek(startDate);
         //: This is week date range %1 is Week's Start Date and %2 is Week's EndDate
         dateInFocusVal = qsTr("%1 - %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
@@ -196,7 +188,7 @@ AppPage {
 
     CalendarWeekModel {
         id:daysModel
-        //weekStartIndex:1
+        weekStartDay: i18nHelper.defaultFirstDayOfWeek
     }
 
     TimeListModel {

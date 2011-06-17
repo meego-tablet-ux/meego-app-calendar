@@ -206,12 +206,13 @@ AppPage {
 
     CalendarMonthModel {
         id:monthModel
+        weekStartDay: i18nHelper.defaultFirstDayOfWeek
         dateVal:dateInFocus
     }
 
     CalendarWeekModel {
         id:weekDaysModel
-        //weekStartIndex:1
+        weekStartDay: i18nHelper.defaultFirstDayOfWeek
     }
 
     TopItem {
