@@ -15,7 +15,6 @@
 
 using namespace eKCal;
 
-
 class CalendarDBSingleton : public QObject
 {
       Q_OBJECT
