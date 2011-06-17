@@ -156,7 +156,7 @@ Window {
 
             if (cmd == "openCalendar") {
                 var uid = cdata;
-                var dateVal = controller.getEventPositonInView(uid);
+                var dateVal = controller.getEventPositionInView(uid);
                 dateFromOutside = dateVal;
                 appDateInFocus = dateVal;
                 positionOfView = dateFromOutside.getHours()*2;

@@ -28,10 +28,13 @@ public:
     ~CalendarController();
 
     Q_INVOKABLE bool addModifyEvent(int actionType, QObject* eventIO);
-    Q_INVOKABLE bool deleteEvent(QString eventUId);
-    Q_INVOKABLE QList<IncidenceIO> getEventsFromDB(int listType,KDateTime startDate=KDateTime::currentLocalDateTime(), KDateTime endDate=KDateTime::currentLocalDateTime(),const QString uid="");
-    Q_INVOKABLE QObject* getEventForEdit(const QString uid);
-    Q_INVOKABLE QDateTime getEventPositonInView(const QString uid);
+    Q_INVOKABLE bool deleteEvent(const QString& eventUId);
+    Q_INVOKABLE QList<IncidenceIO> getEventsFromDB(int listType,
+                                                   const KDateTime& startDate = KDateTime::currentLocalDateTime(),
+                                                   const KDateTime& endDate = KDateTime::currentLocalDateTime(),
+                                                   const QString& uid = "");
+    Q_INVOKABLE QObject* getEventForEdit(const QString& uid);
+    Q_INVOKABLE QDateTime getEventPositionInView(const QString& uid);
 
 signals:
     void dbLoaded();
@@ -41,20 +44,16 @@ public slots:
     void emitDbLoaded();
     void emitDbChanged();
 
-
 private:
     bool setUpCalendars();
-    void handleRepeat(KCalCore::Event::Ptr coreEventPtr,const IncidenceIO& eventIO);
-    void handleEventTime(KCalCore::Event::Ptr coreEventPtr,const IncidenceIO& eventIO);
-    void handleAlarm(const IncidenceIO& eventIO,KCalCore::Alarm::Ptr eventAlarm);    
+    void handleRepeat(const KCalCore::Event::Ptr& coreEventPtr, const IncidenceIO& eventIO);
+    void handleEventTime(const KCalCore::Event::Ptr& coreEventPtr, const IncidenceIO& eventIO);
+    void handleAlarm(const IncidenceIO& eventIO, const KCalCore::Alarm::Ptr& eventAlarm);
 
 
 private:    
     KCalCore::Calendar::Ptr calendar;
     eKCal::EStorage::Ptr storage;
-
-    //Notebook *notebook;
-    QString nUid;
 };
 
 #endif // CALENDARCONTROLLER_H

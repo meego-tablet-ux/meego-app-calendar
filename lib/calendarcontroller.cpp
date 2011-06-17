@@ -63,9 +63,9 @@ bool CalendarController::setUpCalendars()
   * details the user enters on the New Event form.
   * @return returns true if added successfully, else false
   */
-bool CalendarController :: addModifyEvent(int actionType,QObject*  eventIOObj)
+bool CalendarController::addModifyEvent(int actionType, QObject* eventIOObj)
  {
-    bool success=true;
+    bool success = true;
     IncidenceIO eventIO(*(IncidenceIO*)(eventIOObj));
 
    try {
@@ -73,9 +73,9 @@ bool CalendarController :: addModifyEvent(int actionType,QObject*  eventIOObj)
         if(actionType == EAddEvent) {
             coreEvent = KCalCore::Event::Ptr(new KCalCore::Event());
         } else if(actionType == EModifyEvent) {
-            coreEvent = KCalCore::Event::Ptr(calendar->event(eventIO.getUid()));
+            coreEvent = calendar->event(eventIO.getUid());
         }
-        if(coreEvent.isNull()) {
+        if(!coreEvent) {
             return false;
         }
         coreEvent->setSummary(eventIO.getSummary());
@@ -114,16 +114,15 @@ bool CalendarController :: addModifyEvent(int actionType,QObject*  eventIOObj)
   * @param eventUid the unique identifier of the Event
   * @return true of deleted successfully,else false
   */
-bool CalendarController::deleteEvent(QString eventUid)
+bool CalendarController::deleteEvent(const QString& eventUid)
 {
     bool deleted = true;
     try {
-        //storage->loadNotebookIncidences(nUid);
-        KCalCore::Event::Ptr coreEvent = KCalCore::Event::Ptr(calendar->event(eventUid));
-        if(!coreEvent.isNull()) {
+        KCalCore::Event::Ptr coreEvent = calendar->event(eventUid);
+        if(coreEvent) {
             deleted = calendar->deleteEvent(coreEvent);
+            storage->save();
         }
-        storage->save();
 
     }catch(exception &e){
         deleted = false;
@@ -137,14 +136,15 @@ bool CalendarController::deleteEvent(QString eventUid)
   * @param coreEvent, event whose recurrence has to be set
   * @param eventIO, the IO object from the UI
   */
-void CalendarController::handleRepeat(KCalCore::Event::Ptr coreEventPtr,const IncidenceIO&  eventIO)
+void CalendarController::handleRepeat(const KCalCore::Event::Ptr& coreEventPtr,
+                                      const IncidenceIO&  eventIO)
 {
    KCalCore::Recurrence *eventRecurrence = coreEventPtr->recurrence();
    try {
         if(eventIO.getRepeatType()==ENoRepeat){
-            KCalCore :: RecurrenceRule::List rList = eventRecurrence->rRules();
-            for(int i=0;i<rList.count();i++) {
-               eventRecurrence->deleteRRule(rList.at(i));
+            KCalCore::RecurrenceRule::List rList = eventRecurrence->rRules();
+            foreach(KCalCore::RecurrenceRule* rule, rList) {
+               eventRecurrence->deleteRRule(rule);
             }
         } else {
             switch(eventIO.getRepeatType()) {
@@ -198,7 +198,8 @@ void CalendarController::handleRepeat(KCalCore::Event::Ptr coreEventPtr,const In
   */
 //Might need some additional processing.
 //So put the logic seperately into a method instead of cluttering the addEvent method
-void CalendarController::handleEventTime(KCalCore::Event::Ptr coreEventPtr,const IncidenceIO&  eventIO)
+void CalendarController::handleEventTime(const KCalCore::Event::Ptr& coreEventPtr,
+                                         const IncidenceIO& eventIO)
 {
     try{
         coreEventPtr->setDtStart(eventIO.getStartDateTime());
@@ -221,7 +222,8 @@ void CalendarController::handleEventTime(KCalCore::Event::Ptr coreEventPtr,const
   * @param eventIO, the IncidenceIO object from the UI
   * @param eventAlarm, the KCalCore::Alarm object with its parent set
   */
-void CalendarController::handleAlarm(const IncidenceIO&  eventIO,KCalCore::Alarm::Ptr eventAlarm)
+void CalendarController::handleAlarm(const IncidenceIO&  eventIO,
+                                     const KCalCore::Alarm::Ptr& eventAlarm)
 {
     try{
         eventAlarm->setText(eventIO.getSummary());
@@ -293,7 +295,8 @@ void CalendarController::handleAlarm(const IncidenceIO&  eventIO,KCalCore::Alarm
     return;
 }
 
-QList<IncidenceIO> CalendarController::getEventsFromDB(int listType,KDateTime startDate, KDateTime endDate,const QString uid)
+QList<IncidenceIO> CalendarController::getEventsFromDB(int listType, const KDateTime& startDate,
+                                                       const KDateTime& endDate, const QString& uid)
 {
     QList<IncidenceIO> eventIOList;
     try {
@@ -311,9 +314,8 @@ QList<IncidenceIO> CalendarController::getEventsFromDB(int listType,KDateTime st
             eventList.append(eventPtr);
         }
 
-        for(int i=0;i<eventList.count();i++) {
+        foreach(const KCalCore::Event::Ptr& event, eventList) {
             IncidenceIO eventIO;
-            KCalCore::Event *event = eventList.at(i).data();
             eventIO.setType(EEvent);
             eventIO.setUid(event->uid());
             eventIO.setDescription(event->description());
@@ -332,9 +334,8 @@ QList<IncidenceIO> CalendarController::getEventsFromDB(int listType,KDateTime st
             if ( event->hasEnabledAlarms() ) {
                 KCalCore::Alarm::List alarmList = event->alarms();
 
-                if ( alarmList.count() > 0 ) {
-                    KCalCore::Alarm::Ptr ptr = alarmList.at(0);
-                    KCalCore::Alarm* eventAlarm = ptr.data();
+                if ( !alarmList.isEmpty() ) {
+                    KCalCore::Alarm::Ptr& eventAlarm = alarmList.first();
                     eventIO.setAlarmDateTime(eventAlarm->time().toLocalZone());
 
                     if(eventAlarm->startOffset().asSeconds()==(-60*10))
@@ -397,18 +398,18 @@ QList<IncidenceIO> CalendarController::getEventsFromDB(int listType,KDateTime st
 }
 
 
-QObject* CalendarController::getEventForEdit(const QString uid)
+QObject* CalendarController::getEventForEdit(const QString& uid)
 {
-    QList<IncidenceIO> listIO = getEventsFromDB(EByUid,KDateTime::currentDateTime(KDateTime::OffsetFromUTC), KDateTime::currentDateTime(KDateTime::OffsetFromUTC),uid);
-    IncidenceIO* objIO = new IncidenceIO(listIO.at(0));
+    QList<IncidenceIO> listIO = getEventsFromDB(EByUid, KDateTime(), KDateTime(), uid);
+    IncidenceIO* objIO = new IncidenceIO(listIO.first());
     objIO->printIncidence();
     return objIO;
 }
 
-QDateTime CalendarController::getEventPositonInView(const QString uid)
+QDateTime CalendarController::getEventPositionInView(const QString& uid)
 {
-    QList<IncidenceIO> listIO = getEventsFromDB(EByUid,KDateTime::currentDateTime(KDateTime::OffsetFromUTC), KDateTime::currentDateTime(KDateTime::OffsetFromUTC),uid);
-    IncidenceIO objIO = listIO.at(0);
+    QList<IncidenceIO> listIO = getEventsFromDB(EByUid, KDateTime(), KDateTime(), uid);
+    const IncidenceIO& objIO = listIO.first();
 
     return objIO.getStartDateTime().dateTime();
 }
