@@ -40,10 +40,6 @@ signals:
     void dbLoaded();
     void dbChanged();
 
-public slots:
-    void emitDbLoaded();
-    void emitDbChanged();
-
 private:
     bool setUpCalendars();
     void handleRepeat(const KCalCore::Event::Ptr& coreEventPtr, const IncidenceIO& eventIO);

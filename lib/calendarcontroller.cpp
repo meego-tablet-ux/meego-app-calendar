@@ -28,16 +28,6 @@ CalendarController::~CalendarController()
 {
 }
 
-void CalendarController :: emitDbLoaded() {
-    qDebug()<<"Inside CalendarController, emitDbLoaded()";
-    emit dbLoaded();
-}
-
-void CalendarController :: emitDbChanged() {
-    qDebug()<<"Inside CalendarController, emitDbChanged()";
-    emit dbChanged();
-}
-
 bool CalendarController::setUpCalendars()
 {
     bool setUpStatus=true;
@@ -45,8 +35,11 @@ bool CalendarController::setUpCalendars()
         instance = CalendarDBSingleton::instance();
         calendar = CalendarDBSingleton::calendarPtr();
         storage = CalendarDBSingleton::storagePtr();
-        connect(instance,SIGNAL(dbLoaded()),this, SLOT(emitDbLoaded()));
-        connect(instance,SIGNAL(dbChanged()),this, SLOT(emitDbChanged()));
+        bool ok;
+        ok = connect(instance, SIGNAL(dbLoaded()), this, SIGNAL(dbLoaded()));
+        Q_ASSERT(ok);
+        ok = connect(instance, SIGNAL(dbChanged()), this, SIGNAL(dbChanged()));
+        Q_ASSERT(ok);
 
 
     } catch (exception &e) {

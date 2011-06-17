@@ -18,8 +18,11 @@ CalendarDBSingleton* CalendarDBSingleton::instance()
     if (pinstance == 0) // true when called first time
     {
         pinstance = new CalendarDBSingleton(); // create sole instance
-        connect(myObserver,SIGNAL(dbReady()),pinstance, SLOT(emitDbLoaded()));
-        connect(myObserver,SIGNAL(dbChanged()),pinstance, SLOT(emitDbChanged()));
+        bool ok;
+        ok = connect(myObserver, SIGNAL(dbReady()), pinstance, SIGNAL(dbLoaded()));
+        Q_ASSERT(ok);
+        ok = connect(myObserver, SIGNAL(dbChanged()), pinstance, SIGNAL(dbChanged()));
+        Q_ASSERT(ok);
     }
     return pinstance; // address of sole  instance
 }
@@ -51,15 +54,4 @@ KCalCore::Calendar::Ptr& CalendarDBSingleton::calendarPtr()
 eKCal::EStorage::Ptr& CalendarDBSingleton::storagePtr()
 {
     return storage;
-}
-
-
-void CalendarDBSingleton :: emitDbLoaded() {
-    qDebug()<<"Inside CalendarDBSingleton, emitDbLoaded()";
-    emit dbLoaded();
-}
-
-void CalendarDBSingleton :: emitDbChanged() {
-    qDebug()<<"Inside CalendarDBSingleton, emitDbChanged()";
-    emit dbChanged();
 }
