@@ -33,8 +33,10 @@ bool CalendarController::setUpCalendars()
     bool setUpStatus=true;
     try {
         instance = CalendarDBSingleton::instance();
-        calendar = CalendarDBSingleton::calendarPtr();
-        storage = CalendarDBSingleton::storagePtr();
+        storage = instance->storagePtr();
+        if(!storage) throw exception();
+        calendar = instance->calendarPtr();
+        if(!calendar) throw exception();
         bool ok;
         ok = connect(instance, SIGNAL(dbLoaded()), this, SIGNAL(dbLoaded()));
         Q_ASSERT(ok);
