@@ -61,23 +61,21 @@ CalendarListModel::~CalendarListModel()
 void CalendarListModel::refresh()
 {
     CalendarController controller;
-    QList<IncidenceIO> list = controller.getEventsFromDB(EAll);
+    QList<IncidenceIO*> list = controller.getEventsFromDB(EAll);
 
     beginResetModel();
     clearData();
     int eventsCount=0;
-    for(int i=0;i<list.count();i++) {
-        IncidenceIO ioObject = list.at(i);
-        if(ioObject.isAllDay()) {
+    foreach (IncidenceIO* ioObject, list) {
+        if(ioObject->isAllDay()) {
             itemsList << new CalendarDataItem(eventsCount,ioObject);
-            eventsCount++;
+            ++eventsCount;
         }
     }
-    for(int i=0;i<list.count();i++) {
-        IncidenceIO ioObject = list.at(i);
-        if(!ioObject.isAllDay()) {
+    foreach (IncidenceIO* ioObject, list) {
+        if(!ioObject->isAllDay()) {
             itemsList << new CalendarDataItem(eventsCount,ioObject);
-            eventsCount++;
+            ++eventsCount;
         }
     }
 
@@ -93,23 +91,21 @@ void CalendarListModel::refresh()
 void CalendarListModel::loadAllEventsSorted()
 {
     CalendarController controller;
-    QList<IncidenceIO> list = controller.getEventsFromDB(EAll);
+    QList<IncidenceIO*> list = controller.getEventsFromDB(EAll);
 
     beginResetModel();
     clearData();
     int eventsCount=0;
-    for(int i=0;i<list.count();i++) {
-        IncidenceIO ioObject = list.at(i);
-        if(ioObject.isAllDay()) {
+    foreach(IncidenceIO* ioObject, list) {
+        if(ioObject->isAllDay()) {
             itemsList << new CalendarDataItem(eventsCount,ioObject);
-            eventsCount++;
+            ++eventsCount;
         }
     }
-    for(int i=0;i<list.count();i++) {
-        IncidenceIO ioObject = list.at(i);
-        if(!ioObject.isAllDay()) {
+    foreach (IncidenceIO* ioObject, list) {
+        if(!ioObject->isAllDay()) {
             itemsList << new CalendarDataItem(eventsCount,ioObject);
-            eventsCount++;
+            ++eventsCount;
         }
     }
 

@@ -17,8 +17,7 @@
 class CalendarDataItem : QObject{
     Q_OBJECT
 public:
-    CalendarDataItem(int index, const IncidenceIO& fromObj, QObject *parent = 0);
-    CalendarDataItem(const CalendarDataItem& fromObj);
+    explicit CalendarDataItem(int index, IncidenceIO* fromObj, QObject *parent = 0);
 
     enum CalendarDataItemRoles
     {

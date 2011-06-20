@@ -60,22 +60,23 @@ bool CalendarController::setUpCalendars()
   */
 bool CalendarController::addModifyEvent(int actionType, QObject* eventIOObj)
  {
+    qDebug() << Q_FUNC_INFO << actionType << eventIOObj;
     bool success = true;
-    IncidenceIO eventIO(*(IncidenceIO*)(eventIOObj));
+    IncidenceIO *eventIO = static_cast<IncidenceIO*>(eventIOObj);
 
    try {
         KCalCore::Event::Ptr coreEvent;
         if(actionType == EAddEvent) {
             coreEvent = KCalCore::Event::Ptr(new KCalCore::Event());
         } else if(actionType == EModifyEvent) {
-            coreEvent = calendar->event(eventIO.getUid());
+            coreEvent = calendar->event(eventIO->getUid());
         }
         if(!coreEvent) {
             return false;
         }
-        coreEvent->setSummary(eventIO.getSummary());
-        coreEvent->setDescription(eventIO.getDescription());
-        coreEvent->setLocation(eventIO.getLocation());
+        coreEvent->setSummary(eventIO->getSummary());
+        coreEvent->setDescription(eventIO->getDescription());
+        coreEvent->setLocation(eventIO->getLocation());
 
        //handle Event time
         handleEventTime(coreEvent,eventIO);
@@ -84,10 +85,10 @@ bool CalendarController::addModifyEvent(int actionType, QObject* eventIOObj)
         handleRepeat(coreEvent,eventIO);
 
         //handle alarm processing
-        if(eventIO.getAlarmType()!= ENoAlarm) {
+        if(eventIO->getAlarmType()!= ENoAlarm) {
             coreEvent->clearAlarms();
             KCalCore::Alarm::Ptr eventAlarm(coreEvent->newAlarm());
-            handleAlarm(eventIO,eventAlarm);
+            handleAlarm(eventAlarm, eventIO);
         }
 
         if(actionType == EAddEvent) {
@@ -132,17 +133,17 @@ bool CalendarController::deleteEvent(const QString& eventUid)
   * @param eventIO, the IO object from the UI
   */
 void CalendarController::handleRepeat(const KCalCore::Event::Ptr& coreEventPtr,
-                                      const IncidenceIO&  eventIO)
+                                      IncidenceIO*  eventIO)
 {
    KCalCore::Recurrence *eventRecurrence = coreEventPtr->recurrence();
    try {
-        if(eventIO.getRepeatType()==ENoRepeat){
+        if(eventIO->getRepeatType()==ENoRepeat){
             KCalCore::RecurrenceRule::List rList = eventRecurrence->rRules();
             foreach(KCalCore::RecurrenceRule* rule, rList) {
                eventRecurrence->deleteRRule(rule);
             }
         } else {
-            switch(eventIO.getRepeatType()) {
+            switch(eventIO->getRepeatType()) {
 
                 case EEveryDay: {
                         eventRecurrence->setDaily(1);
@@ -175,10 +176,10 @@ void CalendarController::handleRepeat(const KCalCore::Event::Ptr& coreEventPtr,
                 }
             }//end of switch
 
-            if(eventIO.getRepeatEndType() == UtilMethods::EForNTimes) {
-                eventRecurrence->setDuration(eventIO.getRepeatCount());
-            } else if(eventIO.getRepeatEndType() == UtilMethods::EAfterDate) {
-                eventRecurrence->setEndDateTime(eventIO.getRepeatEndDateTime());
+            if(eventIO->getRepeatEndType() == UtilMethods::EForNTimes) {
+                eventRecurrence->setDuration(eventIO->getRepeatCount());
+            } else if(eventIO->getRepeatEndType() == UtilMethods::EAfterDate) {
+                eventRecurrence->setEndDateTime(eventIO->getRepeatEndDateTime());
             }
 
         }//end of else
@@ -194,16 +195,16 @@ void CalendarController::handleRepeat(const KCalCore::Event::Ptr& coreEventPtr,
 //Might need some additional processing.
 //So put the logic seperately into a method instead of cluttering the addEvent method
 void CalendarController::handleEventTime(const KCalCore::Event::Ptr& coreEventPtr,
-                                         const IncidenceIO& eventIO)
+                                         IncidenceIO* eventIO)
 {
     try{
-        coreEventPtr->setDtStart(eventIO.getStartDateTime());
-        if(eventIO.isAllDay()) {
+        coreEventPtr->setDtStart(eventIO->getStartDateTime());
+        if(eventIO->isAllDay()) {
             coreEventPtr->setAllDay(true);
-            if(coreEventPtr->hasEndDate()) { coreEventPtr->setDtEnd(eventIO.getStartDateTime());}
+            if(coreEventPtr->hasEndDate()) { coreEventPtr->setDtEnd(eventIO->getStartDateTime());}
         } else {
             coreEventPtr->setAllDay(false);
-            coreEventPtr->setDtEnd(eventIO.getEndDateTime());
+            coreEventPtr->setDtEnd(eventIO->getEndDateTime());
         }
     } catch(exception &e) {
         qDebug()<<e.what();
@@ -217,15 +218,15 @@ void CalendarController::handleEventTime(const KCalCore::Event::Ptr& coreEventPt
   * @param eventIO, the IncidenceIO object from the UI
   * @param eventAlarm, the KCalCore::Alarm object with its parent set
   */
-void CalendarController::handleAlarm(const IncidenceIO&  eventIO,
-                                     const KCalCore::Alarm::Ptr& eventAlarm)
+void CalendarController::handleAlarm(const KCalCore::Alarm::Ptr& eventAlarm,
+                                     IncidenceIO* eventIO)
 {
     try{
-        eventAlarm->setText(eventIO.getSummary());
-        eventAlarm->setDisplayAlarm(eventIO.getSummary());
+        eventAlarm->setText(eventIO->getSummary());
+        eventAlarm->setDisplayAlarm(eventIO->getSummary());
         eventAlarm->setEnabled(true);
 
-        switch(eventIO.getAlarmType()) {
+        switch(eventIO->getAlarmType()) {
             case E10MinB4:
             default:
                     //snooze with 5min interval
@@ -290,10 +291,10 @@ void CalendarController::handleAlarm(const IncidenceIO&  eventIO,
     return;
 }
 
-QList<IncidenceIO> CalendarController::getEventsFromDB(int listType, const KDateTime& startDate,
+QList<IncidenceIO*> CalendarController::getEventsFromDB(int listType, const KDateTime& startDate,
                                                        const KDateTime& endDate, const QString& uid)
 {
-    QList<IncidenceIO> eventIOList;
+    QList<IncidenceIO*> eventIOList;
     try {
         KCalCore::Event::List eventList;
         if(listType == EAll) {
@@ -310,20 +311,20 @@ QList<IncidenceIO> CalendarController::getEventsFromDB(int listType, const KDate
         }
 
         foreach(const KCalCore::Event::Ptr& event, eventList) {
-            IncidenceIO eventIO;
-            eventIO.setType(EEvent);
-            eventIO.setUid(event->uid());
-            eventIO.setDescription(event->description());
-            eventIO.setSummary(event->summary());
-            eventIO.setLocation(event->location());
+            IncidenceIO *eventIO = new IncidenceIO(this);
+            eventIO->setType(EEvent);
+            eventIO->setUid(event->uid());
+            eventIO->setDescription(event->description());
+            eventIO->setSummary(event->summary());
+            eventIO->setLocation(event->location());
 
-            eventIO.setStartDateTime(event->dtStart().toLocalZone());
+            eventIO->setStartDateTime(event->dtStart().toLocalZone());
             if(event->allDay() || (event->dtStart().time() == event->dtEnd().time()))
             {
-                eventIO.setAllDay(true);
+                eventIO->setAllDay(true);
             } else {
-                eventIO.setAllDay(false);
-                eventIO.setEndDateTime(event->dtEnd().toLocalZone());
+                eventIO->setAllDay(false);
+                eventIO->setEndDateTime(event->dtEnd().toLocalZone());
             }
 
             if ( event->hasEnabledAlarms() ) {
@@ -331,59 +332,59 @@ QList<IncidenceIO> CalendarController::getEventsFromDB(int listType, const KDate
 
                 if ( !alarmList.isEmpty() ) {
                     KCalCore::Alarm::Ptr& eventAlarm = alarmList.first();
-                    eventIO.setAlarmDateTime(eventAlarm->time().toLocalZone());
+                    eventIO->setAlarmDateTime(eventAlarm->time().toLocalZone());
 
                     if(eventAlarm->startOffset().asSeconds()==(-60*10))
-                             eventIO.setAlarmType(E10MinB4);
+                             eventIO->setAlarmType(E10MinB4);
                     else if(eventAlarm->startOffset().asSeconds()==(-60*15))
-                        eventIO.setAlarmType(E15MinB4);
+                        eventIO->setAlarmType(E15MinB4);
                     else if (eventAlarm->startOffset().asSeconds()==(-60*30))
-                         eventIO.setAlarmType(E30MinB4);
+                         eventIO->setAlarmType(E30MinB4);
                     else if(eventAlarm->startOffset().asSeconds()==(-60*60))
-                         eventIO.setAlarmType(E1HrB4);
+                         eventIO->setAlarmType(E1HrB4);
                     else if(eventAlarm->startOffset().asSeconds()==(-60*120))
-                         eventIO.setAlarmType(E2HrsB4);
+                         eventIO->setAlarmType(E2HrsB4);
                     else if(eventAlarm->startOffset().asDays()==(-1))
-                         eventIO.setAlarmType(E1DayB4);
+                         eventIO->setAlarmType(E1DayB4);
                     else if(eventAlarm->startOffset().asDays()==(-2))
-                         eventIO.setAlarmType(E2DaysB4);
+                         eventIO->setAlarmType(E2DaysB4);
                     else if(eventAlarm->startOffset().asDays()==(-7))
-                         eventIO.setAlarmType(E1WeekB4);
-                    else eventIO.setAlarmType(EOtherAlarm);
+                         eventIO->setAlarmType(E1WeekB4);
+                    else eventIO->setAlarmType(EOtherAlarm);
                 }
             } else {
-                eventIO.setAlarmType(ENoAlarm);
+                eventIO->setAlarmType(ENoAlarm);
             }
 
             if(event->hasRecurrenceId())
                 qDebug() <<"Recurrence Id="<< event->recurrenceId().toString(KDateTime::LocalDate).toStdString().c_str()<<"\n\n";
             if(event->recurrence()->recurrenceType()==KCalCore::Recurrence::rNone)
             {
-                eventIO.setRepeatType(ENoRepeat);
+                eventIO->setRepeatType(ENoRepeat);
             } else {
                 if(event->recurrence()->recurrenceType()==KCalCore::Recurrence::rDaily)
-                    eventIO.setRepeatType(EEveryDay);
+                    eventIO->setRepeatType(EEveryDay);
                 else if((event->recurrence()->recurrenceType()==KCalCore::Recurrence::rWeekly) && (event->recurrence()->frequency()!=2))
-                    eventIO.setRepeatType(EEveryWeek);
+                    eventIO->setRepeatType(EEveryWeek);
                 else if((event->recurrence()->recurrenceType()==KCalCore::Recurrence::rWeekly) && (event->recurrence()->frequency()==2))
-                    eventIO.setRepeatType(EEvery2Weeks);
+                    eventIO->setRepeatType(EEvery2Weeks);
                 else if(event->recurrence()->recurrenceType()==KCalCore::Recurrence::rMonthlyDay)
-                    eventIO.setRepeatType(EEveryMonth);
+                    eventIO->setRepeatType(EEveryMonth);
                 else if(event->recurrence()->recurrenceType()==KCalCore::Recurrence::rYearlyDay)
-                    eventIO.setRepeatType(EEveryYear);
-                else eventIO.setRepeatType(EOtherRepeat);
+                    eventIO->setRepeatType(EEveryYear);
+                else eventIO->setRepeatType(EOtherRepeat);
 
                 if(event->recurrence()->duration() > 0) {
-                    eventIO.setRepeatEndType(UtilMethods::EForNTimes);
-                    eventIO.setRepeatCount(event->recurrence()->duration());
+                    eventIO->setRepeatEndType(UtilMethods::EForNTimes);
+                    eventIO->setRepeatCount(event->recurrence()->duration());
                 } else if(event->recurrence()->endDateTime()>=event->recurrence()->startDateTime()) {
-                    eventIO.setRepeatEndType(UtilMethods::EAfterDate);
-                    eventIO.setRepeatCount(0);
-                    eventIO.setRepeatEndDateTime(event->recurrence()->endDateTime().toLocalZone());
+                    eventIO->setRepeatEndType(UtilMethods::EAfterDate);
+                    eventIO->setRepeatCount(0);
+                    eventIO->setRepeatEndDateTime(event->recurrence()->endDateTime().toLocalZone());
                 }
             }
-            eventIO.setTimeZoneOffset(event->dtStart().utcOffset());
-            eventIO.setTimeZoneName(event->dtStart().timeZone().name());
+            eventIO->setTimeZoneOffset(event->dtStart().utcOffset());
+            eventIO->setTimeZoneName(event->dtStart().timeZone().name());
             eventIOList.append(eventIO);
         }
     } catch(exception &e) {
@@ -395,18 +396,17 @@ QList<IncidenceIO> CalendarController::getEventsFromDB(int listType, const KDate
 
 QObject* CalendarController::getEventForEdit(const QString& uid)
 {
-    QList<IncidenceIO> listIO = getEventsFromDB(EByUid, KDateTime(), KDateTime(), uid);
-    IncidenceIO* objIO = new IncidenceIO(listIO.first());
+    QList<IncidenceIO*> listIO = getEventsFromDB(EByUid, KDateTime(), KDateTime(), uid);
+    IncidenceIO* objIO = listIO.first();
     objIO->printIncidence();
     return objIO;
 }
 
 QDateTime CalendarController::getEventPositionInView(const QString& uid)
 {
-    QList<IncidenceIO> listIO = getEventsFromDB(EByUid, KDateTime(), KDateTime(), uid);
-    const IncidenceIO& objIO = listIO.first();
+    QList<IncidenceIO*> listIO = getEventsFromDB(EByUid, KDateTime(), KDateTime(), uid);
 
-    return objIO.getStartDateTime().dateTime();
+    return listIO.first()->getStartDateTime().dateTime();
 }
 
 QML_DECLARE_TYPE(CalendarController);

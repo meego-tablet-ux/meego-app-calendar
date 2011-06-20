@@ -21,7 +21,7 @@
 
 class CalendarController : public QObject
 {
-    Q_OBJECT;
+    Q_OBJECT
 
 public:
     CalendarController(QObject *parent = 0);
@@ -29,7 +29,7 @@ public:
 
     Q_INVOKABLE bool addModifyEvent(int actionType, QObject* eventIO);
     Q_INVOKABLE bool deleteEvent(const QString& eventUId);
-    Q_INVOKABLE QList<IncidenceIO> getEventsFromDB(int listType,
+    Q_INVOKABLE QList<IncidenceIO*> getEventsFromDB(int listType,
                                                    const KDateTime& startDate = KDateTime::currentLocalDateTime(),
                                                    const KDateTime& endDate = KDateTime::currentLocalDateTime(),
                                                    const QString& uid = "");
@@ -42,9 +42,9 @@ signals:
 
 private:
     bool setUpCalendars();
-    void handleRepeat(const KCalCore::Event::Ptr& coreEventPtr, const IncidenceIO& eventIO);
-    void handleEventTime(const KCalCore::Event::Ptr& coreEventPtr, const IncidenceIO& eventIO);
-    void handleAlarm(const IncidenceIO& eventIO, const KCalCore::Alarm::Ptr& eventAlarm);
+    void handleRepeat(const KCalCore::Event::Ptr& coreEventPtr, IncidenceIO* eventIO);
+    void handleEventTime(const KCalCore::Event::Ptr& coreEventPtr, IncidenceIO* eventIO);
+    void handleAlarm(const KCalCore::Alarm::Ptr& eventAlarm, IncidenceIO* eventIO);
 
 
 private:    

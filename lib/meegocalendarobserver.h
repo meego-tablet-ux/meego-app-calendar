@@ -10,7 +10,7 @@ using namespace eKCal;
 class MeeGoCalendarObserver :  public QObject, public eKCal::StorageObserver,
     public KCalCore::Calendar::CalendarObserver
 {
-        Q_OBJECT;
+        Q_OBJECT
 
     public:
         MeeGoCalendarObserver();
