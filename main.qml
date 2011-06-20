@@ -220,7 +220,7 @@ Window {
         addNewEventLoader.item.eventEndHr = eventEndHr;
         addNewEventLoader.item.isAllDay = isAllDay;
         addNewEventLoader.item.initView=true;
-        addNewEventLoader.item.setPosition(xVal,yVal);
+        //addNewEventLoader.item.setPosition(xVal,yVal);
         addNewEventLoader.item.show();
         addNewEventLoader.item.newEvent();
     }
@@ -231,7 +231,7 @@ Window {
         addNewEventLoader.item.windowType = UtilMethods.EModifyEvent;
         addNewEventLoader.item.editEventId = uid;
         addNewEventLoader.item.editView=true;
-        addNewEventLoader.item.setPosition(xVal,yVal);
+        //addNewEventLoader.item.setPosition(xVal,yVal);
         addNewEventLoader.item.show();
         addNewEventLoader.item.editEvent();
     }

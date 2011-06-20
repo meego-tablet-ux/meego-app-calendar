@@ -11,7 +11,7 @@ import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.App.Calendar 0.1
 import MeeGo.Components 0.1
 
-ContextMenu {
+ModalDialog {
     id:outer
     title:container.titleBlockText
 
@@ -28,6 +28,7 @@ ContextMenu {
     property string editEventId
     property int paintedTextMaxWidth:500
     property int outerPainterTextWidth : 2*(paintedTextMaxWidth / 3)
+    property int paintedMaxWidth:2*(topItem.topWidth/3)
 
     signal close();
 
@@ -45,17 +46,33 @@ ContextMenu {
         }
     }
 
+    showCancelButton: true
+    showAcceptButton: true
+    cancelButtonText: qsTr( "Cancel" )
+    acceptButtonText: qsTr( "Save" )
+
+    // handle signals:
+    onAccepted: {
+        if(container.validateInputs()) {
+            container.createIOObject();
+            outer.hide();
+            outer.close();
+        }
+    }
+    onRejected: {
+        outer.hide();
+        outer.close();
+    }
+
     TopItem { id: topItem }
+    height: container.height + decorationHeight
+    width: container.width
 
     content:Item {
         id: container
-        height:400
-        width: {
-            if (outerPainterTextWidth == 500)
-                return paintedTextMaxWidth
-            else
-                return outerPainterTextWidth
-        }
+        height:scrollableSection.height+titleBlock.height+50
+        width:(window.inLandscape||window.inInvertedLandscape)? 600: 2*(topItem.topWidth/3)
+        clip: true
 
         property bool initView:outer.initView
         property bool editView:outer.editView
@@ -489,10 +506,12 @@ ContextMenu {
                 contentHeight:scrollableSection.height
                 anchors.top: titleDivBox.bottom
                 anchors.topMargin: 5
-                anchors.bottom: buttonDivBox.top
+                anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 clip: true
                 interactive: false
+                boundsBehavior: Flickable.StopAtBounds
+
                 property bool flickableExpanded:false
 
                 Item {
@@ -571,12 +590,7 @@ ContextMenu {
                                   Item {
                                       id: allDayTxtBox
                                       anchors.left:parent.left
-                                      width: {
-                                          if(parent.width/3<allDayTxt.paintedWidth){
-                                              (outer.outerPainterTextWidth=2*(outer.paintedTextMaxWidth/3)+allDayTxt.paintedWidth+75)
-                                          }
-                                          return parent.width/3;
-                                      }
+                                      width:parent.width/3
                                       height: 30
                                       anchors.verticalCenter: parent.verticalCenter
                                       Text {
@@ -588,6 +602,7 @@ ContextMenu {
                                           anchors.left: parent.left
                                           anchors.leftMargin: 5
                                           anchors.verticalCenter: parent.verticalCenter
+                                          elide:Text.ElideRight
                                       }
                                   }
 
@@ -625,12 +640,7 @@ ContextMenu {
                               Row {
                                   Item{
                                       id:startTimeBlock
-                                      width: {
-                                          if(dateTimeBlock.width/3<startTxt.paintedWidth) {
-                                              (outer.outerPainterTextWidth=2*(outer.paintedTextMaxWidth/3)+startTxt.paintedWidth+75)
-                                          }
-                                          return dateTimeBlock.width/3;
-                                      }
+                                      width:dateTimeBlock.width/3
                                       height:50
                                       Text{
                                           id:startTxt
@@ -639,7 +649,8 @@ ContextMenu {
                                           font.pixelSize: theme_fontPixelSizeMedium
                                           width:parent.width
                                           anchors.left: parent.left
-                                          anchors.verticalCenter: parent.verticalCenter                                          
+                                          anchors.verticalCenter: parent.verticalCenter
+                                          elide:Text.ElideRight
                                       }
                                   }//end starttimeblock
 
@@ -649,24 +660,22 @@ ContextMenu {
                                       height:50
                                       Item{
                                           id:startDateBox
-                                          height:30
+                                          height:50
                                           width: 2*(parent.width/3)-20
                                           anchors.left: parent.left
-                                          anchors.verticalCenter: parent.verticalCenter
-                                          TextEntry {
-                                                id: startDateTxt
-                                                text: ""
-                                                anchors.fill:parent
-                                                readOnly: false
-                                                textInput.font.pixelSize:theme_fontPixelSizeMedium
-                                          }
-                                          MouseArea {
-                                              anchors.fill: parent
+                                          anchors.verticalCenter: parent.verticalCenter                                          
+                                          Button {
+                                              id: startDateTxt
+                                              anchors.fill:parent
+                                              text: ""
+                                              hasBackground: true
+                                              bgSourceUp: "image://themedimage/widgets/common/button/button"
+                                              bgSourceDn: "image://themedimage/widgets/common/button/button-pressed"
+                                              font.pixelSize:theme_fontPixelSizeNormal
                                               onClicked: {
                                                   container.openDatePicker(1,window);
-                                              }                                              
+                                              }
                                           }
-
                                       }
 
                                       Item {
@@ -675,18 +684,18 @@ ContextMenu {
                                           anchors.left: startDateBox.right
                                           anchors.margins: 5
                                           anchors.verticalCenter: parent.verticalCenter
-                                          height:30
-                                          TextEntry {
-                                                id: startTimeTxt
-                                                text: ""
-                                                anchors.fill: parent
-                                                textInput.font.pixelSize:theme_fontPixelSizeMedium
-                                          }
-                                          MouseArea {
-                                              anchors.fill: parent
+                                          height:50
+                                          Button {
+                                              id: startTimeTxt
+                                              anchors.fill:parent
+                                              text: ""
+                                              hasBackground: true
+                                              bgSourceUp: "image://themedimage/widgets/common/button/button"
+                                              bgSourceDn: "image://themedimage/widgets/common/button/button-pressed"
+                                              font.pixelSize:theme_fontPixelSizeNormal
                                               onClicked: {
                                                   container.openTimePicker(1,window);
-                                              }                                              
+                                              }
                                           }
                                       }
                                   }//end of startTimeCmbBlock
@@ -695,13 +704,8 @@ ContextMenu {
                               Row {
                                   Item{
                                       id:finishTimeBlock
-                                      width:{
-                                          if(dateTimeBlock.width/3<finishTxt.paintedWidth){
-                                              (outer.outerPainterTextWidth=2*(outer.paintedTextMaxWidth/3)+finishTxt.paintedWidth+75)
-                                          }
-                                          return dateTimeBlock.width/3;
-                                      }
-                                      height:30
+                                      width:dateTimeBlock.width/3
+                                      height:50
                                       Text{
                                           id:finishTxt
                                           text: qsTr("End time")
@@ -710,13 +714,14 @@ ContextMenu {
                                           width:parent.width
                                           anchors.left: parent.left
                                           anchors.verticalCenter: parent.verticalCenter
+                                          elide:Text.ElideRight
                                       }
                                   }//end finishtimeblock (string val)
 
                                   Item {
                                       id:finishTimeCmbBlock
                                       width: 2*(dateTimeBlock.width/3)
-                                      height:30
+                                      height:50
 
                                       Item{
                                           id:finishDateBox
@@ -724,17 +729,17 @@ ContextMenu {
                                           anchors.left: parent.left
                                           width: 2*(parent.width/3)-20
                                           height:parent.height
-                                          TextEntry {
-                                                id: finishDateTxt
-                                                text:""
-                                                anchors.fill: parent
-                                                textInput.font.pixelSize:theme_fontPixelSizeMedium
-                                           }
-                                          MouseArea {
-                                              anchors.fill: parent
+                                          Button {
+                                              id: finishDateTxt
+                                              anchors.fill:parent
+                                              text: ""
+                                              hasBackground: true
+                                              bgSourceUp: "image://themedimage/widgets/common/button/button"
+                                              bgSourceDn: "image://themedimage/widgets/common/button/button-pressed"
+                                              font.pixelSize:theme_fontPixelSizeNormal
                                               onClicked: {
-                                                   container.openDatePicker(2,window);
-                                              }                                              
+                                                  container.openDatePicker(2,window);
+                                              }
                                           }
 
                                       }
@@ -745,18 +750,18 @@ ContextMenu {
                                           anchors.left: finishDateBox.right
                                           anchors.margins: 5
                                           anchors.verticalCenter: parent.verticalCenter
-                                          height:30
-                                          TextEntry {
-                                                id: finishTimeTxt
-                                                text: ""
-                                                anchors.fill: parent
-                                                textInput.font.pixelSize:theme_fontPixelSizeMedium
-                                          }
-                                          MouseArea {
-                                              anchors.fill: parent
+                                          height:50
+                                          Button {
+                                              id: finishTimeTxt
+                                              anchors.fill:parent
+                                              text: ""
+                                              hasBackground: true
+                                              bgSourceUp: "image://themedimage/widgets/common/button/button"
+                                              bgSourceDn: "image://themedimage/widgets/common/button/button-pressed"
+                                              font.pixelSize:theme_fontPixelSizeNormal
                                               onClicked: {
                                                   container.openTimePicker(2,window);
-                                              }                                             
+                                              }
                                           }
                                       }
                                   }//end of finishTimeCmbBlock
@@ -847,12 +852,7 @@ ContextMenu {
                               Row {
                                   Item{
                                       id:tzText
-                                      width: {
-                                          if(dateTimeBlock.width/3<tzTxt.paintedWidth){
-                                              (outer.outerPainterTextWidth=2*(outer.paintedTextMaxWidth/3)+tzTxt.paintedWidth+75)
-                                          }
-                                          return dateTimeBlock.width/3;
-                                      }
+                                      width:dateTimeBlock.width/3
                                       height:50
                                       Text{
                                           id:tzTxt
@@ -863,6 +863,7 @@ ContextMenu {
                                           anchors.left: parent.left
                                           anchors.leftMargin: 25
                                           anchors.verticalCenter: parent.verticalCenter
+                                          elide:Text.ElideRight
                                       }
                                   }//end of tztext block
 
@@ -991,7 +992,7 @@ ContextMenu {
                                               } if(repeatEndType == UtilMethods.EAfterDate) {
                                                   repeatEndComboBox.width = repeatEndCmbBlock.width;
                                                   repeatEndDateBox.opacity = 1;
-                                                  repeatEndDateBox.height = 30;
+                                                  repeatEndDateBox.height = 50;
                                                   container.setEndRepeatDateValues();
                                                   if(repeatCountBox.opacity==1) {
                                                       repeatCountBox.opacity = 0;
@@ -1041,19 +1042,21 @@ ContextMenu {
                                           id: endRepeatDayBox
                                           height: repeatEndDateBox.height
                                           width:2*(repeatEndDateBox.width/3)
-                                          TextEntry {
-                                                id: endRepeatDayText
-                                                text: ""
-                                                anchors.fill:parent
-                                                readOnly: true
-                                                font.pixelSize:theme_fontPixelSizeMedium
+                                          Button {
+                                              id: endRepeatDayText
+                                              anchors.fill:parent
+                                              text: ""
+                                              hasBackground: true
+                                              bgSourceUp: "image://themedimage/widgets/common/button/button"
+                                              bgSourceDn: "image://themedimage/widgets/common/button/button-pressed"
+                                              font.pixelSize:theme_fontPixelSizeNormal
                                           }
                                       }//end repeatendday
 
                                       Item {
                                           id: endRepeatIconBox
-                                          height: repeatEndDateBox.height
-                                          width:30
+                                          height: 50
+                                          width:50
                                           Image {
                                                 id: endDatePicker
                                                 anchors.fill: parent
@@ -1323,66 +1326,6 @@ ContextMenu {
                 ]
             }//end of flickable
 
-
-          //Button Div
-           Image {
-                id:buttonDivBox
-                width: parent.width
-                anchors.bottom: buttonsArea.top
-                anchors.left: parent.left
-                anchors.bottomMargin: 5
-                source:"image://themedimage/images/menu_item_separator"
-            }//end button div
-
-            //Save and Cancel buttons
-            Item {
-                id: buttonsArea
-                width: editList.innerBoxWidth
-                height: 40
-                anchors.left: parent.left
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 10
-                anchors.leftMargin: 25
-                //color:"lightgray"
-                Button {
-                    id: saveButton
-                    height: parent.height
-                    //width: (parent.width/3)-10
-                    bgSourceUp: "image://themedimage/widgets/common/button/button-default"
-                    bgSourceDn: "image://themedimage/widgets/common/button/button-default-pressed"
-                    text: qsTr("Save")
-                    hasBackground: true
-                    anchors.left: parent.left
-                    anchors.leftMargin: 20
-                    anchors.verticalCenter: parent.verticalCenter
-                    onClicked: {
-                        if(container.validateInputs()) {
-                            container.createIOObject();
-                            outer.hide();
-                            outer.close();
-                        }
-                    }
-                }//savebutton
-
-                Button {
-                    id: cancelButton
-                    height: parent.height
-                    //width: (parent.width/3)-10
-                    bgSourceUp: "image://themedimage/widgets/common/button/button"
-                    bgSourceDn: "image://themedimage/widgets/common/button/button-pressed"
-                    text: qsTr("Cancel")
-                    hasBackground: true
-                    anchors.right: parent.right
-                    anchors.rightMargin:20
-                    anchors.verticalCenter: parent.verticalCenter
-                    onClicked: {
-                        outer.hide();
-                        outer.close();
-                    }
-                }//closebutton
-
-            }//end of buttons area
-
             states: [
                 State {
                     name: "windowExpanded"
@@ -1391,14 +1334,14 @@ ContextMenu {
                         height:{
                             topItem.calcTopParent();
                             if(window.inLandscape || window.inInvertedLandscape) {
-                                return (outer.sizeHintMaxHeight);
+                                return 2*(topItem.topHeight/3);
                             }
                             else {
-                                return 2*(outer.sizeHintMaxHeight)/3;
+                                return 2*(topItem.topHeight)/3;
                             }
                         }
                     }
-                    PropertyChanges { target: scrollableSection; height:800;}
+                    PropertyChanges { target: scrollableSection; height:900;}
                     PropertyChanges { target: scrollableEditArea; height:editList.height;}
                     when: (editList.windowExpanded==true)
                 }
