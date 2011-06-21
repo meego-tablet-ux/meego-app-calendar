@@ -428,6 +428,7 @@ ModalDialog {
                 container.setTimeValues(fromIndex,timeVal);
             }
             minutesIncrement:5
+            hr24:i18nHelper.defaultTimeFormat
         }
 
         CalendarController {
@@ -669,9 +670,10 @@ ModalDialog {
                                               anchors.fill:parent
                                               text: ""
                                               hasBackground: true
-                                              bgSourceUp: "image://themedimage/widgets/common/button/button"
-                                              bgSourceDn: "image://themedimage/widgets/common/button/button-pressed"
+                                              bgSourceUp: "image://themedimage/widgets/common/button/button-dialogue"
+                                              bgSourceDn: "image://themedimage/widgets/common/button/button-dialogue-active"
                                               font.pixelSize:theme_fontPixelSizeNormal
+                                              textColor:theme_fontColorNormal
                                               onClicked: {
                                                   container.openDatePicker(1,window);
                                               }
@@ -690,9 +692,10 @@ ModalDialog {
                                               anchors.fill:parent
                                               text: ""
                                               hasBackground: true
-                                              bgSourceUp: "image://themedimage/widgets/common/button/button"
-                                              bgSourceDn: "image://themedimage/widgets/common/button/button-pressed"
+                                              bgSourceUp: "image://themedimage/widgets/common/button/button-dialogue"
+                                              bgSourceDn: "image://themedimage/widgets/common/button/button-dialogue-active"
                                               font.pixelSize:theme_fontPixelSizeNormal
+                                              textColor:theme_fontColorNormal
                                               onClicked: {
                                                   container.openTimePicker(1,window);
                                               }
@@ -734,9 +737,10 @@ ModalDialog {
                                               anchors.fill:parent
                                               text: ""
                                               hasBackground: true
-                                              bgSourceUp: "image://themedimage/widgets/common/button/button"
-                                              bgSourceDn: "image://themedimage/widgets/common/button/button-pressed"
+                                              bgSourceUp: "image://themedimage/widgets/common/button/button-dialogue"
+                                              bgSourceDn: "image://themedimage/widgets/common/button/button-dialogue-active"
                                               font.pixelSize:theme_fontPixelSizeNormal
+                                              textColor:theme_fontColorNormal
                                               onClicked: {
                                                   container.openDatePicker(2,window);
                                               }
@@ -756,9 +760,10 @@ ModalDialog {
                                               anchors.fill:parent
                                               text: ""
                                               hasBackground: true
-                                              bgSourceUp: "image://themedimage/widgets/common/button/button"
-                                              bgSourceDn: "image://themedimage/widgets/common/button/button-pressed"
+                                              bgSourceUp: "image://themedimage/widgets/common/button/button-dialogue"
+                                              bgSourceDn: "image://themedimage/widgets/common/button/button-dialogue-active"
                                               font.pixelSize:theme_fontPixelSizeNormal
+                                              textColor:theme_fontColorNormal
                                               onClicked: {
                                                   container.openTimePicker(2,window);
                                               }
@@ -1047,9 +1052,10 @@ ModalDialog {
                                               anchors.fill:parent
                                               text: ""
                                               hasBackground: true
-                                              bgSourceUp: "image://themedimage/widgets/common/button/button"
-                                              bgSourceDn: "image://themedimage/widgets/common/button/button-pressed"
+                                              bgSourceUp: "image://themedimage/widgets/common/button/button-dialogue"
+                                              bgSourceDn: "image://themedimage/widgets/common/button/button-dialogue-active"
                                               font.pixelSize:theme_fontPixelSizeNormal
+                                              textColor:theme_fontColorNormal
                                           }
                                       }//end repeatendday
 

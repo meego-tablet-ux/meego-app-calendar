@@ -10,7 +10,10 @@ OTHER_FILES += $${QML_FILES}
 qmlfiles.files += $${QML_FILES}
 qmlfiles.path += $$INSTALL_ROOT/usr/share/$$TARGET
 
-INSTALLS += qmlfiles
+desktop.files += meego-app-calendar.desktop
+desktop.path += $$INSTALL_ROOT/usr/share/applications/
+
+INSTALLS += qmlfiles desktop
 
 # dist stuff begins here
 TRANSLATIONS += *.qml lib/*.h lib/*.cpp
