@@ -3,9 +3,9 @@ TARGET = meegocalendar
 TEMPLATE = lib
 
 INCLUDEPATH += ../lib
-LIBS += -L../lib
+LIBS += -L../lib -lekcal
 CONFIG += link_pkgconfig
-PKGCONFIG += libekcal
+PKGCONFIG += libkcalcoren
 
 OBJECTS_DIR = .obj
 MOC_DIR = .moc
