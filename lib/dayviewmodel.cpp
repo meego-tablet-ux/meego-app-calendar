@@ -57,34 +57,33 @@ DayViewModel::~DayViewModel()
 void DayViewModel::loadCurrentDayValues()
 {
     CalendarController controller;
-    QList<IncidenceIO> list = controller.getEventsFromDB(EDayList,KDateTime(dateVal));
+    QList<IncidenceIO*> list = controller.getEventsFromDB(EDayList,KDateTime(dateVal));
     beginResetModel();
     clearData();
     int eventsCount=0;
     if(modelType == UtilMethods::EAllEvents ) {
-        for(int i=0;i<list.count();i++) {
-            IncidenceIO ioObject = list.at(i);
-            if(ioObject.isAllDay()) {
+        foreach(IncidenceIO *ioObject, list) {
+            if(ioObject->isAllDay()) {
                 itemsList << new CalendarDataItem(eventsCount,ioObject);
-                eventsCount++;
+                ++eventsCount;
             }
         }
-        for(int i=0;i<list.count();i++) {
-            IncidenceIO ioObject = list.at(i);
-            if(!ioObject.isAllDay()) {
+        foreach(IncidenceIO *ioObject, list) {
+            if(!ioObject->isAllDay()) {
                 itemsList << new CalendarDataItem(eventsCount,ioObject);
-                eventsCount++;
+                ++eventsCount;
             }
         }
     } else {
-        for(int i=0;i<list.count();i++) {
-            IncidenceIO ioObject = list.at(i);
-            if((modelType == UtilMethods::EAllDay) && (ioObject.isAllDay())) {
-                itemsList << new CalendarDataItem(i,ioObject);
-                ioObject.printIncidence();
-            } else if((modelType == UtilMethods::ENotAllDay) && (!ioObject.isAllDay())) {
-                itemsList << new CalendarDataItem(i,ioObject);
-                ioObject.printIncidence();
+        foreach(IncidenceIO *ioObject, list) {
+            if((modelType == UtilMethods::EAllDay) && (ioObject->isAllDay())) {
+                itemsList << new CalendarDataItem(eventsCount,ioObject);
+                ioObject->printIncidence();
+                ++eventsCount;
+            } else if((modelType == UtilMethods::ENotAllDay) && (!ioObject->isAllDay())) {
+                itemsList << new CalendarDataItem(eventsCount,ioObject);
+                ioObject->printIncidence();
+                ++eventsCount;
             }
         }
         assignDisplayValues();

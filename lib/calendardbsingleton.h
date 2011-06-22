@@ -15,36 +15,29 @@
 
 using namespace eKCal;
 
-
 class CalendarDBSingleton : public QObject
 {
       Q_OBJECT
 public:
     static CalendarDBSingleton* instance();
-    static KCalCore::Calendar::Ptr& calendarPtr();
-    static eKCal::EStorage::Ptr& storagePtr();
+    KCalCore::Calendar::Ptr& calendarPtr();
+    eKCal::EStorage::Ptr& storagePtr();
 
 signals:
     void dbLoaded();
     void dbChanged();
 
- public slots:
-    void emitDbLoaded();
-    void emitDbChanged();
-
 protected:
-
     CalendarDBSingleton();
     ~CalendarDBSingleton();
     CalendarDBSingleton(const CalendarDBSingleton&);
     CalendarDBSingleton& operator= (const CalendarDBSingleton&);
 
 private:
-
-    static MeeGoCalendarObserver *myObserver;
     static CalendarDBSingleton* pinstance;
-    static KCalCore::Calendar::Ptr calendar;
-    static eKCal::EStorage::Ptr storage;
+    MeeGoCalendarObserver *myObserver;
+    KCalCore::Calendar::Ptr calendar;
+    eKCal::EStorage::Ptr storage;
 } ;
 
 #endif //CALENDARDBSINGLETON_H

@@ -207,14 +207,13 @@ void TimeListModel::loadCurrentDayModel()
     beginResetModel();
     clearData();
     CalendarController controller;
-    QList<IncidenceIO> list = controller.getEventsFromDB(EDayList,KDateTime(dateVal));
+    QList<IncidenceIO*> list = controller.getEventsFromDB(EDayList,KDateTime(dateVal));
 
     int eventsCount=0;
-    for(int i=0;i<list.count();i++) {
-        IncidenceIO ioObject = list.at(i);
-        if(!ioObject.isAllDay()) {
+    foreach(IncidenceIO *ioObject, list) {
+        if(!ioObject->isAllDay()) {
             eventsList << new CalendarDataItem(eventsCount,ioObject);
-            eventsCount++;
+            ++eventsCount;
         }
     }
     assignDisplayValues();

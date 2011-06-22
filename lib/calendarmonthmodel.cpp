@@ -90,38 +90,38 @@ void CalendarMonthModel::loadCurrentMonthValues()
         if(utilities.datesEqual(tmpDate,QDate::currentDate())) {
             currDate = true;
         }
-        QList<IncidenceIO> list = controller.getEventsFromDB(EDayList,KDateTime(tmpDate));
+        QList<IncidenceIO*> list = controller.getEventsFromDB(EDayList,KDateTime(tmpDate));
 
         eventsCount = list.count();
         if(eventsCount>0) {
             if(eventsCount==1) {
-                IncidenceIO ioObject = list.at(0);
-                if(ioObject.isAllDay()) event1 = allDayText;
-                event1 += ioObject.getSummary();
+                IncidenceIO *ioObject = list.at(0);
+                if(ioObject->isAllDay()) event1 = allDayText;
+                event1 += ioObject->getSummary();
             } else if(eventsCount ==2) {
-                IncidenceIO ioObject = list.at(0);
-                if(ioObject.isAllDay()) event1 = allDayText;
-                event1 += ioObject.getSummary();
-                IncidenceIO ioObject2 = list.at(1);
-                if(ioObject2.isAllDay()) event2 = allDayText;
-                event2 += ioObject2.getSummary();
+                IncidenceIO *ioObject = list.at(0);
+                if(ioObject->isAllDay()) event1 = allDayText;
+                event1 += ioObject->getSummary();
+                IncidenceIO *ioObject2 = list.at(1);
+                if(ioObject2->isAllDay()) event2 = allDayText;
+                event2 += ioObject2->getSummary();
             } else if(eventsCount ==3) {
-                IncidenceIO ioObject = list.at(0);
-                if(ioObject.isAllDay()) event1 = allDayText;
-                event1 += ioObject.getSummary();
-                IncidenceIO ioObject2 = list.at(1);
-                if(ioObject2.isAllDay()) event2 = allDayText;
-                event2 += ioObject2.getSummary();
-                IncidenceIO ioObject3 = list.at(2);
-                if(ioObject3.isAllDay()) event3 = allDayText;
-                event3 += ioObject3.getSummary();
+                IncidenceIO *ioObject = list.at(0);
+                if(ioObject->isAllDay()) event1 = allDayText;
+                event1 += ioObject->getSummary();
+                IncidenceIO *ioObject2 = list.at(1);
+                if(ioObject2->isAllDay()) event2 = allDayText;
+                event2 += ioObject2->getSummary();
+                IncidenceIO *ioObject3 = list.at(2);
+                if(ioObject3->isAllDay()) event3 = allDayText;
+                event3 += ioObject3->getSummary();
             } else {
-                IncidenceIO ioObject = list.at(0);
-                if(ioObject.isAllDay()) event1 = allDayText;
-                event1 += ioObject.getSummary();
-                IncidenceIO ioObject2 = list.at(1);
-                if(ioObject2.isAllDay()) event2 = allDayText;
-                event2 += ioObject2.getSummary();
+                IncidenceIO *ioObject = list.at(0);
+                if(ioObject->isAllDay()) event1 = allDayText;
+                event1 += ioObject->getSummary();
+                IncidenceIO *ioObject2 = list.at(1);
+                if(ioObject2->isAllDay()) event2 = allDayText;
+                event2 += ioObject2->getSummary();
                 //: %n corresponds to events count
                 event3 = tr("%n more event(s)", "", eventsCount - 2);
             }

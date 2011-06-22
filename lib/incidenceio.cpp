@@ -12,26 +12,6 @@ IncidenceIO::IncidenceIO(QObject *parent) : QObject(parent)
 {
 }
 
-IncidenceIO::IncidenceIO(const IncidenceIO& fromObj) : QObject(0)
-{
-    this->type = fromObj.type;
-    this->uid = fromObj.uid;
-    this->description = fromObj.description;
-    this->summary = fromObj.summary;
-    this->location = fromObj.location;
-    this->allDay = fromObj.allDay;
-    this->repeatType = fromObj.repeatType;
-    this->repeatEndType = fromObj.repeatEndType;
-    this->repeatCount = fromObj.repeatCount;
-    this->startDateTime = fromObj.startDateTime;
-    this->endDateTime = fromObj.endDateTime;
-    this->repeatEndDateTime = fromObj.repeatEndDateTime;
-    this->alarmType = fromObj.alarmType;
-    this->alarmDateTime = fromObj.alarmDateTime;
-    this->zoneOffset = fromObj.zoneOffset;
-    this->zoneName = fromObj.zoneName;
-}
-
 IncidenceIO::~IncidenceIO()
 {
 }

@@ -29,8 +29,7 @@ class IncidenceIO : public QObject
     Q_OBJECT;
 
 public:
-    IncidenceIO(QObject *parent = 0);
-    IncidenceIO(const IncidenceIO& fromObj);
+    explicit IncidenceIO(QObject *parent = 0);
     ~IncidenceIO();
 
 public:
