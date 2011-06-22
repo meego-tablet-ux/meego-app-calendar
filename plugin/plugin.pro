@@ -4,7 +4,7 @@ TARGET = Calendar
 
 QT += declarative
 CONFIG += plugin link_pkgconfig
-PKGCONFIG += libmkcal
+PKGCONFIG += libkcalcoren libekcal
 
 TARGET = $$qtLibraryTarget($$TARGET)
 DESTDIR = $$TARGET

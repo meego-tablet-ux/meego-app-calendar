@@ -4,7 +4,7 @@ TEMPLATE = lib
 
 CONFIG += plugin link_pkgconfig
 
-PKGCONFIG += meego-ux-content libmkcal
+PKGCONFIG += meego-ux-content libkcalcoren libekcal
 
 # use pkg-config paths for include in both g++ and moc
 INCLUDEPATH += $$system(pkg-config --cflags meego-ux-content \
