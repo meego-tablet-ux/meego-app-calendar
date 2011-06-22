@@ -418,8 +418,12 @@ int DayViewModel::columnCount(const QModelIndex &parent) const
 
 void DayViewModel::clearData()
 {
-    while (!itemsList.isEmpty())
-        delete itemsList.takeFirst();
+
+    if(!itemsList.isEmpty())
+    {
+        while (!itemsList.isEmpty())
+            delete itemsList.takeFirst();
+    }
 }
 
 QML_DECLARE_TYPE(DayViewModel);

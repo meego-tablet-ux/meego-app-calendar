@@ -212,6 +212,7 @@ AppPage {
     CalendarWeekModel {
         id:daysModel
         weekStartDay:i18nHelper.defaultFirstDayOfWeek
+        dayInFocus:window.appDateInFocus
     }
 
     TimeListModel {
@@ -600,7 +601,6 @@ AppPage {
 
                                             Swipe {
                                                  onFinished: {
-                                                     console.log("Swipe Angle="+gesture.swipeAngle);
                                                       if(gesture.horizontalDirection == 1)  { //QSwipeGesture::Right
                                                           daysModel.loadGivenWeekValuesFromOffset(dateInFocus,1);
                                                           resetFocus(1);
@@ -610,34 +610,6 @@ AppPage {
                                                       }
                                                  }
                                              }
-
-                                            //Uncomment this when Gestures work for Tap and TapANdHold
-                                            /*Tap {
-                                                onFinished: {
-                                                    window.eventStartHr=startHr;
-                                                    window.eventEndHr=endHr;
-                                                    dayViewTopItem.calcTopParent();
-                                                    console.log("gesture.position.x="+gesture.position.x+", gesture.position.y="+gesture.position.y);
-                                                    var map = window.mapToItem(calTimeValBox, gesture.position.x, gesture.position.y);
-                                                    console.log("1st map.x="+map.x+", map.y="+map.y);
-                                                    map = mapToItem(dayViewTopItem.topItem, map.x, map.y);
-                                                    console.log("2nd map.x="+map.x+", map.y="+map.y);
-                                                    window.openNewEventView(map.x, map.y,false);
-                                                }
-                                            }
-
-                                            TapAndHold {
-                                                onFinished: {
-                                                    window.eventStartHr=startHr;
-                                                    window.eventEndHr=endHr;
-                                                    dayViewTopItem.calcTopParent();
-                                                    console.log("gesture.position.x="+gesture.position.x+", gesture.position.y="+gesture.position.y);
-                                                    var map = window.mapToItem(calTimeValBox, gesture.position.x, gesture.position.y);
-                                                    map = mapToItem(dayViewTopItem.topItem, map.x, map.y);
-                                                    console.log("map.x="+map.x+", map.y="+map.y);
-                                                    window.openNewEventView(map.x, map.y,false);
-                                                }
-                                            }*/
                                          }//end GestureArea
 
 

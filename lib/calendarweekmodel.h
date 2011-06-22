@@ -36,6 +36,7 @@ class CalendarWeekModel:public QAbstractListModel
     Q_OBJECT
     Q_PROPERTY(int count READ getCount);
     Q_PROPERTY(int weekStartDay READ getWeekStartDay WRITE setWeekStartDay);
+    Q_PROPERTY(QDate dayInFocus READ getDayInFocus WRITE setDayInFocus);
 
 public:
     CalendarWeekModel(QObject *parent = 0);
@@ -47,13 +48,25 @@ public:
     void setWeekStartDay(const int startDay)
     {
         weekStartDay = startDay;
-        loadCurrentWeekValues();
     }
 
     int getWeekStartDay()
     {
         return weekStartDay;
     }
+
+    void setDayInFocus(const QDate focusDay)
+    {
+        dayInFocus = focusDay;
+        loadCurrentWeekValues();
+    }
+
+    QDate getDayInFocus()
+    {
+        return dayInFocus;
+    }
+
+
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -70,6 +83,7 @@ signals:
 protected:
     QList<DateItem *> itemsList;
     int weekStartDay;
+    QDate dayInFocus;
 
 };
 

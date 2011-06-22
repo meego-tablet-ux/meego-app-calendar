@@ -189,6 +189,7 @@ AppPage {
     CalendarWeekModel {
         id:daysModel
         weekStartDay: i18nHelper.defaultFirstDayOfWeek
+        dayInFocus:window.appDateInFocus
     }
 
     TimeListModel {
@@ -544,7 +545,6 @@ AppPage {
                                                    anchors.fill: parent
                                                    Swipe {
                                                         onFinished: {
-                                                            console.log("Swipe Angle="+gesture.swipeAngle);
                                                              if(gesture.horizontalDirection == 1)  { //QSwipeGesture::Right
                                                                   daysModel.loadGivenWeekValuesFromOffset(dateInFocus,1);
                                                                  resetFocus(1);

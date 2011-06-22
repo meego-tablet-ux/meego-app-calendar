@@ -213,6 +213,7 @@ AppPage {
     CalendarWeekModel {
         id:weekDaysModel
         weekStartDay: i18nHelper.defaultFirstDayOfWeek
+        dayInFocus:window.appDateInFocus
     }
 
     TopItem {
@@ -419,7 +420,6 @@ AppPage {
 
                                                    Swipe {
                                                         onFinished: {
-                                                            console.log("Swipe Angle="+gesture.swipeAngle);
                                                              if(gesture.horizontalDirection == 1)  { //QSwipeGesture::Right
                                                                  resetFocus(1);
                                                              } else if(gesture.horizontalDirection == 2)  { //QSwipeGesture::Left
@@ -552,7 +552,6 @@ AppPage {
 
                                                        Swipe {
                                                             onFinished: {
-                                                                console.log("Swipe Angle="+gesture.swipeAngle);
                                                                  if(gesture.horizontalDirection == 1)  { //QSwipeGesture::Right
                                                                      resetFocus(1);
                                                                  } else if(gesture.horizontalDirection == 2)  { //QSwipeGesture::Left

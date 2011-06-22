@@ -36,12 +36,12 @@ CalendarWeekModel::~CalendarWeekModel()
 void CalendarWeekModel::loadCurrentWeekValues()
 {
     UtilMethods utilities;
-    QDate currentDate = QDate::currentDate();
+    QDate currentDate = dayInFocus;
     int dayOfWeek = currentDate.dayOfWeek();
-    int daysBeforeStartDay = (7-weekStartDay+dayOfWeek)%7; //(dayOfWeek+weekStartDay+1)%7;
+    int daysBeforeStartDay = (7-weekStartDay+dayOfWeek)%7;
     QDate startDate = currentDate.addDays(-(daysBeforeStartDay));
     clearData();
-    emit beginInsertRows(QModelIndex(),0,6);
+    emit beginResetModel();
     itemsList << new DateItem(0,utilities.getShortDate(startDate),startDate);
     itemsList << new DateItem(1,utilities.getShortDate(startDate.addDays(1)),startDate.addDays(1));
     itemsList << new DateItem(2,utilities.getShortDate(startDate.addDays(2)),startDate.addDays(2));
@@ -49,36 +49,30 @@ void CalendarWeekModel::loadCurrentWeekValues()
     itemsList << new DateItem(4,utilities.getShortDate(startDate.addDays(4)),startDate.addDays(4));
     itemsList << new DateItem(5,utilities.getShortDate(startDate.addDays(5)),startDate.addDays(5));
     itemsList << new DateItem(6,utilities.getShortDate(startDate.addDays(6)),startDate.addDays(6));
-    emit endInsertRows();
+    emit endResetModel();
 
 }
 
 void CalendarWeekModel::loadGivenWeekValuesFromOffset(QDate currDateInFocus,int offSetFromCurrentWeek)
 {
     UtilMethods utilities;
-    bool changeModel=false;
     QDate startDate;
     QDate currentDate = currDateInFocus;
     int currDayOfWeek = currentDate.dayOfWeek();
-    int daysBeforeStartDay = (7-weekStartDay+currDayOfWeek)%7; //(currDayOfWeek+weekStartDay+1)%7;
+    int daysBeforeStartDay = (7-weekStartDay+currDayOfWeek)%7;
     startDate = currentDate.addDays(-(daysBeforeStartDay));
 
     startDate = startDate.addDays(offSetFromCurrentWeek*7);
-    changeModel = true;
-
-
-    if(changeModel) {
-        clearData();
-        beginResetModel();
-        itemsList << new DateItem(0,utilities.getShortDate(startDate),startDate);
-        itemsList << new DateItem(1,utilities.getShortDate(startDate.addDays(1)),startDate.addDays(1));
-        itemsList << new DateItem(2,utilities.getShortDate(startDate.addDays(2)),startDate.addDays(2));
-        itemsList << new DateItem(3,utilities.getShortDate(startDate.addDays(3)),startDate.addDays(3));
-        itemsList << new DateItem(4,utilities.getShortDate(startDate.addDays(4)),startDate.addDays(4));
-        itemsList << new DateItem(5,utilities.getShortDate(startDate.addDays(5)),startDate.addDays(5));
-        itemsList << new DateItem(6,utilities.getShortDate(startDate.addDays(6)),startDate.addDays(6));
-        endResetModel();
-    }
+    clearData();
+    beginResetModel();
+    itemsList << new DateItem(0,utilities.getShortDate(startDate),startDate);
+    itemsList << new DateItem(1,utilities.getShortDate(startDate.addDays(1)),startDate.addDays(1));
+    itemsList << new DateItem(2,utilities.getShortDate(startDate.addDays(2)),startDate.addDays(2));
+    itemsList << new DateItem(3,utilities.getShortDate(startDate.addDays(3)),startDate.addDays(3));
+    itemsList << new DateItem(4,utilities.getShortDate(startDate.addDays(4)),startDate.addDays(4));
+    itemsList << new DateItem(5,utilities.getShortDate(startDate.addDays(5)),startDate.addDays(5));
+    itemsList << new DateItem(6,utilities.getShortDate(startDate.addDays(6)),startDate.addDays(6));
+    endResetModel();
 }
 
 
@@ -86,7 +80,7 @@ void CalendarWeekModel::loadGivenWeekValuesFromDate(QDate fromDate)
 {
     UtilMethods utilities;
     int dayOfWeek = fromDate.dayOfWeek();
-    int daysBeforeStartDay = (7-weekStartDay+dayOfWeek)%7; //(dayOfWeek+weekStartDay+1)%7;
+    int daysBeforeStartDay = (7-weekStartDay+dayOfWeek)%7;
     QDate startDate = fromDate.addDays(-(daysBeforeStartDay));
     clearData();
     beginResetModel();
@@ -144,8 +138,13 @@ int CalendarWeekModel::columnCount(const QModelIndex &parent) const
 
 void CalendarWeekModel::clearData()
 {
-    while (!itemsList.isEmpty())
+
+    if(!itemsList.isEmpty())
+    {
+      while (!itemsList.isEmpty()) {
         delete itemsList.takeFirst();
+      }
+    }
 }
 
 QML_DECLARE_TYPE(CalendarWeekModel);

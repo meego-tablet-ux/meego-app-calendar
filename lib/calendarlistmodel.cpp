@@ -231,8 +231,12 @@ int CalendarListModel::columnCount(const QModelIndex &parent) const
 
 void CalendarListModel::clearData()
 {
-    while (!itemsList.isEmpty())
-        delete itemsList.takeFirst();
+
+    if(!itemsList.isEmpty())
+    {
+        while (!itemsList.isEmpty())
+            delete itemsList.takeFirst();
+    }
 }
 
 QML_DECLARE_TYPE(CalendarListModel);
