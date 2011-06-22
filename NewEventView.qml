@@ -46,23 +46,8 @@ ModalDialog {
         }
     }
 
-    showCancelButton: true
-    showAcceptButton: true
-    cancelButtonText: qsTr( "Cancel" )
-    acceptButtonText: qsTr( "Save" )
-
-    // handle signals:
-    onAccepted: {
-        if(container.validateInputs()) {
-            container.createIOObject();
-            outer.hide();
-            outer.close();
-        }
-    }
-    onRejected: {
-        outer.hide();
-        outer.close();
-    }
+    showCancelButton: false
+    showAcceptButton: false
 
     TopItem { id: topItem }
     height: container.height + decorationHeight
@@ -1369,5 +1354,37 @@ ModalDialog {
 
 
     } //end of Item
+
+    buttonRow: [
+        //Save and Cancel buttons
+        Button {
+            id: saveButton
+            height: parent.height
+            bgSourceUp: "image://themedimage/widgets/common/button/button-default"
+            bgSourceDn: "image://themedimage/widgets/common/button/button-default-pressed"
+            text: qsTr("Save")
+            hasBackground: true
+            onClicked: {
+                if(container.validateInputs()) {
+                    container.createIOObject();
+                    outer.hide();
+                    outer.close();
+                }
+            }
+        },
+
+        Button {
+            id: cancelButton
+            height: parent.height
+            bgSourceUp: "image://themedimage/widgets/common/button/button"
+            bgSourceDn: "image://themedimage/widgets/common/button/button-pressed"
+            text: qsTr("Cancel")
+            hasBackground: true
+            onClicked: {
+                outer.hide();
+                outer.close();
+            }
+        }
+    ]
 
 }
