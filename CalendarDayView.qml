@@ -490,7 +490,7 @@ AppPage {
                              model:timeListModel
                              contentHeight:(timeListModel.count+2)*(50)
                              contentWidth: timeListView.width
-                             cacheBuffer: (timeListModel.coun+2)*50-timeListView.height // Set cacheBuffer to remain the scroll area content.
+                             cacheBuffer: (timeListModel.count+2)*50-timeListView.height // Set cacheBuffer to remain the scroll area content.
                              z:1
                              focus: true
                              boundsBehavior: Flickable.StopAtBounds
