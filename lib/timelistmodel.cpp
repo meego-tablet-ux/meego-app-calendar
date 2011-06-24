@@ -233,6 +233,7 @@ void TimeListModel::loadGivenDayModel(QDate nextDate)
 void TimeListModel::sortEventList()
 {
     int i , j;
+    qDebug()<<"Events Count before sort="<<eventsList.count();
     for(i=0;i < eventsList.count();i++)
     {
         for(j=0; j < i; j++)
@@ -243,6 +244,7 @@ void TimeListModel::sortEventList()
             }
         }
     }
+    qDebug()<<"Events Count after sort="<<eventsList.count();
 }
 
 void TimeListModel::assignDisplayValues()
@@ -284,19 +286,20 @@ void TimeListModel::assignDisplayValues()
 
         double htVal = (sTime.secsTo(eTime) / (60.0*30.0));
 
-        if(htVal<0.5) {
+        if(htVal<=0.5) {
             htVal = 0.5;
         }
         htVal = round(htVal);
         ((CalendarDataItem*)(eventsList.at(i)))->heightUnits = htVal;
 
-        for(int j=0;j<calItem->heightUnits;j++) {
+        for(int j=0;j<=calItem->heightUnits;j++) {
             if(hashmap.count(index+j) == 0) {
                 itemCount = 1;
             } else {
                 itemCount = hashmap.value(index+j);
                 itemCount++;
             }
+            //hashmap.replace(index,max(itemCount, hashmap.value(index+j)));
             hashmap.replace(index+j,itemCount);
         }
 
@@ -311,7 +314,7 @@ void TimeListModel::assignDisplayValues()
         int htUnits = calItem->heightUnits;
         int maxCount=1,tmpVal=0;
 
-        for(int j=0;j<htUnits;j++) {
+        for(int j=0;j<=htUnits;j++) {
             tmpVal = hashmap.value(startIndex+j);
             if(tmpVal>maxCount) {
                 maxCount = tmpVal;
@@ -332,14 +335,14 @@ void TimeListModel::assignDisplayValues()
         int htUnits = calItem->heightUnits;
         int maxCount=0,tmpVal=0;
 
-        for(int j=0;j<htUnits;j++) {
+        for(int j=0;j<=htUnits;j++) {
             tmpVal = xOffsetHashmap.value(startIndex+j);
             if(tmpVal>maxCount) {
                 maxCount = tmpVal;
             }
         }
         calItem->xUnits=maxCount;
-        for(int j=0;j<htUnits;j++) {
+        for(int j=0;j<=htUnits;j++) {
             if(xOffsetHashmap.count(startIndex+j) == 0) {
                 itemCount = 1;
             } else {
