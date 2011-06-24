@@ -299,7 +299,6 @@ void TimeListModel::assignDisplayValues()
                 itemCount = hashmap.value(index+j);
                 itemCount++;
             }
-            //hashmap.replace(index,max(itemCount, hashmap.value(index+j)));
             hashmap.replace(index+j,itemCount);
         }
 
