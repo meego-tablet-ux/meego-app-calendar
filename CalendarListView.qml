@@ -129,8 +129,8 @@ Item {
                                 id: highlight
                                 color:"green"
                                 height:parent.height
-                                width:widthUnits*titleText.font.pixelSize
-                                x:(xUnits>0)?(xUnits-1)*titleText.font.pixelSize:xUnits*titleText.font.pixelSize
+                                width: widthUnits*(titleText.width/summary.length)
+                                x:(widthUnits>0)?xUnits*(titleText.width/summary.length):(xUnits-1)*(titleText.width/summary.length)
                                 z:500
                                 opacity:0.5
                             }
