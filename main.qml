@@ -16,6 +16,21 @@ Window {
     toolBarTitle: qsTr("Calendar")
     bookMenuModel: [qsTr("Day"),qsTr("Week"),qsTr("Month")]
     bookMenuPayload: [dayViewComponent,weekViewComponent,monthViewComponent]
+    property int srBookIndex:0
+
+    onBookMenuSelectedIndexChanged:  {
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@Current BookMenyIndex="+bookMenuSelectedIndex);
+        srBookIndex = bookMenuSelectedIndex;
+    }
+
+    SaveRestoreState {
+        id: appState
+        onSaveRequired: {
+            setValue("bookMenuModel",srBookIndex);
+            setValue("appDateInFocus",appDateInFocus);
+            sync()
+        }
+    }
 
     overlayItem:  Item {
         id: globalSpaceItems
@@ -124,8 +139,20 @@ Window {
     }
 
     Component.onCompleted: {
-        appDateInFocus = utilities.getCurrentDateVal();
-        switchBook(dayViewComponent)
+        if(appState.restoreRequired) {
+            appDateInFocus = appState.value("appDateInFocus");
+            console.log("Inside restoring the app");
+            if(appState.value("bookMenuModel")==0)
+                switchBook(dayViewComponent)
+            else if(appState.value("bookMenuModel")==1)
+                switchBook(weekViewComponent)
+            else if(appState.value("bookMenuModel")==2)
+                switchBook(monthViewComponent)
+        } else {
+            console.log("Inside Default book of the app");
+            appDateInFocus = utilities.getCurrentDateVal();
+            switchBook(dayViewComponent)
+        }
     }
 
     property int animationduration:250

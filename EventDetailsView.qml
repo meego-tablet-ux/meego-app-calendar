@@ -111,8 +111,8 @@ ContextMenu {
 
                             Text {
                                 id:repeatValText
-                                //: This corresponds to Repeats frequency text. %1 is frequency of the event and %2 is the translated text for "Repeats"
-                                text: qsTr("%1 %2").arg(qsTr("Repeats")).arg(repeatText)
+                                //: %1 is frequency of the event like Never, Daily, Weekly - the text gets translated and gets passed as argument
+                                text: qsTr("Repeats %1").arg(repeatText)
                                 anchors.top: eventTimeTxt.bottom
                                 font.pixelSize: theme_fontPixelSizeMedium
                                 color:theme_fontColorNormal
@@ -175,8 +175,6 @@ ContextMenu {
                                     font.bold: true
                                     font.pixelSize: theme_fontPixelSizeMedium
                                     color:theme_fontColorNormal
-                                    //width: reminderBox.width/3
-                                    //elide: Text.ElideRight
                                 }
 
                                 Text {
@@ -184,8 +182,6 @@ ContextMenu {
                                     text:utilities.getAlarmString(alarmType)
                                     font.pixelSize: theme_fontPixelSizeMedium
                                     color:theme_fontColorNormal
-                                    //width: 2*reminderBox.width/3
-                                    //elide: Text.ElideRight
                                 }
                             }//reminder
                         }//end of column

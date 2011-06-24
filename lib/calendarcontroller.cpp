@@ -85,8 +85,8 @@ bool CalendarController::addModifyEvent(int actionType, QObject* eventIOObj)
         handleRepeat(coreEvent,eventIO);
 
         //handle alarm processing
+        coreEvent->clearAlarms();
         if(eventIO->getAlarmType()!= ENoAlarm) {
-            coreEvent->clearAlarms();
             KCalCore::Alarm::Ptr eventAlarm(coreEvent->newAlarm());
             handleAlarm(eventAlarm, eventIO);
         }

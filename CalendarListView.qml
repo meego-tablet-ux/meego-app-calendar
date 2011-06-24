@@ -89,7 +89,6 @@ Item {
             clip: true
             model: eventsListModel
             highlight: highlighteroff
-            highlightMoveDuration: 1
             currentIndex: listIndex
             delegate: Rectangle {
                 id: displayBox
@@ -129,8 +128,8 @@ Item {
                                 id: highlight
                                 color:"green"
                                 height:parent.height
-                                width:widthUnits*titleText.font.pixelSize
-                                x:(xUnits>0)?(xUnits-1)*titleText.font.pixelSize:xUnits*titleText.font.pixelSize
+                                width: widthUnits*(titleText.width/summary.length)
+                                x:(widthUnits>0)?xUnits*(titleText.width/summary.length):(xUnits-1)*(titleText.width/summary.length)
                                 z:500
                                 opacity:0.5
                             }
@@ -156,8 +155,8 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        calendarEventsList.currentIndex = index;
-                        calendarEventsList.highlight = highlighter;                       
+                        //calendarEventsList.currentIndex = index;
+                        //calendarEventsList.highlight = highlighter;
                         var map = mapToItem (window, mouseX, mouseY);
                         window.openView (map.x,map.y,uid,description,summary,location,alarmType,utilities.getRepeatTypeString(repeatType),startDate,startTime,endTime,zoneOffset,zoneName,allDay,true,false);
                     }
