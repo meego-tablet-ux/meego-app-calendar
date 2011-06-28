@@ -29,7 +29,6 @@ AppPage {
         xVal = mouseX;
         yVal = mouseY;
     }
-
     onActionMenuTriggered: {
         switch (selectedItem) {
             case 0: {
@@ -306,6 +305,11 @@ AppPage {
                                         anchors.fill: parent
                                         onClicked: {
                                             resetCalendarDayModels(coreDateVal);
+                                            if (centerContent.state == "EXPAND"){
+                                                centerContent.state = "NORMAL"
+                                                allDayBox.height = 60
+                                                allDayIcon.source="image://themedimage/images/popupbox_arrow_bottom";
+                                            }
                                         }
                                     }
                                 }
@@ -361,10 +365,12 @@ AppPage {
                                          }
 
                                          MouseArea {
+                                             id: allDayEventExpandIcon
                                              anchors.fill: parent
                                              onClicked: {
                                                  allDayIcon.source="";
-                                                 allDayBox.height=100
+                                                 allDayBox.height=100;
+                                                 centerContent.state="EXPAND";
                                              }
                                          }
                                      }//end of alldayiconbox
@@ -472,7 +478,7 @@ AppPage {
                     Image {
                         id:headerDivider
                         width: calData.width
-                        source: "image://themedimage/images/menu_item_separator"
+                        //source: "image://themedimage/images/menu_item_separator"
                     } //end of headerDivider
 
                     Rectangle {
@@ -482,6 +488,33 @@ AppPage {
                          border.width:2
                          border.color: "gray"
                          color:"white"
+                         states: [
+                             State {
+                                 name: "EXPAND"
+                                 //when: allDayEventExpandIcon.pressed
+                                 PropertyChanges {
+                                    target: centerContent
+                                    y: dayBox.height+allDayBox.height-60
+                                 }
+                             },
+                             State {
+                                 name: "NORMAL"
+                                 //when: allDayEventExpandIcon.pressed
+                                 PropertyChanges {
+                                    target: centerContent
+                                    y: dayBox.height
+                                 }
+                             }
+                         ]
+                         transitions:[
+                              Transition {
+                                  to: "EXPAND"
+                                  NumberAnimation {
+                                      properties: "y"
+                                      easing.type: Easing.OutQunit
+                                  }
+                             }
+                         ]
 
                          ListView {
                              id: timeListView
