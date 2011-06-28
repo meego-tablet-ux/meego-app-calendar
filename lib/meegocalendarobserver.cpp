@@ -78,7 +78,10 @@ void MeeGoCalendarObserver::calendarModified(bool modified, KCalCore::Calendar *
     m_dbg() << m_prefix << "calendar modified:" << (modified ? "yes" : "no");
     m_lastChange = QDateTime::currentMSecsSinceEpoch();
     qDebug()<<"Inside MeeGoCalendarObserver, calendarModified before dbChanged()";
-    emit dbChanged();
+    if(modified)  {
+        qDebug()<<"Inside MeeGoCalendarObserver, Emitting dbChanged()";
+        emit dbChanged();
+    }
 
 }
 

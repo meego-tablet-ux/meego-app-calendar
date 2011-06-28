@@ -47,6 +47,19 @@ AppPage {
         }
     }
 
+    CalendarController {
+        id:controller
+    }
+
+    Connections {
+        target:controller
+        onDbChanged: {
+            console.log("Inside CalendarWeekView Connections: Received dbChnaged signal, updating view");
+            initDate();
+        }
+    }
+
+
     function initDate()
     {
         dateInFocus = window.appDateInFocus;

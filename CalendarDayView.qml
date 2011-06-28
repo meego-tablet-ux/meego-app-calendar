@@ -56,6 +56,11 @@ AppPage {
         onDbLoaded: {
             initDate();
         }
+
+        onDbChanged: {
+            console.log("Inside CalendarDayView Connections: Received dbChnaged signal, updating view");
+            initDate();
+        }
     }
 
 
