@@ -43,7 +43,7 @@ ContextMenu {
             eventTime = qsTr("All day");
         } else  {
             //: This is Date, Time range ("Event StartDate, StartTime - EndTime ") %1 is Event StartDate, %2 is StartTime and %3 is EndTime
-            eventTime = qsTr("%1, %2 - %3").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull));
+            eventTime = qsTr("%1, %2 - %3","DateTimeRange").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull));
         }
         viewEventDetails.title = summary;
         visible = true;
@@ -102,7 +102,7 @@ ContextMenu {
                             Text {
                                 id:eventTimeTxt
                                 //: This is EventTime followed by GMT offset ("%1 is event time and %2 is GMT offset")
-                                text:qsTr("%1 (GMT %2)").arg(eventTime).arg(zoneOffset/(60*60))
+                                text:qsTr("%1 (GMT %2)","TimezoneData").arg(eventTime).arg(zoneOffset/(60*60))
                                 font.pixelSize: theme_fontPixelSizeMedium
                                 color:theme_fontColorNormal
                                 width: timeBox.width

@@ -25,7 +25,7 @@ Name[de]=Kalender
 Name[da]=Kalender
 Name[cs]=Kalendář
 Icon=meego-app-calendar
-Exec=meego-qml-launcher --opengl --fullscreen --app meego-app-calendar
+Exec=invoker --type=l meego-qml-launcher --opengl --fullscreen --app meego-app-calendar
 X-MEEGO-CORE-UX=true
 X-MEEGO-CGROUP-PATH=managed
 X-MEEGO-CGROUP-CONTROLLERS=freezer

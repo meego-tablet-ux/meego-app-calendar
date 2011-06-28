@@ -40,8 +40,8 @@ DropDown {
           var offsetArr1 = new Array();
           var gmtNameArr1 = new Array();
           for(var i=0;i<window.addEditTimeZoneList.count;i++) {
-              //: This Time zone string  %1 corresponds to cityname, %2 corresponds to GMT offset. Both strings are localized. Translators don't have to do anything here.
-              modelArr1[i] = qsTr("%1 (%2)").arg(window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.Title)).arg(window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.LongGMTName));
+              //: This Time zone string  %1 corresponds to cityname, %2 corresponds to GMT offset. Both arguments are localized.
+              modelArr1[i] = qsTr("%1 (%2)","TimezoneData").arg(window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.Title)).arg(window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.LongGMTName));
               payloadArr1[i] = i;
               offsetArr1[i] = window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.GMTOffset);
               gmtNameArr1[i] = window.addEditTimeZoneList.getData(i, Labs.TimezoneListModel.Title);

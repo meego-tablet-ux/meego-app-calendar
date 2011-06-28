@@ -66,7 +66,7 @@ AppPage {
         var startDate = utilities.getStartDateOfWeek(dateInFocus,i18nHelper.defaultFirstDayOfWeek);
         var endDate = utilities.getEndDateOfWeek(startDate);
         //: This is week date range %1 is Week's Start Date and %2 is Week's EndDate
-        dateInFocusVal = qsTr("%1 - %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
+        dateInFocusVal = qsTr("%1 - %2","WeekRange").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
         dayInFocusIndex = (7-i18nHelper.defaultFirstDayOfWeek+dateInFocus.getDay())%7;
         resetCalendarDayModels(dateInFocus);
     }
@@ -82,8 +82,7 @@ AppPage {
                 daysModel.loadGivenWeekValuesFromDate(dateInFocus)
                 var startDate = utilities.getStartDateOfWeek(dateInFocus,i18nHelper.defaultFirstDayOfWeek);
                 var endDate = utilities.getEndDateOfWeek(startDate);
-                //: This is week date range %1 is Week's Start Date and %2 is Week's EndDate
-                dateInFocusVal = qsTr("%1 - %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
+                dateInFocusVal = qsTr("%1 - %2","WeekRange").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
                 dayInFocusIndex = (7-i18nHelper.defaultFirstDayOfWeek+dateInFocus.getDay())%7;
                 eventsListView.contentY = (UtilMethods.EDayTimeStart*50);
             }
@@ -122,8 +121,7 @@ AppPage {
         window.appDateInFocus = dateInFocus;
         var startDate = utilities.getStartDateOfWeek(dateInFocus,i18nHelper.defaultFirstDayOfWeek);
         var endDate = utilities.getEndDateOfWeek(startDate);
-        //: This is week date range %1 is Week's Start Date and %2 is Week's EndDate
-        dateInFocusVal = qsTr("%1 - %2").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
+        dateInFocusVal = qsTr("%1 - %2","WeekRange").arg(i18nHelper.localDate(startDate, Labs.LocaleHelper.DateFull)).arg(i18nHelper.localDate(endDate, Labs.LocaleHelper.DateFull));
         daysModel.loadGivenWeekValuesFromDate(dateInFocus);
         eventsListView.contentY = (UtilMethods.EDayTimeStart*50);
     }
@@ -526,7 +524,7 @@ AppPage {
                                                                     Text {
                                                                           id: eventTime
                                                                           //: This is time range ("StartTime - EndTime") %1 is StartTime and %2 is EndTime
-                                                                          text: qsTr("%1 - %2").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull));
+                                                                          text: qsTr("%1 - %2","TimeRange").arg(i18nHelper.localTime(startTime, Labs.LocaleHelper.TimeFull)).arg(i18nHelper.localTime(endTime, Labs.LocaleHelper.TimeFull));
                                                                           color:theme_fontColorNormal
                                                                           font.pixelSize:theme_fontPixelSizeSmall
                                                                           width:descriptionBox.width
