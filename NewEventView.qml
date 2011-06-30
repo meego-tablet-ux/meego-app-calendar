@@ -612,11 +612,11 @@ ModalDialog {
                                         } else {
                                             container.allDaySet = false;
                                             finishTimeBlock.opacity = 1;
-                                            finishTimeBox.height = 30;
+                                            finishTimeBox.height = 50;
                                             finishTimeCmbBlock.opacity = 1;
-                                            finishTimeCmbBlock.height=30;
+                                            finishTimeCmbBlock.height=50;
                                             startTimeBox.opacity = 1;
-                                            startTimeBox.height = 30;
+                                            startTimeBox.height = 50;
 
                                         }
                                   }

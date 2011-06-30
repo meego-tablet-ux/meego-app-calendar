@@ -257,7 +257,7 @@ AppPage {
             }
         }
 
-        BorderImage {
+        ThemeImage {
             id: spacerImage
             height:dayViewTopItem.topHeight - (navHeader.height)
             width: dayViewTopItem.topWidth
@@ -363,7 +363,7 @@ AppPage {
                                          anchors.horizontalCenter: parent.horizontalCenter
                                          visible:(allDayEventsCount>1)?1:0
                                          z:500
-                                         BorderImage {
+                                         ThemeImage {
                                              id:allDayIcon
                                              source:"image://themedimage/images/popupbox_arrow_bottom"
                                              anchors.fill: parent
@@ -412,7 +412,7 @@ AppPage {
                                                 id: calItemBox
                                                 height: 30
                                                 width: allDayDisplayBox.width
-                                                BorderImage {
+                                                ThemeImage {
                                                      id:allDayImage
                                                      source:"image://themedimage/widgets/apps/calendar/event-allday"
                                                      anchors.fill: parent
@@ -578,7 +578,7 @@ AppPage {
                                                      height: (heightUnits*vacantAreaBox.height)
                                                      width: 9*(widthUnits*vacantAreaBox.width)/10
                                                      x:(xUnits+xUnits*displayRect.width)+5
-                                                     BorderImage {
+                                                     ThemeImage {
                                                          id:regEventImage
                                                          source:"image://themedimage/widgets/apps/calendar/event"
                                                          anchors.fill: parent

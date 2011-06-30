@@ -219,7 +219,9 @@ void TimeListModel::loadCurrentDayModel()
     assignDisplayValues();
     loadValues();
     endResetModel();
-    return;
+
+    // Clean up
+    qDeleteAll(list);
 }
 
 
@@ -233,7 +235,6 @@ void TimeListModel::loadGivenDayModel(QDate nextDate)
 void TimeListModel::sortEventList()
 {
     int i , j;
-    qDebug()<<"Events Count before sort="<<eventsList.count();
     for(i=0;i < eventsList.count();i++)
     {
         for(j=0; j < i; j++)
@@ -244,7 +245,6 @@ void TimeListModel::sortEventList()
             }
         }
     }
-    qDebug()<<"Events Count after sort="<<eventsList.count();
 }
 
 void TimeListModel::assignDisplayValues()

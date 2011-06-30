@@ -128,6 +128,8 @@ void CalendarMonthModel::loadCurrentMonthValues()
 
         }
         itemsList << new MonthItem(indexCount,utilities.getDateInFormatString(tmpDate,"d"),tmpDate,true,currDate,event1,event2,event3,eventsCount);
+        // Clean up
+        qDeleteAll(list);
     }
 
     for(int k=1;k<=daysAfterEndDay;k++,indexCount++) {

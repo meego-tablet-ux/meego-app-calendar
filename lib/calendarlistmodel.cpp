@@ -86,6 +86,9 @@ void CalendarListModel::refresh()
     for(int i = 0; i < itemsList.count(); i++)
         itemsDisplay << itemsList[i];
     endResetModel();
+
+    // Clean up
+    qDeleteAll(list);
 }
 
 void CalendarListModel::loadAllEventsSorted()
@@ -110,6 +113,9 @@ void CalendarListModel::loadAllEventsSorted()
     }
 
     endResetModel();
+
+    // Clean up
+    qDeleteAll(list);
 }
 
 

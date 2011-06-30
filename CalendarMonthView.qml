@@ -255,7 +255,7 @@ AppPage {
             id:spacerbox
             height:monthViewTopItem.topHeight - (navHeader.height)
             width: monthViewTopItem.topWidth
-            BorderImage {
+            ThemeImage {
                     id: spacerImage
                     anchors.fill: parent
                     source: "image://themedimage/images/titlebar_l"
@@ -300,7 +300,7 @@ AppPage {
                                                     height:weekBox.height
                                                     border.width:2
                                                     border.color: "darkgray"
-                                                    BorderImage {
+                                                    ThemeImage {
                                                         id: weekImage
                                                         source: "image://themedimage/images/calendar/calendar_month_inactiveday_l"
                                                         anchors.fill: parent
@@ -334,7 +334,7 @@ AppPage {
                                                 width:centerContent.cellWidth
                                                 border.width: 2
                                                 border.color:"gray"
-                                                BorderImage {
+                                                ThemeImage {
                                                     id:dayImage
                                                     anchors.fill: parent
                                                     source: getDayImage(isCurrentDay,isMonthDay,coreDateVal,index)
@@ -361,7 +361,7 @@ AppPage {
                                                         height:dayBox.height/5
                                                         width:dayBox.width
                                                         opacity:setOpacity(1,isMonthDay,eventsCount)
-                                                        BorderImage {
+                                                        ThemeImage {
                                                             id:eventImage1
                                                             source:"image://themedimage/widgets/apps/calendar/event"
                                                             width: parent.width-4
@@ -385,7 +385,7 @@ AppPage {
                                                         height:dayBox.height/5
                                                         width:dayBox.width
                                                         opacity:setOpacity(2,isMonthDay,eventsCount)
-                                                        BorderImage {
+                                                        ThemeImage {
                                                             id:eventImage2
                                                             source:"image://themedimage/widgets/apps/calendar/event"
                                                             width: parent.width-4
@@ -409,7 +409,7 @@ AppPage {
                                                         height:dayBox.height/5
                                                         width:dayBox.width
                                                         opacity:setOpacity(3,isMonthDay,eventsCount)
-                                                        BorderImage {
+                                                        ThemeImage {
                                                             id:eventImage3
                                                             //The image was supposed to be something else when the count was > 3. Have to revisit this.
                                                             source:(eventsCount>3)?"image://themedimage/widgets/apps/calendar/event":"image://themedimage/widgets/apps/calendar/event"
@@ -486,7 +486,7 @@ AppPage {
                                         id:dateBox
                                         height: 50
                                         width: eventViewBox.width
-                                        BorderImage {
+                                        ThemeImage {
                                             id: dateBoxImage
                                             source: "image://themedimage/images/calendar/calendar_month_inactiveday_l"
                                             anchors.fill: parent

@@ -89,6 +89,8 @@ void DayViewModel::loadCurrentDayValues()
         assignDisplayValues();
     }
     endResetModel();
+    // Clean up
+    qDeleteAll(list);
 }
 
 void DayViewModel::loadGivenDayModel(QDate nextDate)

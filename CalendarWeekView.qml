@@ -259,7 +259,7 @@ AppPage {
                                 property int dayIndex:0
                                 property int prevIndex:0
                                 model: daysModel
-                                BorderImage {
+                                ThemeImage {
                                     id: allDayBorderImage
                                     width:(dayBox.width/7)
                                     height:100
@@ -343,7 +343,7 @@ AppPage {
                                                         anchors.horizontalCenter: parent.horizontalCenter
                                                         anchors.leftMargin: 2
 
-                                                        BorderImage {
+                                                        ThemeImage {
                                                             id:allDayImage
                                                             source:"image://themedimage/widgets/apps/calendar/event-allday"
                                                             anchors.fill: parent
@@ -494,7 +494,7 @@ AppPage {
                                                         height: (heightUnits*vacantAreaBox.height)
                                                         width: 9*(widthUnits*vacantAreaBox.width)/10
                                                         x:(xUnits+xUnits*displayRect.width)+1
-                                                        BorderImage {
+                                                        ThemeImage {
                                                             id:regEventImage
                                                             source:"image://themedimage/widgets/apps/calendar/event"
                                                             anchors.fill: parent
