@@ -300,8 +300,17 @@ AppPage {
                                             height: dayBox.height/2
                                             property int parentIndex:index
                                             border.width:1
-                                            border.color:(isDateInFocus(coreDateVal))?"lightgray":"lightgray"
+                                            border.color:"lightgray"
                                             color:"transparent"
+                                            ThemeImage {
+                                                id:allDayBgImage
+                                                source:(isDateInFocus(coreDateVal))? "image://themedimage/widgets/apps/calendar/weekday-active":"image://themedimage/widgets/apps/calendar/calendar"
+                                                anchors.top:parent.top
+                                                anchors.bottom:parent.bottom
+                                                anchors.left:parent.left
+                                                anchors.right:parent.right
+                                                anchors.margins:1
+                                            }
 
                                             DayViewModel {
                                                 id:allDayViewModel
@@ -449,7 +458,7 @@ AppPage {
                                         height: (centerContent.timeListCount)*centerContent.cellHeight
                                         width: centerContent.cellWidth
                                         property int weekDayIndex:index
-                                        source:(dayInFocusIndex==weekDayIndex)?"image://themedimage/widgets/apps/calendar/weekday-active":"image://themedimage/widgets/apps/calendar/weekday"
+                                        source:(dayInFocusIndex==weekDayIndex)?"image://themedimage/widgets/apps/calendar/weekday-active":"image://themedimage/widgets/apps/calendar/calendar"
                                         TimeListModel {
                                             id:timeModel
                                             dateVal:coreDateVal

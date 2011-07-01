@@ -295,7 +295,16 @@ AppPage {
                                     height: 40
                                     border.width:2
                                     border.color: (isDateInFocus(coreDateVal))?"white":"gray"
-                                    color:(isDateInFocus(coreDateVal))?"white":"lightgray"
+                                    color:"transparent"
+                                    ThemeImage {
+                                        id:dateBgImage
+                                        source:(isDateInFocus(coreDateVal))? "image://themedimage/widgets/apps/calendar/calendar":"image://themedimage/widgets/apps/calendar/weekday"
+                                        anchors.top:parent.top
+                                        anchors.bottom:parent.bottom
+                                        anchors.left:parent.left
+                                        anchors.right:parent.right
+                                        anchors.margins:1
+                                    }
 
                                     Text {
                                           id: dateValTxt

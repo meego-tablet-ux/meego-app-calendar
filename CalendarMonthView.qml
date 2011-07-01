@@ -302,7 +302,7 @@ AppPage {
                                                     border.color: "darkgray"
                                                     ThemeImage {
                                                         id: weekImage
-                                                        source: "image://themedimage/images/calendar/calendar_month_inactiveday_l"
+                                                        source: "image://themedimage/images/calendar/weekday"
                                                         anchors.fill: parent
                                                     }
 
@@ -351,6 +351,7 @@ AppPage {
                                                             font.bold:true
                                                             color:isMonthDay?theme_fontColorNormal:theme_fontColorInactive
                                                             font.pixelSize:theme_fontPixelSizeMedium
+                                                            anchors.top:parent.top
                                                             anchors.left: parent.left
                                                             anchors.leftMargin: 5
                                                             anchors.topMargin: 5
@@ -488,7 +489,7 @@ AppPage {
                                         width: eventViewBox.width
                                         ThemeImage {
                                             id: dateBoxImage
-                                            source: "image://themedimage/images/calendar/calendar_month_inactiveday_l"
+                                             source: "image://themedimage/images/calendar/weekday"
                                             anchors.fill: parent
                                         }
                                         Text {
