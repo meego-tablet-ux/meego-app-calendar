@@ -10,6 +10,7 @@ import Qt 4.7
 import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.App.Calendar 0.1
 import MeeGo.Components 0.1
+import MeeGo.Connman 0.1
 
 ModalDialog {
     id:outer
@@ -79,7 +80,6 @@ ModalDialog {
         property variant editEvent
         property int repeatType
         property int alarmType
-        property string zoneName
 
        function setEndRepeatDateValues() {
             endRepeatDayText.text = finishDateTxt.text;
@@ -118,6 +118,25 @@ ModalDialog {
                 }
             }
             return isValid;
+        }
+
+        Labs.TimezoneListModel {
+            id: timezoneModel
+        }
+
+        ClockModel {
+            id: clockModel
+        }
+
+        Labs.TimezonePicker {
+            id: tzPicker
+            currentLocation: clockModel.timezone
+            gmtName: timezoneModel.getLocationName(clockModel.timezone)
+            onTimezoneSelected: {
+                tzCmb.gmtName = gmtName;
+                tzCmb.gmtOffset = gmtOffset;
+                tzCmb.gmtTitle = locationName;
+            }
         }
 
        ModalDialog {
@@ -171,10 +190,10 @@ ModalDialog {
             eventIO.allDay = isAllDay;
 
             if(eventIO.allDay ) {
-                eventIO.setStartDateTime(startDate,"",tzCmb.gmtName);
+                eventIO.setStartDateTime(startDate,"",tzCmb.gmtTitle);
             } else if(!eventIO.allDay ) {
-                eventIO.setStartDateTime(startDate,startTime,tzCmb.gmtName);
-                eventIO.setEndDateTime(endDate,endTime,tzCmb.gmtName);
+                eventIO.setStartDateTime(startDate,startTime,tzCmb.gmtTitle);
+                eventIO.setEndDateTime(endDate,endTime,tzCmb.gmtTitle);
             }
             eventIO.zoneOffset = tzCmb.gmtOffset;
 
@@ -189,7 +208,7 @@ ModalDialog {
                     }
                 } else if(eventIO.repeatEndType == UtilMethods.EAfterDate) {
                     if(endRepeatDayText.text!="") {
-                        eventIO.setRepeatEndDateTime(repeatEndDate, endTime,tzCmb.gmtName);
+                        eventIO.setRepeatEndDateTime(repeatEndDate, endTime,tzCmb.gmtTitle);
                     }
                 } else if(eventIO.repeatEndType == UtilMethods.EForever) {
 
@@ -261,7 +280,6 @@ ModalDialog {
             finishTimeTxt.text = endTimeStr;
             alarmCmb.selectedIndex=0;
             repeatCmb.selectedIndex=0;
-            tzCmb.reInit();
         }
 
         function initializeModifyView(eventId)
@@ -294,11 +312,8 @@ ModalDialog {
             startTimeStr = startTimeTxt.text;
             endTimeStr = finishTimeTxt.text;
 
-            tzCmb.gmtOffset = editEvent.zoneOffset;
-            tzCmb.gmtName = editEvent.zoneName;
             container.repeatType = editEvent.repeatType;
             container.alarmType = editEvent.alarmType;
-            container.zoneName = editEvent.zoneName;
 
             alarmCmb.selectedTitle = utilities.getAlarmString(editEvent.alarmType);
             alarmCmb.selectedIndex = editEvent.alarmType;
@@ -306,7 +321,6 @@ ModalDialog {
             repeatCmb.selectedTitle = utilities.getRepeatTypeString(editEvent.repeatType);
             repeatEndCmb.selectedIndex = editEvent.repeatEndType;
             repeatEndCmb.selectedTitle = utilities.getRepeatEndTypeString(editEvent.repeatEndType);
-            tzCmb.reInit();
 
             if(editEvent.repeatType != UtilMethods.ENoRepeat) {
                 if(editEvent.repeatEndType == UtilMethods.EForNTimes) {
@@ -322,7 +336,6 @@ ModalDialog {
         {
             timePicker.fromIndex = index;
             if(index ==1) {
-                console.log("startTime: "+startTime.toString());
                 timePicker.hours = utilities.getHour(startTime);
                 timePicker.minutes = utilities.getMin(startTime);
             } else if(index ==2) {
@@ -413,7 +426,7 @@ ModalDialog {
                 container.setTimeValues(fromIndex,timeVal);
             }
             minutesIncrement:5
-            hr24:i18nHelper.defaultTimeFormat
+            //hr24:i18nHelper.defaultTimeFormat
         }
 
         CalendarController {
@@ -840,6 +853,8 @@ ModalDialog {
 
 
                               Row {
+                                  anchors.left: parent.left
+                                  anchors.leftMargin: 25
                                   Item{
                                       id:tzText
                                       width:dateTimeBlock.width/3
@@ -851,7 +866,6 @@ ModalDialog {
                                           font.pixelSize:theme_fontPixelSizeMedium
                                           width:parent.width
                                           anchors.left: parent.left
-                                          anchors.leftMargin: 25
                                           anchors.verticalCenter: parent.verticalCenter
                                           elide:Text.ElideRight
                                       }
@@ -861,12 +875,24 @@ ModalDialog {
                                       id:tzCmbBlock
                                       width: 2*(dateTimeBlock.width/3)
                                       height:50
-                                      TimeZoneListDelegate {
-                                          id: tzCmb
-                                          gmtName: (container.windowType==UtilMethods.EAddEvent)?utilities.getLocalTimeZoneName():container.zoneName
-                                          title: (container.windowType==UtilMethods.EAddEvent)?utilities.getLocalTimeZoneName():container.zoneName
-                                      }
 
+                                      Button {
+                                          id: tzCmb
+                                          anchors.fill: parent
+                                          text: gmtName
+                                          hasBackground: true
+                                          bgSourceUp: "image://themedimage/widgets/common/button/button-dialogue"
+                                          bgSourceDn: "image://themedimage/widgets/common/button/button-dialogue-active"
+                                          font.pixelSize:theme_fontPixelSizeNormal
+                                          textColor:theme_fontColorNormal
+                                          property string gmtName: timezoneModel.getLocationName(clockModel.timezone)
+                                          property string gmtTitle
+                                          property int gmtOffset
+                                          onClicked: {
+                                              tzPicker.initLocation(clockModel.timezone);
+                                              tzPicker.show();
+                                          }
+                                      }
                                   }//end of tzcmb block
 
                               }//end timezonerow
